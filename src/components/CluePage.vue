@@ -1,19 +1,23 @@
 <template>
   <div>
-    <slot
-      name="clue"
-      v-if="playerIsChasing" />
+    <div v-if="playerIsChasing">
+      <slot name="clue" />
+    </div>
     <div v-else>
       <slot name="chaseInfo" />
-      <div v-if="isChaseEntry">Enter Chase</div>
-      <q-btn />
+      <join-chase v-if="isChaseEntry" />
     </div>
   </div>
 </template>
 
 <script>
+import JoinChase from './JoinChase'
+
 export default {
   name: 'CluePage',
+  components: {
+    JoinChase
+  },
   props: {
     playerIsChasing: Boolean,
     isChaseEntry: Boolean

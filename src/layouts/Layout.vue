@@ -14,7 +14,6 @@
         <q-toolbar-title>
           Chassotrezor
         </q-toolbar-title>
-
       </q-toolbar>
     </q-header>
 
@@ -23,8 +22,7 @@
       show-if-above
       bordered
       content-class="bg-grey-1"
-    >
-    </q-drawer>
+    />
 
     <q-page-container>
       <router-view />
