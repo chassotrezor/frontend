@@ -21,7 +21,8 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "quasar": "^1.0.0",
-    "vue-i18n": "^8.0.0"
+    "vue-i18n": "^8.0.0",
+    "vue-qrcode-reader": "^2.3.0"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0",

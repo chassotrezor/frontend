@@ -1,5 +1,6 @@
 <template>
   <q-page class="flex flex-center">
+    <scanner />
     <q-toggle v-model="playerIsChasing" />
     <clue-page :player-is-chasing="playerIsChasing">
       <template v-slot:clue>
@@ -18,11 +19,13 @@
 
 <script>
 import CluePage from 'components/Clue/CluePage'
+import Scanner from 'components/Scanner/Scanner'
 
 export default {
   name: 'PageIndex',
   components: {
-    CluePage
+    CluePage,
+    Scanner
   },
   data () {
     return {
