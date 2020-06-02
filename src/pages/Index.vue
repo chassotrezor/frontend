@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import CluePage from 'components/CluePage'
+import CluePage from 'components/Clue/CluePage'
 
 export default {
   name: 'PageIndex',
