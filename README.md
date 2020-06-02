@@ -12,6 +12,11 @@ yarn
 quasar dev
 ```
 
+### Run unit tests with majestic
+```bash
+yarn test:unit:ui
+```
+
 ### Lint the files
 ```bash
 yarn run lint
