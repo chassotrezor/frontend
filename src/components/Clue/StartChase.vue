@@ -1,6 +1,6 @@
 <template>
   <q-btn
-    @click="() => start(chaseId)"
+    @click="start(chaseId)"
   >
     {{ $t('chase.manage.start') }}
   </q-btn>
@@ -11,10 +11,9 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'StartChase',
-  props: {
-    chaseId: {
-      type: String,
-      required: true
+  computed: {
+    chaseId () {
+      return this.$route.params.chaseId
     }
   },
   methods: {

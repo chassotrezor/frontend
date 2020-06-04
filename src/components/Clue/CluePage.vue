@@ -7,7 +7,6 @@
       <slot name="chaseInfo" />
       <start-chase
         v-if="isChaseEntry"
-        :chase-id="chaseId"
       />
     </div>
   </div>
@@ -24,14 +23,6 @@ export default {
   props: {
     playerIsChasing: Boolean,
     isChaseEntry: Boolean
-  },
-  computed: {
-    chaseId () {
-      return this.$route.params.chaseId
-    },
-    clueId () {
-      return this.$route.params.clueId
-    }
   }
 }
 </script>
