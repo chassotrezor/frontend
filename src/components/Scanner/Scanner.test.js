@@ -15,30 +15,6 @@ describe('Scanner', () => {
   })
 
   describe('methods', () => {
-    describe('checkQRCode', () => {
-      const checkQRCode = wrapper.vm.checkQRCode
-      it('returns true if code is not empty', () => {
-        expect(checkQRCode('notEmpty')).toBeTruthy()
-      })
-      it('returns false if code is empty', () => {
-        expect(checkQRCode('')).toBeFalsy()
-      })
-    })
-
-    describe('parseChaseID', () => {
-      const parseChaseID = wrapper.vm.parseChaseID
-      it('returns the chaseID', () => {
-        expect(parseChaseID('chaseID:clueID')).toBe('chaseID')
-      })
-    })
-
-    describe('parseClueID', () => {
-      const parseClueID = wrapper.vm.parseClueID
-      it('returns the clueID', () => {
-        expect(parseClueID('chaseID:clueID')).toBe('clueID')
-      })
-    })
-
     describe('onDecode', () => {
       const push = wrapper.vm.$router.push
       beforeEach(() => {
