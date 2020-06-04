@@ -9,14 +9,18 @@ describe('CluePage', () => {
     }
   })
 
+  function setProps (props, done) {
+    wrapper.setProps(props)
+    wrapper.vm.$nextTick(() => {
+      done()
+    })
+  }
+
   describe('when "playerIsChasing" prop is true', () => {
     beforeAll(done => {
-      wrapper.setProps({
+      setProps({
         playerIsChasing: true
-      })
-      wrapper.vm.$nextTick(() => {
-        done()
-      })
+      }, done)
     })
 
     it('displays clue slot', () => {
@@ -31,29 +35,23 @@ describe('CluePage', () => {
 
     describe('when "isChaseEntry" prop is true', () => {
       beforeAll(done => {
-        wrapper.setProps({
+        setProps({
           isChaseEntry: true
-        })
-        wrapper.vm.$nextTick(() => {
-          done()
-        })
+        }, done)
       })
 
-      it('does not display a "JoinChase" component', () => {
-        const joinChase = wrapper.findComponent({ name: 'JoinChase' })
-        expect(joinChase.exists()).toBeFalsy()
+      it('does not display a "StartChase" component', () => {
+        const startChase = wrapper.findComponent({ name: 'StartChase' })
+        expect(startChase.exists()).toBeFalsy()
       })
     })
   })
 
   describe('when "playerIsChasing" prop is false', () => {
     beforeAll(done => {
-      wrapper.setProps({
+      setProps({
         playerIsChasing: false
-      })
-      wrapper.vm.$nextTick(() => {
-        done()
-      })
+      }, done)
     })
 
     it('does not display clue slot', () => {
@@ -68,17 +66,14 @@ describe('CluePage', () => {
 
     describe('when "isChaseEntry" prop is true', () => {
       beforeAll(done => {
-        wrapper.setProps({
+        setProps({
           isChaseEntry: true
-        })
-        wrapper.vm.$nextTick(() => {
-          done()
-        })
+        }, done)
       })
 
-      it('displays a "JoinChase" component', () => {
-        const joinChase = wrapper.findComponent({ name: 'JoinChase' })
-        expect(joinChase.exists()).toBeTruthy()
+      it('displays a "StartChase" component', () => {
+        const startChase = wrapper.findComponent({ name: 'StartChase' })
+        expect(startChase.exists()).toBeTruthy()
       })
     })
   })
