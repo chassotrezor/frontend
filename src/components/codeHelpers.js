@@ -1,5 +1,5 @@
-export function generateString (chaseID, clueID) {
-  return `${chaseID}:${clueID}`
+export function generateString (chaseId, clueId) {
+  return `${chaseId}:${clueId}`
 }
 
 function getPart (code, index) {
@@ -7,11 +7,11 @@ function getPart (code, index) {
   return parts[index]
 }
 
-export function getChaseID (code) {
+export function getchaseId (code) {
   return getPart(code, 0)
 }
 
-export function getClueID (code) {
+export function getclueId (code) {
   return getPart(code, 1)
 }
 

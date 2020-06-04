@@ -4,7 +4,7 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader'
-import { getChaseID, getClueID, checkCodeValidity } from 'components/codeHelpers'
+import { getchaseId, getclueId, checkCodeValidity } from 'components/codeHelpers'
 
 export default {
   name: 'Scanner',
@@ -15,13 +15,13 @@ export default {
     onDecode (code) {
       const codeIsValid = checkCodeValidity(code)
       if (codeIsValid) {
-        const chaseID = getChaseID(code)
-        const clueID = getClueID(code)
+        const chaseId = getchaseId(code)
+        const clueId = getclueId(code)
         this.$router.push({
           name: 'clue',
           params: {
-            chaseID,
-            clueID
+            chaseId,
+            clueId
           }
         })
       }

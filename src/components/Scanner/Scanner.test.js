@@ -27,8 +27,8 @@ describe('Scanner', () => {
         expect(push).toHaveBeenCalledWith({
           name: 'clue',
           params: {
-            chaseID: 'testChase',
-            clueID: 'testClue'
+            chaseId: 'testChase',
+            clueId: 'testClue'
           }
         })
       })

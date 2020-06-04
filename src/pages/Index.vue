@@ -2,7 +2,10 @@
   <q-page class="flex flex-center">
     <scanner />
     <q-toggle v-model="playerIsChasing" />
-    <clue-page :player-is-chasing="playerIsChasing">
+    <clue-page
+      :player-is-chasing="playerIsChasing"
+      is-chase-entry
+    >
       <template v-slot:clue>
         <div>
           CLUE

@@ -5,22 +5,33 @@
     </div>
     <div v-else>
       <slot name="chaseInfo" />
-      <join-chase v-if="isChaseEntry" />
+      <start-chase
+        v-if="isChaseEntry"
+        :chase-id="chaseId"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import JoinChase from './JoinChase'
+import StartChase from './StartChase'
 
 export default {
   name: 'CluePage',
   components: {
-    JoinChase
+    StartChase
   },
   props: {
     playerIsChasing: Boolean,
     isChaseEntry: Boolean
+  },
+  computed: {
+    chaseId () {
+      return this.$route.params.chaseId
+    },
+    clueId () {
+      return this.$route.params.clueId
+    }
   }
 }
 </script>

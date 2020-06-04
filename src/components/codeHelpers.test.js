@@ -1,19 +1,19 @@
 import {
   generateString,
-  getChaseID,
-  getClueID,
+  getchaseId,
+  getclueId,
   checkCodeValidity
 } from './codeHelpers'
 
 describe('codeHelpers.js', () => {
-  const testChaseID = 'testChaseID'
-  const testClueID = 'testClueID'
+  const testchaseId = 'testchaseId'
+  const testclueId = 'testclueId'
 
-  test('generateString and (getChaseID, getClueID) are inverse functions', () => {
-    const codeString = generateString(testChaseID, testClueID)
-    const inverseChaseID = getChaseID(codeString)
-    const inverseClueID = getClueID(codeString)
-    expect([inverseChaseID, inverseClueID]).toEqual([testChaseID, testClueID])
+  test('generateString and (getchaseId, getclueId) are inverse functions', () => {
+    const codeString = generateString(testchaseId, testclueId)
+    const inversechaseId = getchaseId(codeString)
+    const inverseclueId = getclueId(codeString)
+    expect([inversechaseId, inverseclueId]).toEqual([testchaseId, testclueId])
   })
 
   describe('checkCodeValidity checks if code has format "*:*"', () => {
