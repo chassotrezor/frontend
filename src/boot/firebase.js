@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
@@ -15,10 +14,7 @@ const firebaseConfig = {
   measurementId: 'G-2GW7YPHNE6'
 }
 
-const firebaseInstance = firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig)
 
-// for direct access to firebase in vue components
-Vue.prototype.$firebase = firebaseInstance
-
-firebaseInstance.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-firebaseInstance.auth().languageCode = 'fr'
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+firebase.auth().languageCode = 'fr'

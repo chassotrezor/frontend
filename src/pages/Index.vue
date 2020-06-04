@@ -1,38 +1,20 @@
 <template>
   <q-page class="flex flex-center">
-    <scanner />
-    <q-toggle v-model="playerIsChasing" />
-    <clue-page
-      :player-is-chasing="playerIsChasing"
-      is-chase-entry
-    >
-      <template v-slot:clue>
-        <div>
-          CLUE
-        </div>
-      </template>
-      <template v-slot:chaseInfo>
-        <div>
-          CHASE INFO
-        </div>
-      </template>
-    </clue-page>
+    <authentication />
   </q-page>
 </template>
 
 <script>
-import CluePage from 'components/Clue/CluePage'
-import Scanner from 'components/Scanner/Scanner'
+import Authentication from 'components/authentication/Authentication'
 
 export default {
   name: 'PageIndex',
   components: {
-    CluePage,
-    Scanner
+    Authentication
   },
   data () {
     return {
-      playerIsChasing: false
+      // playerIsChasing: false
     }
   }
 }
