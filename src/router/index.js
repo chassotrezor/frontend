@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import firebase from 'firebase/app'
 
 import routes from './routes'
 
@@ -24,6 +25,32 @@ export default function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
+  })
+
+  const reRoute = (isConnected) => {
+    if (isConnected) {
+      console.log('home')
+      return { name: 'home' }
+    } else {
+      console.log('sign')
+      return { name: 'sign' }
+    }
+  }
+
+  // Router.beforeEach((to, from, next) => {
+  //   if (to.meta.access) {
+  //     const isConnected = !!firebase.auth().currentUser
+  //     if (isConnected) to.meta.access.connected ? next() : next(reRoute(true))
+  //     else to.meta.access.notConnected ? next() : next(reRoute(false))
+  //   } else {
+  //     next({ name: 'roller' })
+  //   }
+  // })
+
+  firebase.auth().onAuthStateChanged(user => {
+    const isConnected = !!user
+    const targetRoute = reRoute(isConnected)
+    if (targetRoute.name !== Router.currentRoute.name) Router.push(targetRoute)
   })
 
   return Router

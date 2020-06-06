@@ -23,7 +23,8 @@
     "firebase": "^7.14.6",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.0.0",
-    "vue-qrcode-reader": "^2.3.0"
+    "vue-qrcode-reader": "^2.3.0",
+    "vuelidate": "^0.7.5"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0",

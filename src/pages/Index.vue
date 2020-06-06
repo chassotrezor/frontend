@@ -1,21 +1,13 @@
 <template>
   <q-page class="flex flex-center">
-    <authentication />
+    <q-btn
+      label="sign"
+      @click="() => $router.push({ name: 'sign' })"
+    />
   </q-page>
 </template>
 
-<script>
-import Authentication from 'components/authentication/Authentication'
-
-export default {
-  name: 'PageIndex',
-  components: {
-    Authentication
-  },
-  data () {
-    return {
-      // playerIsChasing: false
-    }
-  }
+<script>export default {
+  name: 'PageIndex'
 }
 </script>
