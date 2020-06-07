@@ -29,10 +29,8 @@ export default function (/* { store, ssrContext } */) {
 
   const reRoute = (isConnected) => {
     if (isConnected) {
-      console.log('home', Router.currentRoute.name)
       return { name: 'home' }
     } else {
-      console.log('sign', Router.currentRoute.name)
       return { name: 'sign' }
     }
   }
@@ -51,10 +49,8 @@ export default function (/* { store, ssrContext } */) {
     const isConnected = !!user
     const targetRoute = reRoute(isConnected)
     if (targetRoute.name !== Router.currentRoute.name) {
-      console.log('push')
       Router.push(targetRoute)
     } else {
-      console.log('do not push')
     }
   })
 
