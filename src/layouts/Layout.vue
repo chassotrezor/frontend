@@ -42,7 +42,6 @@
     </q-drawer>
     <q-page-container>
       <router-view />
-      {{ routes }}
     </q-page-container>
   </q-layout>
 </template>
