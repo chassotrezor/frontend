@@ -23,7 +23,7 @@ describe('Scanner', () => {
 
       const onDecode = wrapper.vm.onDecode
       it('pushes to clue when code is valid', () => {
-        onDecode('testChase:testClue')
+        onDecode('https://chassotrezor.web.app/chase/testChase/clue/testClue')
         expect(push).toHaveBeenCalledWith({
           name: 'clue',
           params: {
