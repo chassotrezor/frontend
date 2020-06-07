@@ -44,6 +44,16 @@ describe('NavigationLink', () => {
     test('q-item is not clickable', () => {
       expect(qItem.props().clickable).toBe(false)
     })
+
+    test('router pushes to "route" prop when q-item emits "click" event', () => {
+      return new Promise(resolve => {
+        qItem.vm.$emit('click')
+        wrapper.vm.$nextTick(() => {
+          expect($router.push).toHaveBeenCalledWith({ name: $route.name })
+          resolve()
+        })
+      })
+    })
   })
 
   describe('when "route" prop has different name than current route', () => {
