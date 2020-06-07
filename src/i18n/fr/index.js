@@ -1,17 +1,15 @@
 export default {
   auth: {
-    confirmPassword: 'répétez votre mot de passe',
     connect: 'se connecter',
-    changeMethod: 'changer de méthode de connexion',
     createAccount: 'créer mon compte',
-    email: 'e-mail',
-    emailPassword: 'e-mail et mot de passe',
+    email: 'adresse e-mail',
+    emailError: 'veuillez entrer un e-mail valide',
+    emailHint: 'un lien de connextion vous sera envoyé',
+    emailSent: 'Lien de connexion envoyé',
     googleAccount: 'compte Google',
-    password: 'mot de passe',
-    toggle: {
-      goToSignin: 'J\'ai déjà un compte.',
-      goToSignup: 'Je n\'ai pas encore de compte.'
-    }
+    loggingOut: 'déconnection en cours',
+    pleaseWait: 'Veuillez patienter',
+    sendingMail: 'envoi du lien de connexion...'
   },
   chase: {
     manage: {
