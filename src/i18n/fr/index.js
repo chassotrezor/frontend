@@ -15,5 +15,10 @@ export default {
     manage: {
       start: 'Commencer la chasse au trésor'
     }
+  },
+  routes: {
+    home: 'accueil',
+    logout: 'se déconnecter',
+    sign: 'se connecter'
   }
 }
