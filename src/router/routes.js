@@ -15,6 +15,11 @@ const routes = [
         component: () => import('pages/Sign.vue')
       },
       {
+        path: '/logout',
+        name: 'logout',
+        component: () => import('pages/Logout.vue')
+      },
+      {
         path: '/chase/:chaseId/clue/:clueId',
         name: 'clue',
         component: () => import('pages/Index.vue')

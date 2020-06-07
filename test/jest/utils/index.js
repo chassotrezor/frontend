@@ -56,10 +56,10 @@ export const mountQuasar = (component, options = {}) => {
   }
 
   // mock vue-i18n
-  const $t = () => {}
-  const $tc = () => {}
-  const $n = () => {}
-  const $d = () => {}
+  const $t = () => 'mock $t'
+  const $tc = () => 'mock $tc'
+  const $n = () => 'mock $n'
+  const $d = () => 'mock $d'
 
   return shallowMount(component, {
     localVue: localVue,
