@@ -50,7 +50,6 @@ export default function (/* { store, ssrContext } */) {
   firebase.auth().onAuthStateChanged(user => {
     const connectionState = getConnectionState(user)
     const targetRoute = getReplacingRoute(connectionState)
-    console.log(connectionState, targetRoute.name, Router.currentRoute.name, user)
     if (targetRoute.name !== Router.currentRoute.name) {
       Router.push(targetRoute)
     }
