@@ -1,10 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-    Home
+    <scanner />
   </q-page>
 </template>
 
-<script>export default {
-  name: 'PageIndex'
+<script>
+import Scanner from 'components/Scanner/Scanner'
+
+export default {
+  name: 'PageIndex',
+  components: {
+    Scanner
+  }
 }
 </script>

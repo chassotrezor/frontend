@@ -11,14 +11,18 @@ describe('codeHelpers.js', () => {
 
   test('generateString and (getchaseId, getclueId) are inverse functions', () => {
     const codeString = generateString(testchaseId, testclueId)
-    const inversechaseId = getchaseId(codeString)
-    const inverseclueId = getclueId(codeString)
-    expect([inversechaseId, inverseclueId]).toEqual([testchaseId, testclueId])
+    const inverseChaseId = getchaseId(codeString)
+    const inverseClueId = getclueId(codeString)
+    expect([inverseChaseId, inverseClueId]).toEqual([testchaseId, testclueId])
   })
 
-  describe('checkCodeValidity checks if code has format "*:*"', () => {
-    const validCodes = ['a:b', 'abcd:efgh']
-    const invalidCodes = ['ab', 'ab:', ':ab', ':ab:']
+  describe('checkCodeValidity checks if code has format "https://chassotrezor.web.app/chase/chaseId/clue/clueId"', () => {
+    const validCodes = ['https://chassotrezor.web.app/chase/chaseId/clue/clueId']
+    const invalidCodes = [
+      'http://chassotrezor.web.app/chase/chaseId/clue/clueId',
+      'https://chassotrezor.web.app/chase//clue/clueId',
+      'https://chassotrezor.web.app/chase/chaseId/clue/'
+    ]
     for (let i = 0; i < validCodes.length; i++) {
       test('valid codes', () => {
         const checks = validCodes.map(code => checkCodeValidity(code))
