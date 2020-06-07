@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import firebase from 'firebase/app'
 
 import routes from './routes'
+import types from 'src/types'
 
 Vue.use(VueRouter)
 
@@ -27,30 +28,31 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  const reRoute = (isConnected) => {
-    if (isConnected) {
+  const getConnectionState = user => {
+    return user ? types.connection.CONNECTED : types.connection.DISCONNECTED
+  }
+
+  const getReplacingRoute = (connectionState) => {
+    if (connectionState === types.connection.CONNECTED) {
       return { name: 'home' }
     } else {
       return { name: 'sign' }
     }
   }
 
-  // Router.beforeEach((to, from, next) => {
-  //   if (to.meta.access) {
-  //     const isConnected = !!firebase.auth().currentUser
-  //     if (isConnected) to.meta.access.connected ? next() : next(reRoute(true))
-  //     else to.meta.access.notConnected ? next() : next(reRoute(false))
-  //   } else {
-  //     next({ name: 'roller' })
-  //   }
-  // })
+  Router.beforeEach((to, from, next) => {
+    const connectionState = getConnectionState(firebase.auth().currentUser)
+    const validRoute = to.meta.access && to.meta.access.some(access => access === connectionState)
+    if (validRoute) next()
+    else next(false)
+  })
 
   firebase.auth().onAuthStateChanged(user => {
-    const isConnected = !!user
-    const targetRoute = reRoute(isConnected)
+    const connectionState = getConnectionState(user)
+    const targetRoute = getReplacingRoute(connectionState)
+    console.log(connectionState, targetRoute.name, Router.currentRoute.name, user)
     if (targetRoute.name !== Router.currentRoute.name) {
       Router.push(targetRoute)
-    } else {
     }
   })
 

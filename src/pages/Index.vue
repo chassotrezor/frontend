@@ -1,9 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <q-btn
-      label="sign"
-      @click="() => $router.push({ name: 'sign' })"
-    />
+    Home
   </q-page>
 </template>
 
