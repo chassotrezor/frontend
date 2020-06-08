@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
+import { signOut } from '@firebaseAuth'
 import SpinnerWithMessage from 'components/Navigation/SpinnerWithMessage'
 
 export default {
@@ -14,7 +14,7 @@ export default {
     SpinnerWithMessage
   },
   mounted () {
-    firebase.auth().signOut()
+    signOut()
   }
 }
 </script>

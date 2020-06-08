@@ -29,7 +29,14 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
+import {
+  getRedirectResult,
+  isSignInWithFirebaseEmailLink,
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+  signInWithGoogle
+} from '@firebaseAuth'
+
 import SignMethodItem from './SignMethodItem'
 import SuccessWithMessage from 'components/Navigation/SuccessWithMessage'
 import SignEmail from './SignEmail'
@@ -50,7 +57,7 @@ export default {
     }
   },
   mounted () {
-    if (firebase.auth().isSignInWithEmailLink(location.href)) {
+    if (isSignInWithFirebaseEmailLink()) {
       this.signInWithEmailLink()
     } else {
       this.handleRedirectResult()
@@ -63,12 +70,7 @@ export default {
     },
     sendEmailLink (email) {
       this.display('waiting', this.$t('auth.sendingMail'))
-      const url = process.env.NODE_ENV === 'development' ? 'http://localhost:8081/sign/' : 'https://chassotrezor.web.app/sign/'
-      const actionCodeSettings = {
-        url,
-        handleCodeInApp: true
-      }
-      firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+      sendSignInLinkToEmail(email)
         .then(() => {
           this.display('success', this.$t('auth.emailSent'))
           localStorage.setItem('emailForSignIn', email)
@@ -81,7 +83,7 @@ export default {
       if (!email) {
         // email = ... demander à l'utilisateur
       }
-      firebase.auth().signInWithEmailLink(email, location.href)
+      signInWithEmailLink(email)
         .then(result => {
           localStorage.removeItem('emailForSignIn')
           vm.display('succes', vm.$t('auth.connected'))
@@ -92,7 +94,7 @@ export default {
     },
     handleRedirectResult () {
       const vm = this
-      firebase.auth().getRedirectResult()
+      getRedirectResult()
         .then(result => {
           if (result.user) {
             vm.display('succes', vm.$t('auth.connected'))
@@ -103,8 +105,7 @@ export default {
         .catch(error => console.error(error))
     },
     signInWithGoogle () {
-      const provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithRedirect(provider)
+      signInWithGoogle()
     }
   }
 }

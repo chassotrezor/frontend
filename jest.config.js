@@ -44,7 +44,8 @@ module.exports = {
     '^components/(.*)$': '<rootDir>/src/components/$1',
     '^boot/(.*)': '<rootDir>/src/boot/$1',
     '.*css$': '<rootDir>/test/jest/utils/stub.css',
-    '@test': '<rootDir>/test/jest/utils'
+    '@test': '<rootDir>/test/jest/utils',
+    '@firebaseAuth': '<rootDir>/test/jest/utils/mockFirebaseAuth.js'
   },
   transform: {
     '.*\\.vue$': 'vue-jest',
