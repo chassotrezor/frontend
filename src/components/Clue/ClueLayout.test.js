@@ -1,13 +1,8 @@
 import { mountQuasar } from '@test'
-import CluePage from './CluePage'
+import ClueLayout from './ClueLayout'
 
-describe('CluePage', () => {
-  const wrapper = mountQuasar(CluePage, {
-    slots: {
-      clue: '<span class="testClue">CLUE</span>',
-      chaseInfo: '<span class="testChaseInfo">CHASE INFO</span>'
-    }
-  })
+describe('ClueLayout', () => {
+  const wrapper = mountQuasar(ClueLayout)
 
   function setProps (props, done) {
     wrapper.setProps(props)
@@ -23,13 +18,13 @@ describe('CluePage', () => {
       }, done)
     })
 
-    it('displays clue slot', () => {
-      const clue = wrapper.find('.testClue')
+    it('displays clue component', () => {
+      const clue = wrapper.find('.Clue_test')
       expect(clue.exists()).toBeTruthy()
     })
 
     it('does not display chaseInfo slot', () => {
-      const chaseInfo = wrapper.find('.testChaseInfo')
+      const chaseInfo = wrapper.find('.ChaseInfo_test')
       expect(chaseInfo.exists()).toBeFalsy()
     })
 
@@ -41,7 +36,7 @@ describe('CluePage', () => {
       })
 
       it('does not display a "StartChase" component', () => {
-        const startChase = wrapper.findComponent({ name: 'StartChase' })
+        const startChase = wrapper.find('.StartChase_test')
         expect(startChase.exists()).toBeFalsy()
       })
     })
@@ -54,13 +49,13 @@ describe('CluePage', () => {
       }, done)
     })
 
-    it('does not display clue slot', () => {
-      const clue = wrapper.find('.testClue')
+    it('does not display clue component', () => {
+      const clue = wrapper.find('.Clue_test')
       expect(clue.exists()).toBeFalsy()
     })
 
     it('displays chaseInfo slot', () => {
-      const chaseInfo = wrapper.find('.testChaseInfo')
+      const chaseInfo = wrapper.find('.ChaseInfo_test')
       expect(chaseInfo.exists()).toBeTruthy()
     })
 
@@ -72,7 +67,7 @@ describe('CluePage', () => {
       })
 
       it('displays a "StartChase" component', () => {
-        const startChase = wrapper.findComponent({ name: 'StartChase' })
+        const startChase = wrapper.find('.StartChase_test')
         expect(startChase.exists()).toBeTruthy()
       })
     })
