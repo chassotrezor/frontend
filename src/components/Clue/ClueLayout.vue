@@ -13,13 +13,11 @@
         class="StartChase_test"
       />
     </div>
-    <q-btn @click="setClueData" />
-    {{ clue }}
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import ChaseInfo from './ChaseInfo'
 import Clue from './Clue'
 import StartChase from './StartChase'
@@ -36,10 +34,13 @@ export default {
     isChaseEntry: Boolean
   },
   computed: {
+    ...mapGetters({
+      getClue: 'chase/getClue'
+    }),
     clue () {
       const chaseId = this.$route.params.chaseId
       const clueId = this.$route.params.clueId
-      return this.$store.getters['chase/getClue']({ chaseId, clueId })
+      return this.getClue({ chaseId, clueId })
     }
   },
   mounted () {
@@ -53,12 +54,7 @@ export default {
   methods: {
     ...mapActions({
       downloadClue: 'chase/downloadClue'
-    }),
-    setClueData () {
-      const chaseId = this.$route.params.chaseId
-      const clueId = this.$route.params.clueId
-      this.clueData = this.$store.getters['chase/getClue']({ chaseId, clueId })
-    }
+    })
   }
 }
 </script>

@@ -2,7 +2,37 @@ import { mountQuasar } from '@test'
 import ClueLayout from './ClueLayout'
 
 describe('ClueLayout', () => {
-  const wrapper = mountQuasar(ClueLayout)
+  const chaseId = 'testChaseId'
+  const clueId = 'testClueId'
+
+  const $route = {
+    params: {
+      chaseId,
+      clueId
+    }
+  }
+
+  const store = {
+    modules: {
+      chase: {
+        namespaced: true,
+        actions: {
+          downloadClue: jest.fn().mockResolvedValue()
+        },
+        getters: {
+          getClue: () => jest.fn()
+        },
+        state: () => {}
+      }
+    }
+  }
+
+  const wrapper = mountQuasar(ClueLayout, {
+    store,
+    mocks: {
+      $route
+    }
+  })
 
   function setProps (props, done) {
     wrapper.setProps(props)
