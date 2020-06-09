@@ -1,11 +1,17 @@
-export const isSignInWithFirebaseEmailLink = jest.fn().mockImplementation(() => Promise.resolve())
+export let isSignInWithFirebaseEmailLink = jest.fn().mockImplementation(() => false)
+export const setIsSignInWithFirebaseEmailLink = implementation => { isSignInWithFirebaseEmailLink = implementation }
 
-export const signInWithEmailLink = jest.fn().mockImplementation(() => Promise.resolve())
+export let signInWithEmailLink = jest.fn().mockImplementation(() => Promise.resolve())
+export const setSignInWithEmailLink = implementation => { signInWithEmailLink = implementation }
 
-export const sendSignInLinkToEmail = jest.fn().mockImplementation(() => Promise.resolve())
+export let sendSignInLinkToEmail = jest.fn().mockResolvedValue()
+export const setSendSignInLinkToEmail = implementation => { sendSignInLinkToEmail = implementation }
 
-export const getRedirectResult = jest.fn().mockImplementation(() => Promise.resolve())
+export let getRedirectResult = jest.fn().mockResolvedValue({ user: null })
+export const setGetRedirectResult = implementation => { getRedirectResult = implementation }
 
-export const signInWithGoogle = jest.fn().mockImplementation(() => Promise.resolve())
+export let signInWithGoogle = jest.fn().mockImplementation(() => Promise.resolve())
+export const setSignInWithGooglesetSignOut = implementation => { signInWithGoogle = implementation }
 
-export const signOut = jest.fn().mockImplementation(() => Promise.resolve())
+export let signOut = jest.fn().mockImplementation(() => Promise.resolve())
+export const setSignOut = implementation => { signOut = implementation }

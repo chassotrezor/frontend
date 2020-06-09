@@ -1,11 +1,12 @@
 import { mountQuasar } from '@test'
+import { signOut } from '@firebaseAuth'
+
 import Logout from './Logout'
 
 describe('Logout', () => {
-  const wrapper = mountQuasar(Logout)
+  mountQuasar(Logout)
 
-  // TODO: find how to mock firebase.auth
-  it('exists', () => {
-    expect(wrapper.exists()).toBeTruthy()
+  it('signs out from backend when mounted', () => {
+    expect(signOut).toHaveBeenCalled()
   })
 })
