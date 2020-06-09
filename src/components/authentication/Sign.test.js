@@ -3,6 +3,7 @@ import Sign from './Sign'
 import {
   getRedirectResult,
   restoreFirebaseMock,
+  setGetRedirectResult,
   setIsSignInWithFirebaseEmailLink,
   setSendSignInLinkToEmail,
   setSignInWithEmailLink,
@@ -30,7 +31,7 @@ function init () {
 function restore () {
   localStorage.removeItem('emailForSignIn')
   restoreFirebaseMock()
-  // $q.dialog.mockClear()
+  $q.dialog.mockClear()
 }
 
 describe('Sign', () => {
@@ -177,5 +178,42 @@ describe('Sign', () => {
         expect(signInWithEmailLink).toHaveBeenCalledWith(testEmail)
       })
     })
+
+    afterAll(restore)
+  })
+
+  describe('when accessing from third party sign in', () => {
+    let wrapper
+    let resolveGetRedirectResult
+    const getRedirectResultPromise = new Promise(resolve => {
+      resolveGetRedirectResult = () => resolve({ user: {} })
+    })
+
+    beforeAll(done => {
+      setGetRedirectResult(() => getRedirectResultPromise)
+      wrapper = init()
+      wrapper.vm.$nextTick(done)
+    })
+
+    it('displays a "SpinnerWithMessage" component', () => {
+      const spinner = wrapper.find('.spinnerWithMessage_test')
+      expect(spinner.exists()).toBe(true)
+    })
+
+    describe('when getRedirectResult resolves with no null user', () => {
+      beforeAll(done => {
+        resolveGetRedirectResult()
+        getRedirectResultPromise.then(() => {
+          wrapper.vm.$nextTick(done)
+        })
+      })
+
+      it('displays a "SuccessWithMessage" component', () => {
+        const success = wrapper.find('.successWithMessage_test')
+        expect(success.exists()).toBe(true)
+      })
+    })
+
+    afterAll(restore)
   })
 })

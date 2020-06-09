@@ -1,7 +1,7 @@
 const defaultIsSignInWithFirebaseEmailLink = jest.fn().mockImplementation(() => false)
 const defaultSignInWithEmailLink = jest.fn().mockResolvedValue()
 const defaultSendSignInLinkToEmail = jest.fn().mockResolvedValue()
-const defaultSetRedirectResult = jest.fn().mockResolvedValue({ user: null })
+const defaultGetRedirectResult = jest.fn().mockResolvedValue({ user: null })
 const defaultSignInWithGoogle = jest.fn().mockResolvedValue()
 const defaultSignOut = jest.fn().mockResolvedValue()
 
@@ -23,7 +23,7 @@ export const restoreFirebaseMock = () => {
   setIsSignInWithFirebaseEmailLink(defaultIsSignInWithFirebaseEmailLink)
   setSignInWithEmailLink(defaultSignInWithEmailLink)
   setSendSignInLinkToEmail(defaultSendSignInLinkToEmail)
-  setGetRedirectResult(defaultSetRedirectResult)
+  setGetRedirectResult(defaultGetRedirectResult)
   setSignInWithGoogle(defaultSignInWithGoogle)
   setSignOut(defaultSignOut)
 }
