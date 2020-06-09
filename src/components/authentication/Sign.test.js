@@ -7,7 +7,8 @@ import {
   setIsSignInWithFirebaseEmailLink,
   setSendSignInLinkToEmail,
   setSignInWithEmailLink,
-  signInWithEmailLink
+  signInWithEmailLink,
+  signInWithGoogle
 } from '@firebaseAuth'
 
 const testEmail = 'test@email.com'
@@ -107,6 +108,23 @@ describe('Sign', () => {
             expect(success.exists()).toBe(true)
           })
         })
+      })
+
+      afterAll(done => {
+        wrapper.vm.display('chooseMethod')
+        wrapper.vm.$nextTick(done)
+      })
+    })
+
+    describe('when "SignMethodItem" for google emits "click"', () => {
+      beforeAll(done => {
+        const signMethodItem = wrapper.find('.signMethodItemGoogle_test')
+        signMethodItem.vm.$emit('click')
+        wrapper.vm.$nextTick(done)
+      })
+
+      it('executes SignInWithGoogle', () => {
+        expect(signInWithGoogle).toHaveBeenCalled()
       })
     })
 
