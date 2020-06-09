@@ -8,6 +8,8 @@ export default {
     emailSent: 'Lien de connexion envoyé',
     googleAccount: 'compte Google',
     loggingOut: 'déconnection en cours',
+    noEmailForSignIn: 'Oups... j\'ai oublié votre e-mail',
+    pleaseEnterEmailForSignIn: 'Merci de l\'entrer à nouveau',
     pleaseWait: 'Veuillez patienter',
     sendingMail: 'envoi du lien de connexion...'
   },

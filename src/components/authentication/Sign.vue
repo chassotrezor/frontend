@@ -63,7 +63,7 @@ export default {
   },
   mounted () {
     if (isSignInWithFirebaseEmailLink()) {
-      this.signInWithEmailLink()
+      this.checkEmailForSignIn()
     } else {
       this.handleRedirectResult()
     }
@@ -82,18 +82,23 @@ export default {
         })
         .catch(error => console.error(error))
     },
-    signInWithEmailLink () {
-      const vm = this
+    checkEmailForSignIn () {
       const email = localStorage.getItem('emailForSignIn')
-      if (!email) {
-        // email = ... demander à l'utilisateur
+      if (email) {
+        this.signInWithEmailLink(email)
+      } else {
+        this.enterEmailForSignIn()
       }
+    },
+    signInWithEmailLink (email) {
+      const vm = this
       signInWithEmailLink(email)
         .then(result => {
           localStorage.removeItem('emailForSignIn')
           vm.display('succes', vm.$t('auth.connected'))
         })
         .catch(error => {
+          // TODO: handle errors
           console.error(error)
         })
     },
@@ -107,10 +112,28 @@ export default {
             vm.display('chooseMethod')
           }
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+          // TODO: handle errors
+          console.error(error)
+        })
     },
     signInWithGoogle () {
       signInWithGoogle()
+    },
+    enterEmailForSignIn () {
+      const vm = this
+      vm.$q.dialog({
+        title: vm.$t('auth.noEmailForSignIn'),
+        message: vm.$t('auth.pleaseEnterEmailForSignIn'),
+        prompt: {
+          model: '',
+          type: 'email'
+        },
+        persistent: true
+      })
+        .onOk(email => {
+          vm.signInWithEmailLink(email)
+        })
     }
   }
 }
