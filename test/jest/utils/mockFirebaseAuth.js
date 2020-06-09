@@ -1,17 +1,31 @@
-export let isSignInWithFirebaseEmailLink = jest.fn().mockImplementation(() => false)
+const defaultIsSignInWithFirebaseEmailLink = jest.fn().mockImplementation(() => false)
+const defaultSignInWithEmailLink = jest.fn().mockResolvedValue()
+const defaultSendSignInLinkToEmail = jest.fn().mockResolvedValue()
+const defaultSetRedirectResult = jest.fn().mockResolvedValue({ user: null })
+const defaultSignInWithGoogle = jest.fn().mockResolvedValue()
+const defaultSignOut = jest.fn().mockResolvedValue()
+
+export let isSignInWithFirebaseEmailLink
+export let signInWithEmailLink
+export let sendSignInLinkToEmail
+export let getRedirectResult
+export let signInWithGoogle
+export let signOut
+
 export const setIsSignInWithFirebaseEmailLink = implementation => { isSignInWithFirebaseEmailLink = implementation }
-
-export let signInWithEmailLink = jest.fn().mockImplementation(() => Promise.resolve())
 export const setSignInWithEmailLink = implementation => { signInWithEmailLink = implementation }
-
-export let sendSignInLinkToEmail = jest.fn().mockResolvedValue()
 export const setSendSignInLinkToEmail = implementation => { sendSignInLinkToEmail = implementation }
-
-export let getRedirectResult = jest.fn().mockResolvedValue({ user: null })
 export const setGetRedirectResult = implementation => { getRedirectResult = implementation }
-
-export let signInWithGoogle = jest.fn().mockImplementation(() => Promise.resolve())
-export const setSignInWithGooglesetSignOut = implementation => { signInWithGoogle = implementation }
-
-export let signOut = jest.fn().mockImplementation(() => Promise.resolve())
+export const setSignInWithGoogle = implementation => { signInWithGoogle = implementation }
 export const setSignOut = implementation => { signOut = implementation }
+
+export const restoreFirebaseMock = () => {
+  setIsSignInWithFirebaseEmailLink(defaultIsSignInWithFirebaseEmailLink)
+  setSignInWithEmailLink(defaultSignInWithEmailLink)
+  setSendSignInLinkToEmail(defaultSendSignInLinkToEmail)
+  setGetRedirectResult(defaultSetRedirectResult)
+  setSignInWithGoogle(defaultSignInWithGoogle)
+  setSignOut(defaultSignOut)
+}
+
+restoreFirebaseMock()

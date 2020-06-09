@@ -95,30 +95,12 @@ export default {
       signInWithEmailLink(email)
         .then(result => {
           localStorage.removeItem('emailForSignIn')
-          vm.display('succes', vm.$t('auth.connected'))
+          vm.display('success', vm.$t('auth.connected'))
         })
         .catch(error => {
           // TODO: handle errors
           console.error(error)
         })
-    },
-    handleRedirectResult () {
-      const vm = this
-      getRedirectResult()
-        .then(result => {
-          if (result.user) {
-            vm.display('succes', vm.$t('auth.connected'))
-          } else {
-            vm.display('chooseMethod')
-          }
-        })
-        .catch(error => {
-          // TODO: handle errors
-          console.error(error)
-        })
-    },
-    signInWithGoogle () {
-      signInWithGoogle()
     },
     enterEmailForSignIn () {
       const vm = this
@@ -134,6 +116,24 @@ export default {
         .onOk(email => {
           vm.signInWithEmailLink(email)
         })
+    },
+    handleRedirectResult () {
+      const vm = this
+      getRedirectResult()
+        .then(result => {
+          if (result.user) {
+            vm.display('success', vm.$t('auth.connected'))
+          } else {
+            vm.display('chooseMethod')
+          }
+        })
+        .catch(error => {
+          // TODO: handle errors
+          console.error(error)
+        })
+    },
+    signInWithGoogle () {
+      signInWithGoogle()
     }
   }
 }
