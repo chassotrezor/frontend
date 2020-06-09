@@ -2,26 +2,31 @@
   <div>
     <spinner-with-message
       v-if="ui === 'waiting'"
+      class="spinnerWithMessage_test"
       :message="message"
     />
     <success-with-message
       v-else-if="ui === 'success'"
+      class="successWithMessage_test"
       :message="message"
     />
     <q-list
       v-if="ui === 'chooseMethod'"
     >
       <sign-method-item
+        class="signMethodItemEmail_test"
         :name="this.$t('auth.email')"
         @click="display('signEmail')"
       />
       <sign-method-item
+        class="signMethodItemGoogle_test"
         :name="this.$t('auth.googleAccount')"
         @click="signInWithGoogle"
       />
     </q-list>
     <sign-email
       v-else-if="ui === 'signEmail'"
+      class="signEmail_test"
       @back="display('chooseMethod')"
       @email="sendEmailLink"
     />
