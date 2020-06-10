@@ -5,5 +5,4 @@ export function setClue (state, { chaseId, clueId, clue }) {
     Vue.set(state.chases, chaseId, {})
   }
   Vue.set(state.chases[chaseId], clueId, clue)
-  console.log('mutation', state.chases[chaseId][clueId])
 }
