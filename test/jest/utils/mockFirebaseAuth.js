@@ -1,5 +1,5 @@
 const defaultIsSignInWithFirebaseEmailLink = jest.fn().mockImplementation(() => false)
-const defaultSignInWithEmailLink = jest.fn().mockResolvedValue()
+const defaultSignInWithEmailLink = jest.fn().mockResolvedValue({ user: null })
 const defaultSendSignInLinkToEmail = jest.fn().mockResolvedValue()
 const defaultGetRedirectResult = jest.fn().mockResolvedValue({ user: null })
 const defaultSignInWithGoogle = jest.fn().mockResolvedValue()

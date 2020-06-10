@@ -21,8 +21,20 @@ const $q = {
   })
 }
 
+const store = {
+  modules: {
+    user: {
+      namespaced: true,
+      actions: {
+        initUser: jest.fn()
+      }
+    }
+  }
+}
+
 function init () {
   return mountQuasar(Sign, {
+    store,
     mocks: {
       $q
     }
@@ -33,6 +45,7 @@ function restore () {
   localStorage.removeItem('emailForSignIn')
   restoreFirebaseMock()
   $q.dialog.mockClear()
+  store.modules.user.actions.initUser.mockClear()
 }
 
 describe('Sign', () => {
@@ -153,7 +166,7 @@ describe('Sign', () => {
 
     describe('when "signInWithEmailLink" has resolved', () => {
       beforeAll(done => {
-        resolveSignIn()
+        resolveSignIn({ user: { uid: 'userId' } })
         SignInPromise.then(() => {
           wrapper.vm.$nextTick(done)
         })
@@ -168,6 +181,10 @@ describe('Sign', () => {
         const success = wrapper.find('.successWithMessage_test')
         expect(success.exists()).toBe(true)
       })
+
+      it('initializes the user in the database', () => {
+        expect(store.modules.user.actions.initUser).toHaveBeenCalled()
+      })
     })
 
     afterAll(restore)
@@ -179,6 +196,7 @@ describe('Sign', () => {
     beforeAll(done => {
       localStorage.removeItem('emailForSignIn')
       setIsSignInWithFirebaseEmailLink(() => true)
+      setSignInWithEmailLink(jest.fn().mockResolvedValue({ user: { uid: 'userId' } }))
       wrapper = init()
       wrapper.vm.$nextTick(done)
     })
@@ -204,7 +222,7 @@ describe('Sign', () => {
     let wrapper
     let resolveGetRedirectResult
     const getRedirectResultPromise = new Promise(resolve => {
-      resolveGetRedirectResult = () => resolve({ user: {} })
+      resolveGetRedirectResult = resolve
     })
 
     beforeAll(done => {
@@ -220,7 +238,7 @@ describe('Sign', () => {
 
     describe('when getRedirectResult resolves with no null user', () => {
       beforeAll(done => {
-        resolveGetRedirectResult()
+        resolveGetRedirectResult({ user: { uid: 'userId' } })
         getRedirectResultPromise.then(() => {
           wrapper.vm.$nextTick(done)
         })
