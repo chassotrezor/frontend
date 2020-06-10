@@ -1,69 +1,69 @@
 import { mountQuasar } from '@test'
 import StationLayout from './StationLayout'
 
-describe('StationLayout', () => {
-  const chaseId = 'testChaseId'
-  const clueId = 'testClueId'
+const chaseId = 'testChaseId'
+const clueId = 'testClueId'
 
-  const $route = {
-    params: {
-      chaseId,
-      clueId
-    }
+const $route = {
+  params: {
+    chaseId,
+    clueId
   }
+}
 
-  const store = {
-    modules: {
-      chase: {
-        namespaced: true,
-        actions: {
-          downloadClue: jest.fn()
-        },
-        getters: {
-          getClue: state => () => state.clue
-        },
-        mutations: {
-          setClue: (state, clue) => { state.clue = clue }
-        },
-        state: () => {
-          return {
-            clue: undefined
-          }
-        }
+const store = {
+  modules: {
+    chase: {
+      namespaced: true,
+      actions: {
+        downloadClue: jest.fn()
       },
-      user: {
-        namespaced: true,
-        getters: {
-          openedChases: state => state.openedChases
-        },
-        mutations: {
-          setOpenedChases: (state, openedChases) => { state.openedChases = openedChases }
-        },
-        state: () => {
-          return {
-            openedChases: []
-          }
+      getters: {
+        getClue: state => () => state.clue
+      },
+      mutations: {
+        setClue: (state, clue) => { state.clue = clue }
+      },
+      state: () => {
+        return {
+          clue: undefined
+        }
+      }
+    },
+    user: {
+      namespaced: true,
+      getters: {
+        openedChases: state => state.openedChases
+      },
+      mutations: {
+        setOpenedChases: (state, openedChases) => { state.openedChases = openedChases }
+      },
+      state: () => {
+        return {
+          openedChases: []
         }
       }
     }
   }
+}
 
-  const wrapper = mountQuasar(StationLayout, {
-    store,
-    mocks: {
-      $route
-    }
+const wrapper = mountQuasar(StationLayout, {
+  store,
+  mocks: {
+    $route
+  }
+})
+
+describe('StationLayout', () => {
+  it('displays a "SpinnerWithMessage" component', () => {
+    const spinner = wrapper.find('.SpinnerWithMessage_test')
+    expect(spinner.exists()).toBe(true)
   })
 
   describe('when "playerIsChasing" is true', () => {
     beforeAll(done => {
       wrapper.vm.$store.commit('user/setOpenedChases', [chaseId])
       wrapper.vm.$nextTick(done)
-    })
-
-    it('displays a "SpinnerWithMessage" component', () => {
-      const spinner = wrapper.find('.SpinnerWithMessage_test')
-      expect(spinner.exists()).toBeTruthy()
     })
 
     describe('when clue data is downloaded', () => {
@@ -73,14 +73,19 @@ describe('StationLayout', () => {
         wrapper.vm.$nextTick(done)
       })
 
+      it('does not display a "SpinnerWithMessage" component', () => {
+        const spinner = wrapper.find('.SpinnerWithMessage_test')
+        expect(spinner.exists()).toBe(false)
+      })
+
       it('displays "Clue" component', () => {
         const clue = wrapper.find('.Clue_test')
-        expect(clue.exists()).toBeTruthy()
+        expect(clue.exists()).toBe(true)
       })
 
       it('does not display chaseInfo component', () => {
         const chaseInfo = wrapper.find('.ChaseInfo_test')
-        expect(chaseInfo.exists()).toBeFalsy()
+        expect(chaseInfo.exists()).toBe(false)
       })
 
       describe('when "clue.isChaseEntry" is true', () => {
@@ -91,7 +96,7 @@ describe('StationLayout', () => {
 
         it('does not display a "StartChase" component', () => {
           const startChase = wrapper.find('.StartChase_test')
-          expect(startChase.exists()).toBeFalsy()
+          expect(startChase.exists()).toBe(false)
         })
       })
     })
@@ -105,12 +110,12 @@ describe('StationLayout', () => {
 
     it('does not display clue component', () => {
       const clue = wrapper.find('.Clue_test')
-      expect(clue.exists()).toBeFalsy()
+      expect(clue.exists()).toBe(false)
     })
 
     it('displays chaseInfo slot', () => {
       const chaseInfo = wrapper.find('.ChaseInfo_test')
-      expect(chaseInfo.exists()).toBeTruthy()
+      expect(chaseInfo.exists()).toBe(true)
     })
 
     describe('when "isChaseEntry" prop is true', () => {
@@ -121,7 +126,7 @@ describe('StationLayout', () => {
 
       it('displays a "StartChase" component', () => {
         const startChase = wrapper.find('.StartChase_test')
-        expect(startChase.exists()).toBeTruthy()
+        expect(startChase.exists()).toBe(true)
       })
     })
   })
