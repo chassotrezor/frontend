@@ -8,7 +8,7 @@
       <clue-text
         v-if="row.type === 'text'"
         class="clueText_test"
-        :text="row.value"
+        :raw-html="row.value"
       />
     </div>
   </div>

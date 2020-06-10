@@ -1,19 +1,19 @@
 <template>
-  <div v-html="sanitizedText" />
+  <div v-html="sanitizedRawHtml" />
 </template>
 
 <script>
 export default {
   name: 'ClueText',
   props: {
-    text: {
+    rawHtml: {
       type: String,
-      default: () => ''
+      required: true
     }
   },
   computed: {
-    sanitizedText () {
-      return this.$sanitize(this.text)
+    sanitizedRawHtml () {
+      return this.$sanitize(this.rawHtml)
     }
   }
 }
