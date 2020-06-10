@@ -57,3 +57,7 @@ moduleNameMapper: {
   '@firebaseAuth': '<rootDir>/test/jest/utils/mockFirebaseAuth.js'
 ```
 `mockFirebaseAuth.js` provides mocks and setters for the Firebase auth logic
+
+### TODO: Sanitize html string data in backend
+It will be sanitized on render.
+But it has to be sanitized in the backend as soon as we have our own.
