@@ -1,6 +1,6 @@
 <template>
   <q-btn
-    @click="start(chaseId)"
+    @click="start({ chaseId })"
   >
     {{ $t('chase.manage.start') }}
   </q-btn>

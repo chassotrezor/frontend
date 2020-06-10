@@ -17,7 +17,7 @@ describe('StationLayout', () => {
       chase: {
         namespaced: true,
         actions: {
-          downloadClue: jest.fn().mockResolvedValue()
+          downloadClue: jest.fn()
         },
         getters: {
           getClue: state => () => state.clue
@@ -28,6 +28,20 @@ describe('StationLayout', () => {
         state: () => {
           return {
             clue: undefined
+          }
+        }
+      },
+      user: {
+        namespaced: true,
+        getters: {
+          openedChases: state => state.openedChases
+        },
+        mutations: {
+          setOpenedChases: (state, openedChases) => { state.openedChases = openedChases }
+        },
+        state: () => {
+          return {
+            openedChases: []
           }
         }
       }
@@ -41,45 +55,51 @@ describe('StationLayout', () => {
     }
   })
 
-  function setClue (clue, done) {
-    wrapper.vm.$store.commit('chase/setClue', clue)
-    wrapper.vm.$nextTick(done)
-  }
-
   describe('when "playerIsChasing" is true', () => {
     beforeAll(done => {
-      wrapper.vm.playerIsChasing = true
-      wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+      wrapper.vm.$store.commit('user/setOpenedChases', [chaseId])
       wrapper.vm.$nextTick(done)
     })
 
-    it('displays clue component', () => {
-      const clue = wrapper.find('.Clue_test')
-      expect(clue.exists()).toBeTruthy()
+    it('displays a "SpinnerWithMessage" component', () => {
+      const spinner = wrapper.find('.SpinnerWithMessage_test')
+      expect(spinner.exists()).toBeTruthy()
     })
 
-    it('does not display chaseInfo component', () => {
-      const chaseInfo = wrapper.find('.ChaseInfo_test')
-      expect(chaseInfo.exists()).toBeFalsy()
-    })
-
-    describe('when "clue.isChaseEntry" is true', () => {
+    describe('when clue data is downloaded', () => {
       beforeAll(done => {
-        setClue({
-          isChaseEntry: true
-        }, done)
+        store.modules.chase.actions.downloadClue.mockResolvedValue()
+        wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+        wrapper.vm.$nextTick(done)
       })
 
-      it('does not display a "StartChase" component', () => {
-        const startChase = wrapper.find('.StartChase_test')
-        expect(startChase.exists()).toBeFalsy()
+      it('displays "Clue" component', () => {
+        const clue = wrapper.find('.Clue_test')
+        expect(clue.exists()).toBeTruthy()
+      })
+
+      it('does not display chaseInfo component', () => {
+        const chaseInfo = wrapper.find('.ChaseInfo_test')
+        expect(chaseInfo.exists()).toBeFalsy()
+      })
+
+      describe('when "clue.isChaseEntry" is true', () => {
+        beforeAll(done => {
+          wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+          wrapper.vm.$nextTick(done)
+        })
+
+        it('does not display a "StartChase" component', () => {
+          const startChase = wrapper.find('.StartChase_test')
+          expect(startChase.exists()).toBeFalsy()
+        })
       })
     })
   })
 
   describe('when "playerIsChasing" prop is false', () => {
     beforeAll(done => {
-      wrapper.vm.playerIsChasing = false
+      wrapper.vm.$store.commit('user/setOpenedChases', [])
       wrapper.vm.$nextTick(done)
     })
 
@@ -95,9 +115,8 @@ describe('StationLayout', () => {
 
     describe('when "isChaseEntry" prop is true', () => {
       beforeAll(done => {
-        setClue({
-          isChaseEntry: true
-        }, done)
+        wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+        wrapper.vm.$nextTick(done)
       })
 
       it('displays a "StartChase" component', () => {

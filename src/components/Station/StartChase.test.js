@@ -34,7 +34,7 @@ describe('StartChase', () => {
 
     it('fires "start" method with "chaseId" parameter', () => {
       const start = store.modules.chase.actions.start
-      expect(start).toHaveBeenCalledWith(expect.any(Object), chaseId)
+      expect(start).toHaveBeenCalledWith(expect.any(Object), { chaseId })
     })
   })
 })

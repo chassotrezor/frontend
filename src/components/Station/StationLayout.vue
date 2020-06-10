@@ -17,6 +17,7 @@
     </div>
     <spinner-with-message
       v-else
+      class="SpinnerWithMessage_test"
       :message="$t('chase.clue.waitForClue')"
     />
   </div>
@@ -37,19 +38,20 @@ export default {
     SpinnerWithMessage,
     StartChase
   },
-  data () {
-    return {
-      playerIsChasing: true
-    }
-  },
   computed: {
     ...mapGetters({
-      getClue: 'chase/getClue'
+      getClue: 'chase/getClue',
+      openedChases: 'user/openedChases'
     }),
     clue () {
       const chaseId = this.$route.params.chaseId
       const clueId = this.$route.params.clueId
       return this.getClue({ chaseId, clueId })
+    },
+    playerIsChasing () {
+      const chaseId = this.$route.params.chaseId
+      if (this.openedChases) return this.openedChases.some(id => id === chaseId)
+      else return false
     }
   },
   mounted () {
