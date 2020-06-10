@@ -66,7 +66,7 @@ const routes = [
       {
         path: '/chase/:chaseId/clue/:clueId',
         name: 'clue',
-        component: () => import('pages/Clue.vue'),
+        component: () => import('pages/Station.vue'),
         meta: {
           access: connected,
           display: {

@@ -1,7 +1,7 @@
 import { mountQuasar } from '@test'
-import ClueLayout from './ClueLayout'
+import StationLayout from './StationLayout'
 
-describe('ClueLayout', () => {
+describe('StationLayout', () => {
   const chaseId = 'testChaseId'
   const clueId = 'testClueId'
 
@@ -27,7 +27,7 @@ describe('ClueLayout', () => {
     }
   }
 
-  const wrapper = mountQuasar(ClueLayout, {
+  const wrapper = mountQuasar(StationLayout, {
     store,
     mocks: {
       $route

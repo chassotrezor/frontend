@@ -1,16 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-    <clue-layout />
+    <station-layout />
   </q-page>
 </template>
 
 <script>
-import ClueLayout from 'components/Clue/ClueLayout'
+import StationLayout from 'components/Station/StationLayout'
 
 export default {
   name: 'PageClue',
   components: {
-    ClueLayout
+    StationLayout
   }
 }
 </script>
