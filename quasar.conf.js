@@ -25,6 +25,7 @@ module.exports = function (/* ctx */) {
     boot: [
       'firebase',
       'i18n',
+      'vue-sanitize',
       'vuelidate'
     ],
 
