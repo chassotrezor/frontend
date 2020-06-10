@@ -20,9 +20,16 @@ describe('StationLayout', () => {
           downloadClue: jest.fn().mockResolvedValue()
         },
         getters: {
-          getClue: () => jest.fn()
+          getClue: state => () => state.clue
         },
-        state: () => {}
+        mutations: {
+          setClue: (state, clue) => { state.clue = clue }
+        },
+        state: () => {
+          return {
+            clue: undefined
+          }
+        }
       }
     }
   }
@@ -34,18 +41,16 @@ describe('StationLayout', () => {
     }
   })
 
-  function setProps (props, done) {
-    wrapper.setProps(props)
-    wrapper.vm.$nextTick(() => {
-      done()
-    })
+  function setClue (clue, done) {
+    wrapper.vm.$store.commit('chase/setClue', clue)
+    wrapper.vm.$nextTick(done)
   }
 
-  describe('when "playerIsChasing" prop is true', () => {
+  describe('when "playerIsChasing" is true', () => {
     beforeAll(done => {
-      setProps({
-        playerIsChasing: true
-      }, done)
+      wrapper.vm.playerIsChasing = true
+      wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+      wrapper.vm.$nextTick(done)
     })
 
     it('displays clue component', () => {
@@ -53,14 +58,14 @@ describe('StationLayout', () => {
       expect(clue.exists()).toBeTruthy()
     })
 
-    it('does not display chaseInfo slot', () => {
+    it('does not display chaseInfo component', () => {
       const chaseInfo = wrapper.find('.ChaseInfo_test')
       expect(chaseInfo.exists()).toBeFalsy()
     })
 
-    describe('when "isChaseEntry" prop is true', () => {
+    describe('when "clue.isChaseEntry" is true', () => {
       beforeAll(done => {
-        setProps({
+        setClue({
           isChaseEntry: true
         }, done)
       })
@@ -74,9 +79,8 @@ describe('StationLayout', () => {
 
   describe('when "playerIsChasing" prop is false', () => {
     beforeAll(done => {
-      setProps({
-        playerIsChasing: false
-      }, done)
+      wrapper.vm.playerIsChasing = false
+      wrapper.vm.$nextTick(done)
     })
 
     it('does not display clue component', () => {
@@ -91,7 +95,7 @@ describe('StationLayout', () => {
 
     describe('when "isChaseEntry" prop is true', () => {
       beforeAll(done => {
-        setProps({
+        setClue({
           isChaseEntry: true
         }, done)
       })

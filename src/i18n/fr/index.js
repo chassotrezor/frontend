@@ -16,6 +16,9 @@ export default {
   chase: {
     manage: {
       start: 'Commencer la chasse au trésor'
+    },
+    clue: {
+      waitForClue: 'patientez pendant le chargement de l\'indice...'
     }
   },
   routes: {
