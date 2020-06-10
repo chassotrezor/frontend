@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import {
   getRedirectResult,
   isSignInWithFirebaseEmailLink,
@@ -69,6 +70,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      initUser: 'user/initUser'
+    }),
     display (ui, message) {
       this.ui = ui
       this.message = message
@@ -96,6 +100,7 @@ export default {
         .then(result => {
           localStorage.removeItem('emailForSignIn')
           vm.display('success', vm.$t('auth.connected'))
+          vm.initUser({ userId: result.user.uid })
         })
         .catch(error => {
           // TODO: handle errors
@@ -123,6 +128,7 @@ export default {
         .then(result => {
           if (result.user) {
             vm.display('success', vm.$t('auth.connected'))
+            vm.initUser({ userId: result.user.uid })
           } else {
             vm.display('chooseMethod')
           }
