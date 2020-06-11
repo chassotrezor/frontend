@@ -22,9 +22,12 @@ export default {
     }
   },
   routes: {
-    cluesList: 'indices',
+    cluesList: 'historique des indices',
+    creator: 'créer un parcours',
     home: 'accueil',
     logout: 'se déconnecter',
+    map: 'trouver un parcours',
+    scanner: 'scanner un indice',
     sign: 'se connecter'
   }
 }

@@ -1,11 +1,11 @@
 <template>
   <q-page class="flex flex-center">
-    Home
+    Creator
   </q-page>
 </template>
 
 <script>
 export default {
-  name: 'PageIndex'
+  name: 'PageCreator'
 }
 </script>

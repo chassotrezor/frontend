@@ -31,7 +31,8 @@ const routes = [
           display: {
             rule: anyTime,
             group: types.displayGroups.NAVIGATION,
-            priority: 1000
+            priority: 1000,
+            icon: 'home'
           }
         }
       },
@@ -85,6 +86,48 @@ const routes = [
             group: types.displayGroups.NAVIGATION,
             priority: 100,
             icon: 'info'
+          }
+        }
+      },
+      {
+        path: '/scanner/',
+        name: 'scanner',
+        component: () => import('pages/Scanner.vue'),
+        meta: {
+          access: connected,
+          display: {
+            rule: connected,
+            group: types.displayGroups.NAVIGATION,
+            priority: 1000,
+            icon: 'perm_device_information'
+          }
+        }
+      },
+      {
+        path: '/map/',
+        name: 'map',
+        component: () => import('pages/Map.vue'),
+        meta: {
+          access: anyTime,
+          display: {
+            rule: anyTime,
+            group: types.displayGroups.NAVIGATION,
+            priority: 10,
+            icon: 'explore'
+          }
+        }
+      },
+      {
+        path: '/creator/',
+        name: 'creator',
+        component: () => import('pages/Creator.vue'),
+        meta: {
+          access: anyTime,
+          display: {
+            rule: anyTime,
+            group: types.displayGroups.NAVIGATION,
+            priority: 1,
+            icon: 'edit'
           }
         }
       }
