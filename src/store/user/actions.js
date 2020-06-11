@@ -20,16 +20,19 @@ export function initUser (__, { userId }) {
   })
 }
 
-export function downloadUser ({ commit }, { userId }) {
-  return new Promise((resolve, reject) => {
+let unbind = () => {}
+export function bindUser ({ commit }) {
+  const currentUser = firebase.auth().currentUser
+  if (currentUser) {
+    const userId = currentUser.uid
     const userRef = getUserRef(userId)
-    userRef.get()
-      .then(doc => {
-        commit('setUser', doc.data())
-        resolve()
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  })
+    unbind = userRef.onSnapshot(docSnapshot => {
+      commit('setUser', docSnapshot.data())
+    })
+  }
+}
+export function unbindUser ({ commit }) {
+  unbind()
+  unbind = () => {}
+  commit('delUser', {})
 }
