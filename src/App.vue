@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { onAuthStateChanged } from '@firebaseAuth'
+import firebase from 'firebase/app'
 import { mapActions } from 'vuex'
 
 export default {
@@ -17,7 +17,7 @@ export default {
   },
   mounted () {
     const vm = this
-    vm.unsubscribeAuthStateListener = onAuthStateChanged(() => {
+    vm.unsubscribeAuthStateListener = firebase.auth().onAuthStateChanged(() => {
       vm.unbind()
       vm.bind()
     })
