@@ -27,7 +27,9 @@ export function bindUser ({ commit }) {
     const userId = currentUser.uid
     const userRef = getUserRef(userId)
     unbind = userRef.onSnapshot(docSnapshot => {
-      commit('setUser', docSnapshot.data())
+      if (docSnapshot.exists) {
+        commit('setUser', docSnapshot.data())
+      }
     })
   }
 }
