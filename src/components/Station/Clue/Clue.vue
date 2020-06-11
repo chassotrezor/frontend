@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import ClueImage from './ClueImage'
 import ClueText from './ClueText'
 
@@ -39,6 +39,16 @@ export default {
       const clueId = this.$route.params.clueId
       return this.getClue({ chaseId, clueId })
     }
+  },
+  mounted () {
+    const chaseId = this.$route.params.chaseId
+    const clueId = this.$route.params.clueId
+    this.saveClueAccess({ chaseId, clueId })
+  },
+  methods: {
+    ...mapActions({
+      saveClueAccess: 'chase/saveClueAccess'
+    })
   }
 }
 </script>

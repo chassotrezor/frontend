@@ -35,6 +35,9 @@ const store = {
   modules: {
     chase: {
       namespaced: true,
+      actions: {
+        saveClueAccess: jest.fn()
+      },
       getters: {
         getClue: () => jest.fn(() => clue)
       },
@@ -50,6 +53,10 @@ const wrapper = mountQuasar(Clue, {
 })
 
 describe('Clue', () => {
+  it('saves access for this clue for this user on the server', () => {
+    expect(store.modules.chase.actions.saveClueAccess).toHaveBeenCalled()
+  })
+
   it('displays as many "ClueImage" components as rows with type "image" in clue', () => {
     const clueTexts = wrapper.findAll('.ClueImage_test')
     expect(clueTexts.length).toBe(nbRowsOfType('image'))

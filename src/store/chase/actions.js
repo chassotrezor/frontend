@@ -31,8 +31,42 @@ export async function start (__, { chaseId }) {
   try {
     await db.runTransaction(async (t) => {
       const doc = await t.get(userRef)
-      const openedChases = [...doc.data().openedChases, chaseId]
-      t.update(userRef, { openedChases })
+      const openChases = [...doc.data().openChases, chaseId]
+      t.update(userRef, { openChases })
+    })
+    console.log('Transaction success!')
+  } catch (err) {
+    console.log('Transaction failure:', err)
+  }
+}
+
+export async function saveClueAccess (__, { chaseId, clueId }) {
+  const db = firebase.firestore()
+  const userId = firebase.auth().currentUser.uid
+  const userRef = db.collection('users').doc(userId)
+  try {
+    await db.runTransaction(async (t) => {
+      const doc = await t.get(userRef)
+      const chaseIsOpen = doc.data().openChases.some(id => id === chaseId)
+      const currentAccessibleClues = doc.data().accessibleClues
+      if (chaseIsOpen) {
+        if (!currentAccessibleClues[chaseId]) {
+          const accessibleClues = {
+            ...currentAccessibleClues,
+            [chaseId]: [clueId]
+          }
+          t.update(userRef, { accessibleClues })
+        } else if (currentAccessibleClues[chaseId].every(id => id !== clueId)) {
+          const accessibleClues = {
+            ...currentAccessibleClues,
+            [chaseId]: [
+              ...currentAccessibleClues[chaseId],
+              clueId
+            ]
+          }
+          t.update(userRef, { accessibleClues })
+        }
+      }
     })
     console.log('Transaction success!')
   } catch (err) {
