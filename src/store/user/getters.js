@@ -1,3 +1,3 @@
-export function openedChases (state) {
-  return state.openedChases
+export function openChases (state) {
+  return state.openChases
 }

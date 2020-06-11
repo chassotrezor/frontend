@@ -41,7 +41,7 @@ export default {
   computed: {
     ...mapGetters({
       getClue: 'chase/getClue',
-      openedChases: 'user/openedChases'
+      openChases: 'user/openChases'
     }),
     clue () {
       const chaseId = this.$route.params.chaseId
@@ -50,7 +50,7 @@ export default {
     },
     playerIsChasing () {
       const chaseId = this.$route.params.chaseId
-      if (this.openedChases) return this.openedChases.some(id => id === chaseId)
+      if (this.openChases) return this.openChases.some(id => id === chaseId)
       else return false
     }
   },

@@ -1,7 +1,7 @@
 import firebase from 'firebase/app'
 
 const defaultUser = {
-  openedChases: []
+  openChases: []
 }
 
 function getUserRef (userId) {

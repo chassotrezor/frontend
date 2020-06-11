@@ -33,14 +33,14 @@ const store = {
     user: {
       namespaced: true,
       getters: {
-        openedChases: state => state.openedChases
+        openChases: state => state.openChases
       },
       mutations: {
-        setOpenedChases: (state, openedChases) => { state.openedChases = openedChases }
+        setopenChases: (state, openChases) => { state.openChases = openChases }
       },
       state: () => {
         return {
-          openedChases: []
+          openChases: []
         }
       }
     }
@@ -62,7 +62,7 @@ describe('StationLayout', () => {
 
   describe('when "playerIsChasing" is true', () => {
     beforeAll(done => {
-      wrapper.vm.$store.commit('user/setOpenedChases', [chaseId])
+      wrapper.vm.$store.commit('user/setopenChases', [chaseId])
       wrapper.vm.$nextTick(done)
     })
 
@@ -104,7 +104,7 @@ describe('StationLayout', () => {
 
   describe('when "playerIsChasing" is false', () => {
     beforeAll(done => {
-      wrapper.vm.$store.commit('user/setOpenedChases', [])
+      wrapper.vm.$store.commit('user/setopenChases', [])
       wrapper.vm.$nextTick(done)
     })
 
