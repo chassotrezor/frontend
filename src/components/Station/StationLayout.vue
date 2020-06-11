@@ -26,7 +26,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import ChaseInfo from './ChaseInfo'
-import Clue from './Clue'
+import Clue from './Clue/Clue'
 import SpinnerWithMessage from 'components/Navigation/SpinnerWithMessage'
 import StartChase from './StartChase'
 
