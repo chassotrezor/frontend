@@ -5,9 +5,14 @@
       v-for="row in clue.rows"
       :key="row.value"
     >
+      <clue-image
+        v-if="row.type === 'image'"
+        class="ClueImage_test"
+        :src="row.value"
+      />
       <clue-text
         v-if="row.type === 'text'"
-        class="clueText_test"
+        class="ClueText_test"
         :raw-html="row.value"
       />
     </div>
@@ -16,11 +21,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import ClueImage from './ClueImage'
 import ClueText from './ClueText'
 
 export default {
   name: 'Clue',
   components: {
+    ClueImage,
     ClueText
   },
   computed: {

@@ -11,6 +11,10 @@ const clue = {
     {
       type: 'text',
       value: 'testText'
+    },
+    {
+      type: 'image',
+      value: 'testSrc'
     }
   ]
 }
@@ -46,8 +50,13 @@ const wrapper = mountQuasar(Clue, {
 })
 
 describe('Clue', () => {
+  it('displays as many "ClueImage" components as rows with type "image" in clue', () => {
+    const clueTexts = wrapper.findAll('.ClueImage_test')
+    expect(clueTexts.length).toBe(nbRowsOfType('image'))
+  })
+
   it('displays as many "ClueText" components as rows with type "text" in clue', () => {
-    const clueTexts = wrapper.findAll('.clueText_test')
+    const clueTexts = wrapper.findAll('.ClueText_test')
     expect(clueTexts.length).toBe(nbRowsOfType('text'))
   })
 })
