@@ -51,11 +51,18 @@ const store = {
   }
 }
 
+const $router = {
+  push: jest.fn()
+}
+
 describe('CluesList', () => {
   let wrapper
   beforeAll(done => {
     wrapper = mountQuasar(CluesList, {
-      store
+      store,
+      mocks: {
+        $router
+      }
     })
     wrapper.vm.$nextTick(done)
   })
@@ -81,6 +88,25 @@ describe('CluesList', () => {
       const qItems = wrapper.findAll('.QItem_test')
       const expectedLength = Object.keys(defaultAccessibleClues[defaultLastChase].clues).length
       expect(qItems.length).toBe(expectedLength)
+    })
+
+    describe('when "QItem" emits "click" event', () => {
+      beforeAll(done => {
+        const qItem = wrapper.find('.testClueId11_test')
+        qItem.vm.$emit('click')
+        wrapper.vm.$nextTick(done)
+      })
+
+      test('router pushes to /chase/[chaseId]/clue/[clueId]', () => {
+        const expectedRoute = {
+          name: 'clue',
+          params: {
+            chaseId: 'testChaseId1',
+            clueId: 'testClueId11'
+          }
+        }
+        expect($router.push).toHaveBeenCalledWith(expectedRoute)
+      })
     })
   })
 

@@ -14,6 +14,7 @@
           v-for="clue in clues"
           :key="clue"
           class="QItem_test"
+          :class="`${clue}_test`"
           clickable
           @click="() => push(clue)"
         >
@@ -83,7 +84,7 @@ export default {
       const route = {
         name: 'clue',
         params: {
-          chaseId: this.selectedChase,
+          chaseId: this.selectedChase.value,
           clueId: clue
         }
       }
