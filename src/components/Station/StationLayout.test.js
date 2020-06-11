@@ -102,7 +102,7 @@ describe('StationLayout', () => {
     })
   })
 
-  describe('when "playerIsChasing" prop is false', () => {
+  describe('when "playerIsChasing" is false', () => {
     beforeAll(done => {
       wrapper.vm.$store.commit('user/setOpenedChases', [])
       wrapper.vm.$nextTick(done)
