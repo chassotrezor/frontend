@@ -2,7 +2,9 @@ import firebase from 'firebase/app'
 
 const defaultUser = {
   openChases: [],
-  accessibleClues: {}
+  accessibleClues: {},
+  lastChase: '',
+  lastClue: ''
 }
 
 function getUserRef (userId) {

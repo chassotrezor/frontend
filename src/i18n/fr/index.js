@@ -22,6 +22,7 @@ export default {
     }
   },
   routes: {
+    cluesList: 'indices',
     home: 'accueil',
     logout: 'se déconnecter',
     sign: 'se connecter'

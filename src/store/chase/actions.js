@@ -50,22 +50,49 @@ export async function saveClueAccess (__, { chaseId, clueId }) {
       const chaseIsOpen = doc.data().openChases.some(id => id === chaseId)
       const currentAccessibleClues = doc.data().accessibleClues
       if (chaseIsOpen) {
+        const update = {
+          lastChase: chaseId,
+          lastClue: clueId
+        }
+        // TODO: improve checks and case handling
         if (!currentAccessibleClues[chaseId]) {
           const accessibleClues = {
             ...currentAccessibleClues,
-            [chaseId]: [clueId]
+            [chaseId]: {
+              data: {
+                name: 'chase name' // TODO: handle chase data
+              },
+              clues: {
+                [clueId]: {
+                  name: 'clue name' // TODO: handle clue data
+                }
+              }
+            }
           }
-          t.update(userRef, { accessibleClues })
-        } else if (currentAccessibleClues[chaseId].every(id => id !== clueId)) {
-          const accessibleClues = {
-            ...currentAccessibleClues,
-            [chaseId]: [
-              ...currentAccessibleClues[chaseId],
-              clueId
-            ]
+          update.accessibleClues = accessibleClues
+        } else {
+          const currentClueIsNotAccessible =
+            Object.keys(currentAccessibleClues[chaseId].clues).every(id => id !== clueId)
+
+          if (currentClueIsNotAccessible) {
+            const accessibleClues = {
+              ...currentAccessibleClues,
+              [chaseId]: {
+                data: {
+                  name: 'chase name' // TODO: handle chase data
+                },
+                clues: {
+                  ...currentAccessibleClues[chaseId].clues,
+                  [clueId]: {
+                    name: 'clue name' // TODO: handle clue data
+                  }
+                }
+              }
+            }
+            update.accessibleClues = accessibleClues
           }
-          t.update(userRef, { accessibleClues })
         }
+        t.update(userRef, update)
       }
     })
     console.log('Transaction success!')
