@@ -73,6 +73,20 @@ const routes = [
             rule: never
           }
         }
+      },
+      {
+        path: '/cluesList/',
+        name: 'cluesList',
+        component: () => import('pages/CluesList.vue'),
+        meta: {
+          access: connected,
+          display: {
+            rule: connected,
+            group: types.displayGroups.NAVIGATION,
+            priority: 100,
+            icon: 'info'
+          }
+        }
       }
     ]
   }
