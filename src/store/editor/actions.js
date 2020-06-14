@@ -21,9 +21,20 @@ export function unbindMyChases ({ commit }) {
   commit('deleteChases')
 }
 
+const defaultChase = userId => {
+  return {
+    chaseScheme: {},
+    editors: [userId],
+    name: ''
+  }
+}
+
 export function createChase () {
-  return new Promise(resolve => {
-    console.log('CREATE')
-    resolve()
+  return new Promise((resolve) => {
+    const userId = firebase.auth().currentUser.uid
+    const chaseRef = firebase.firestore().collection('chases').doc()
+    chaseRef.set(defaultChase(userId))
+      .then(() => resolve(chaseRef.id))
+      .catch(error => console.log(error))
   })
 }

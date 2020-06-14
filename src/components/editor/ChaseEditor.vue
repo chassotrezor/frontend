@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div>{{ chase.name }}</div>
+    <div>Chase name : {{ chase.name }}</div>
+    <br>
+    <div>Clues :</div>
     <edit-clue
       v-for="clue in chase.chaseScheme"
       :key="clue.id"

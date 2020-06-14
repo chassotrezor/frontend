@@ -8,6 +8,7 @@
       @open="emitOpen(chase.id)"
     />
     <q-btn
+      class="CreateChase_test"
       @click="createAndEditChase"
     />
   </div>
@@ -35,8 +36,11 @@ export default {
       this.$emit('open', chaseId)
     },
     createAndEditChase () {
-      return this.createChase()
-        .then()
+      const vm = this
+      vm.createChase()
+        .then(chaseId => {
+          vm.emitOpen(chaseId)
+        })
     }
   }
 }

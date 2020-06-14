@@ -12,12 +12,16 @@ const testChases = [
   }
 ]
 
+const newChaseId = 'newChaseId'
 const store = {
   modules: {
     editor: {
       namespaced: true,
       getters: {
         myChases: () => testChases
+      },
+      actions: {
+        createChase: jest.fn().mockResolvedValue(newChaseId)
       }
     }
   }
@@ -46,6 +50,27 @@ describe('MyChases', () => {
 
     it('emits "open" event with "chaseId" parameter', () => {
       expect(wrapper.emitted('open')[0][0]).toBe(testChases[0].id)
+    })
+  })
+
+  it('displays a "create chase" button', () => {
+    const btn = wrapper.find('.CreateChase_test')
+    expect(btn.exists()).toBe(true)
+  })
+
+  describe('when "create chase" button emits "click"', () => {
+    beforeAll(done => {
+      const btn = wrapper.find('.CreateChase_test')
+      btn.vm.$emit('click')
+      wrapper.vm.$nextTick(done)
+    })
+
+    it('creates a new chase on the server', () => {
+      expect(store.modules.editor.actions.createChase).toHaveBeenCalled()
+    })
+
+    it('emits "open" event with value "newChaseId"', () => {
+      expect(wrapper.emitted().open[1][0]).toBe(newChaseId)
     })
   })
 })
