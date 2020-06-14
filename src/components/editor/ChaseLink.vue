@@ -10,10 +10,6 @@
 export default {
   name: 'ChaseLink',
   props: {
-    chaseId: {
-      type: String,
-      required: true
-    },
     name: {
       type: String,
       default: () => ''
@@ -21,7 +17,7 @@ export default {
   },
   methods: {
     openChase () {
-      this.$emit('open', this.chaseId)
+      this.$emit('open')
     }
   }
 }
