@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    @click="edit"
+  >
     {{ clue.name }}
   </div>
 </template>
@@ -11,6 +13,11 @@ export default {
     clue: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    edit () {
+      this.$emit('edit', this.clue.id)
     }
   }
 }

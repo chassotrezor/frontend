@@ -2,10 +2,11 @@
   <div>
     <div>{{ chase.name }}</div>
     <edit-clue
-      v-for="(clue, id) in chase.chaseScheme"
-      :key="id"
+      v-for="clue in chase.chaseScheme"
+      :key="clue.id"
       class="EditClue_test"
       :clue="clue"
+      @edit="editClue"
     />
   </div>
 </template>
@@ -31,6 +32,11 @@ export default {
     }),
     chase () {
       return this.getChase({ chaseId: this.chaseId })
+    }
+  },
+  methods: {
+    editClue (clueId) {
+      this.$emit('editClue', clueId)
     }
   }
 }
