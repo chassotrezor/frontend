@@ -39,6 +39,11 @@ export function createChase () {
   })
 }
 
+export function updateChase (__, { chaseId, newProps }) {
+  const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
+  chaseRef.update(newProps)
+}
+
 export function deleteChase (__, chaseId) {
   const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
   return chaseRef.delete()

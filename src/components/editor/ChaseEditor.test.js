@@ -3,15 +3,18 @@ import ChaseEditor from './ChaseEditor'
 
 const chaseId = 'testChaseId'
 
-const chaseScheme = {
-  testClueId1: {
-    id: 'testClueId1',
-    name: 'testClueName1'
+const chase = {
+  chaseScheme: {
+    testClueId1: {
+      id: 'testClueId1',
+      name: 'testClueName1'
+    },
+    testClueId2: {
+      id: 'testClueId2',
+      name: 'testClueName2'
+    }
   },
-  testClueId2: {
-    id: 'testClueId2',
-    name: 'testClueName2'
-  }
+  name: 'testChaseName'
 }
 
 const store = {
@@ -19,9 +22,10 @@ const store = {
     editor: {
       namespaced: true,
       getters: {
-        getChase: () => () => {
-          return { chaseScheme }
-        }
+        getChase: () => () => chase
+      },
+      actions: {
+        updateChase: jest.fn()
       }
     }
   }
@@ -39,9 +43,35 @@ describe('ChaseEditor', () => {
     wrapper.vm.$nextTick(done)
   })
 
+  it('displays an "update" button', () => {
+    const btn = wrapper.find('.UpdateBtn_test')
+    expect(btn.exists()).toBe(true)
+  })
+
+  describe('when "update" button emits "click"', () => {
+    beforeAll(done => {
+      wrapper.vm.name = 'newName'
+      const btn = wrapper.find('.UpdateBtn_test')
+      btn.vm.$emit('click')
+      wrapper.vm.$nextTick(done)
+    })
+
+    it('updates the name of this chase on server', () => {
+      expect(store.modules.editor.actions.updateChase).toHaveBeenCalledWith(
+        expect.any(Object),
+        {
+          chaseId,
+          newProps: {
+            name: 'newName'
+          }
+        }
+      )
+    })
+  })
+
   it('displays an "EditClue" component for each clue in chase', () => {
     const clues = wrapper.findAll('.EditClue_test')
-    expect(clues.length).toBe(Object.keys(chaseScheme).length)
+    expect(clues.length).toBe(Object.keys(chase.chaseScheme).length)
   })
 
   describe('when one "EditClue" component emits "edit" with value "clueId"', () => {

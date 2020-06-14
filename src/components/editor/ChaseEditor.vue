@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div>Chase name : {{ chase.name }}</div>
+    <q-input v-model="name" />
+    <q-btn
+      class="UpdateBtn_test"
+      icon="send"
+      color="primary"
+      @click="updateChase({ chaseId, newProps: { name } })"
+    />
     <br>
     <div>Clues :</div>
     <edit-clue
@@ -14,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import EditClue from './EditClue'
 
 export default {
@@ -28,6 +34,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      name: ''
+    }
+  },
   computed: {
     ...mapGetters({
       getChase: 'editor/getChase'
@@ -36,7 +47,13 @@ export default {
       return this.getChase({ chaseId: this.chaseId })
     }
   },
+  mounted () {
+    this.name = this.chase.name
+  },
   methods: {
+    ...mapActions({
+      updateChase: 'editor/updateChase'
+    }),
     editClue (clueId) {
       this.$emit('editClue', clueId)
     }
