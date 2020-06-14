@@ -5,6 +5,7 @@
       :key="chase.id"
       class="ChaseLink_test"
       :name="chase.name"
+      @open="emitOpen(chase.id)"
     />
   </div>
 </template>
@@ -29,7 +30,10 @@ export default {
   methods: {
     ...mapActions({
       downloadMyChases: 'editor/downloadMyChases'
-    })
+    }),
+    emitOpen (chaseId) {
+      this.$emit('open', chaseId)
+    }
   }
 }
 </script>
