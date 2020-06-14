@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    @click="openChase"
+  >
     {{ name }}
   </div>
 </template>
@@ -8,9 +10,18 @@
 export default {
   name: 'ChaseLink',
   props: {
+    chaseId: {
+      type: String,
+      required: true
+    },
     name: {
       type: String,
       default: () => ''
+    }
+  },
+  methods: {
+    openChase () {
+      this.$emit('open', this.chaseId)
     }
   }
 }

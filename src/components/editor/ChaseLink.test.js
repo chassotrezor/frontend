@@ -1,10 +1,17 @@
 import { mountQuasar } from '@test'
 import ChaseLink from './ChaseLink'
 
-describe('ChaseLink', () => {
-  const wrapper = mountQuasar(ChaseLink)
+const chaseId = 'testChaseId'
 
-  it('exists', () => {
-    expect(wrapper.exists()).toBe(true)
+describe('ChaseLink', () => {
+  const wrapper = mountQuasar(ChaseLink, {
+    propsData: {
+      chaseId
+    }
+  })
+
+  it('emits "open" event with "chaseId" value when clicked', () => {
+    wrapper.trigger('click')
+    expect(wrapper.emitted('open')[0][0]).toBe(chaseId)
   })
 })
