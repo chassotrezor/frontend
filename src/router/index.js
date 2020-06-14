@@ -34,7 +34,8 @@ export default function (/* { store, ssrContext } */) {
 
   const getReplacingRoute = (connectionState) => {
     if (connectionState === types.connection.CONNECTED) {
-      return { name: 'home' }
+      // return { name: 'home' }
+
       // return {
       //   name: 'clue',
       //   params: {
@@ -42,6 +43,8 @@ export default function (/* { store, ssrContext } */) {
       //     clueId: 'testClueID'
       //   }
       // }
+
+      return { name: 'editor' }
     } else {
       return { name: 'sign' }
     }

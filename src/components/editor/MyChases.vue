@@ -4,7 +4,7 @@
       v-for="chase in myChases"
       :key="chase.id"
       class="EditChase_test"
-      :name="chase.name"
+      :chase="chase"
       @open="emitOpen(chase.id)"
     />
     <q-btn

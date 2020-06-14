@@ -38,3 +38,8 @@ export function createChase () {
       .catch(error => console.log(error))
   })
 }
+
+export function deleteChase (__, chaseId) {
+  const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
+  return chaseRef.delete()
+}
