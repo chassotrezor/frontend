@@ -7,6 +7,9 @@
       :name="chase.name"
       @open="emitOpen(chase.id)"
     />
+    <q-btn
+      @click="createAndEditChase"
+    />
   </div>
 </template>
 
@@ -24,15 +27,16 @@ export default {
       myChases: 'editor/myChases'
     })
   },
-  mounted () {
-    this.downloadMyChases()
-  },
   methods: {
     ...mapActions({
-      downloadMyChases: 'editor/downloadMyChases'
+      createChase: 'editor/createChase'
     }),
     emitOpen (chaseId) {
       this.$emit('open', chaseId)
+    },
+    createAndEditChase () {
+      return this.createChase()
+        .then()
     }
   }
 }

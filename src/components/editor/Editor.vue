@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import MyChases from './MyChases'
 import ChaseEditor from './ChaseEditor'
 import ClueEditor from './ClueEditor'
@@ -37,7 +39,17 @@ export default {
       selectedClue: ''
     }
   },
+  mounted () {
+    this.bindMyChases()
+  },
+  beforeDestroy () {
+    this.unbindMyChases()
+  },
   methods: {
+    ...mapActions({
+      bindMyChases: 'editor/bindMyChases',
+      unbindMyChases: 'editor/unbindMyChases'
+    }),
     openChase (chaseId) {
       this.selectedChase = chaseId
     },
