@@ -16,7 +16,7 @@ import { mapGetters } from 'vuex'
 import EditClue from './EditClue'
 
 export default {
-  name: 'ChaseSummary',
+  name: 'ChaseEditor',
   components: {
     EditClue
   },

@@ -12,9 +12,9 @@ describe('Editor', () => {
     expect(myChases.exists()).toBe(true)
   })
 
-  it('displays no "ChaseSummary" component', () => {
-    const chaseSummary = wrapper.find('.ChaseSummary_test')
-    expect(chaseSummary.exists()).toBe(false)
+  it('displays no "ChaseEditor" component', () => {
+    const chaseEditor = wrapper.find('.ChaseEditor_test')
+    expect(chaseEditor.exists()).toBe(false)
   })
 
   describe('when "MyChases" emits "open" with "chaseId" param', () => {
@@ -29,15 +29,15 @@ describe('Editor', () => {
       expect(myChases.exists()).toBe(false)
     })
 
-    it('displays a "ChaseSummary" component with "chase-id" prop set to "chaseId"', () => {
-      const chaseSummary = wrapper.find('.ChaseSummary_test')
-      expect(chaseSummary.props().chaseId).toBe(testChaseId)
+    it('displays a "ChaseEditor" component with "chase-id" prop set to "chaseId"', () => {
+      const chaseEditor = wrapper.find('.ChaseEditor_test')
+      expect(chaseEditor.props().chaseId).toBe(testChaseId)
     })
 
-    describe('when "ChaseSummary" emits "editClue" with value "clueId"', () => {
+    describe('when "ChaseEditor" emits "editClue" with value "clueId"', () => {
       beforeAll(done => {
-        const chaseSummary = wrapper.find('.ChaseSummary_test')
-        chaseSummary.vm.$emit('editClue', testClueId)
+        const chaseEditor = wrapper.find('.ChaseEditor_test')
+        chaseEditor.vm.$emit('editClue', testClueId)
         wrapper.vm.$nextTick(done)
       })
 

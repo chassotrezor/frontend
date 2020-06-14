@@ -5,9 +5,9 @@
       class="MyChases_test"
       @open="openChase"
     />
-    <chase-summary
+    <chase-editor
       v-else
-      class="ChaseSummary_test"
+      class="ChaseEditor_test"
       :chase-id="selectedChase"
       @editClue="editClue"
     />
@@ -21,14 +21,14 @@
 
 <script>
 import MyChases from './MyChases'
-import ChaseSummary from './ChaseSummary'
+import ChaseEditor from './ChaseEditor'
 import ClueEditor from './ClueEditor'
 
 export default {
   name: 'Editor',
   components: {
     MyChases,
-    ChaseSummary,
+    ChaseEditor,
     ClueEditor
   },
   data () {

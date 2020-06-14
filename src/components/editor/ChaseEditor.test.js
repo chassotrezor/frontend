@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import ChaseSummary from './ChaseSummary'
+import ChaseEditor from './ChaseEditor'
 
 const chaseId = 'testChaseId'
 
@@ -27,10 +27,10 @@ const store = {
   }
 }
 
-describe('ChaseSummary', () => {
+describe('ChaseEditor', () => {
   let wrapper
   beforeAll(done => {
-    wrapper = mountQuasar(ChaseSummary, {
+    wrapper = mountQuasar(ChaseEditor, {
       store,
       propsData: {
         chaseId
