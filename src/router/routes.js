@@ -118,13 +118,13 @@ const routes = [
         }
       },
       {
-        path: '/creator/',
-        name: 'creator',
-        component: () => import('pages/Creator.vue'),
+        path: '/editor/',
+        name: 'editor',
+        component: () => import('pages/Editor.vue'),
         meta: {
-          access: anyTime,
+          access: connected,
           display: {
-            rule: anyTime,
+            rule: connected,
             group: types.displayGroups.NAVIGATION,
             priority: 1,
             icon: 'edit'

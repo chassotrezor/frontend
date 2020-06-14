@@ -23,7 +23,7 @@ export default {
   },
   routes: {
     cluesList: 'historique des indices',
-    creator: 'créer un parcours',
+    editor: 'créer un parcours',
     home: 'accueil',
     logout: 'se déconnecter',
     map: 'trouver un parcours',

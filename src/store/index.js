@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import chase from './chase'
+import editor from './editor'
 import user from './user'
 
 Vue.use(Vuex)
@@ -19,6 +20,7 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       chase,
+      editor,
       user
     },
 
