@@ -18,9 +18,6 @@ const store = {
       namespaced: true,
       getters: {
         myChases: () => testChases
-      },
-      actions: {
-        downloadMyChases: jest.fn()
       }
     }
   }
@@ -33,10 +30,6 @@ describe('MyChases', () => {
       store
     })
     wrapper.vm.$nextTick(done)
-  })
-
-  it('downloads my chases when mounted', () => {
-    expect(store.modules.editor.actions.downloadMyChases).toHaveBeenCalled()
   })
 
   it('displays a "EditChase" component for each chase I created', () => {

@@ -4,8 +4,30 @@ import Editor from './Editor'
 const testChaseId = 'testChaseId'
 const testClueId = 'testClueId'
 
+const store = {
+  modules: {
+    editor: {
+      namespaced: true,
+      actions: {
+        bindMyChases: jest.fn(),
+        unbindMyChases: jest.fn()
+      }
+    }
+  }
+}
+
 describe('Editor', () => {
-  const wrapper = mountQuasar(Editor)
+  let wrapper
+  beforeAll(done => {
+    wrapper = mountQuasar(Editor, {
+      store
+    })
+    wrapper.vm.$nextTick(done)
+  })
+
+  it('starts listening to MyChases on server', () => {
+    expect(store.modules.editor.actions.bindMyChases).toHaveBeenCalled()
+  })
 
   it('displays a "MyChases" component', () => {
     const myChases = wrapper.find('.MyChases_test')
@@ -65,6 +87,17 @@ describe('Editor', () => {
         const clueEditor = wrapper.find('.ClueEditor_test')
         expect(clueEditor.exists()).toBe(true)
       })
+    })
+  })
+
+  describe('when it is destroyed', () => {
+    beforeAll(done => {
+      wrapper.vm.$nextTick(done)
+      wrapper.destroy()
+    })
+
+    it('stops listening to MyChases on server', () => {
+      expect(store.modules.editor.actions.unbindMyChases).toHaveBeenCalled()
     })
   })
 })
