@@ -39,15 +39,15 @@ describe('MyChases', () => {
     expect(store.modules.editor.actions.downloadMyChases).toHaveBeenCalled()
   })
 
-  it('displays a "Chaselink" component for each chase I created', () => {
-    const myChases = wrapper.findAll('.ChaseLink_test')
+  it('displays a "EditChase" component for each chase I created', () => {
+    const myChases = wrapper.findAll('.EditChase_test')
     expect(myChases.length).toBe(Object.keys(testChases).length)
   })
 
-  describe('when "ChaseLink" component emits "open"', () => {
+  describe('when "EditChase" component emits "open"', () => {
     beforeAll(done => {
-      const chaseLink = wrapper.find('.ChaseLink_test')
-      chaseLink.vm.$emit('open')
+      const editChase = wrapper.find('.EditChase_test')
+      editChase.vm.$emit('open')
       wrapper.vm.$nextTick(done)
     })
 

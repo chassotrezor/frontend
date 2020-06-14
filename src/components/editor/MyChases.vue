@@ -1,9 +1,9 @@
 <template>
   <div>
-    <chase-link
+    <edit-chase
       v-for="chase in myChases"
       :key="chase.id"
-      class="ChaseLink_test"
+      class="EditChase_test"
       :name="chase.name"
       @open="emitOpen(chase.id)"
     />
@@ -12,12 +12,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ChaseLink from './ChaseLink'
+import EditChase from './EditChase'
 
 export default {
   name: 'MyChases',
   components: {
-    ChaseLink
+    EditChase
   },
   computed: {
     ...mapGetters({

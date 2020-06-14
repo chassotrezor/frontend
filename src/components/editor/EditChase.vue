@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'ChaseLink',
+  name: 'EditChase',
   props: {
     name: {
       type: String,
