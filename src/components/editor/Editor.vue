@@ -6,13 +6,13 @@
       @open="openChase"
     />
     <chase-editor
-      v-else
+      v-else-if="selectedClue === ''"
       class="ChaseEditor_test"
       :chase-id="selectedChase"
       @editClue="editClue"
     />
     <clue-editor
-      v-if="selectedClue !== ''"
+      v-else
       class="ClueEditor_test"
       :clue-id="selectedClue"
     />
