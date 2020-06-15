@@ -6,12 +6,17 @@ export function bindMyChases ({ commit }) {
   const userId = firebase.auth().currentUser.uid
   const chasesRef = firebase.firestore().collection('chases')
   myChasesListener = chasesRef.where('editors', 'array-contains', userId).onSnapshot(querySnapshot => {
-    querySnapshot.forEach(documentSnaphot => {
-      const chase = {
-        ...documentSnaphot.data(),
-        id: documentSnaphot.id
+    querySnapshot.docChanges().forEach(change => {
+      const id = change.doc.id
+      if (change.type === 'removed') {
+        commit('deleteChase', id)
+      } else {
+        const chase = {
+          ...change.doc.data(),
+          id
+        }
+        commit('setChase', chase)
       }
-      commit('setChase', chase)
     })
   })
 }
@@ -44,6 +49,11 @@ export function updateChase (__, { chaseId, newProps }) {
   chaseRef.update(newProps)
 }
 
+/*
+  TODO: delete clue subcollection as well
+  needs to use cloud functions
+  https://firebase.google.com/docs/firestore/solutions/delete-collections
+*/
 export function deleteChase (__, chaseId) {
   const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
   return chaseRef.delete()
