@@ -76,8 +76,11 @@ export function bindClues ({ commit }, { chaseId }) {
 }
 
 export function unbindClues ({ commit }, { chaseId }) {
-  cluesListener[chaseId]()
-  commit('deleteClues', { chaseId })
+  if (cluesListener[chaseId]) {
+    cluesListener[chaseId]()
+    delete cluesListener[chaseId]
+    commit('deleteClues', { chaseId })
+  }
 }
 
 const defaultClueScheme = clueId => {

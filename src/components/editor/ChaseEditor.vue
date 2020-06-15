@@ -56,13 +56,11 @@ export default {
   },
   mounted () {
     this.name = this.chase.name
-    this.bindClues({ chaseId: this.chaseId })
   },
   methods: {
     ...mapActions({
       updateChase: 'editor/updateChase',
-      createClue: 'editor/createClue',
-      bindClues: 'editor/bindClues'
+      createClue: 'editor/createClue'
     }),
     async createAndEditClue () {
       const chaseId = this.chaseId

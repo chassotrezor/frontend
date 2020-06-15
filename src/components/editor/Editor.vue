@@ -69,15 +69,23 @@ export default {
   methods: {
     ...mapActions({
       bindMyChases: 'editor/bindMyChases',
-      unbindMyChases: 'editor/unbindMyChases'
+      unbindMyChases: 'editor/unbindMyChases',
+      bindClues: 'editor/bindClues',
+      unbindClues: 'editor/unbindClues'
     }),
-    openChase (chaseId) {
-      this.$router.push({
+    async openChase (chaseId) {
+      const oldChaseId = this.$route.params.chaseId
+      this.unbindClues({ chaseId: oldChaseId })
+
+      await this.$router.push({
         name: 'chaseEditor',
         params: {
           chaseId
         }
       })
+
+      const newChaseId = this.$route.params.chaseId
+      this.bindClues({ chaseId: newChaseId })
     },
     editClue (clueId) {
       const chaseId = this.$route.params.chaseId
