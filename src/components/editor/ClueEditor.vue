@@ -2,6 +2,13 @@
   <div>
     <q-input
       v-model="name"
+      class="QInputName_test"
+    />
+    <q-btn
+      class="UpdateBtn_test"
+      icon="send"
+      color="primary"
+      @click="update"
     />
   </div>
 </template>
@@ -43,7 +50,17 @@ export default {
   methods: {
     ...mapActions({
       updateClueInChase: 'editor/updateClueInChase'
-    })
+    }),
+    update () {
+      const newProps = {
+        name: this.name
+      }
+      this.updateClueInChase({
+        chaseId: this.chaseId,
+        clueId: this.clueId,
+        newProps
+      })
+    }
   }
 }
 </script>

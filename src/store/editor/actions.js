@@ -87,6 +87,10 @@ const defaultClueScheme = clueId => {
   }
 }
 
+const isInDefaultClueScheme = key => {
+  return Object.keys(defaultClueScheme('')).some(schemeKey => key === schemeKey)
+}
+
 const defaultClue = clueId => {
   return {
     id: clueId,
@@ -112,6 +116,28 @@ export function createClue (__, { chaseId }) {
       await clueRef.set(defaultClue(clueId))
       resolve(clueId)
     })
+  })
+}
+
+export function updateClueInChase (__, { chaseId, clueId, newProps }) {
+  const db = firebase.firestore()
+  const chaseRef = db.collection('chases').doc(chaseId)
+  const clueRef = chaseRef.collection('clues').doc(clueId)
+  const newPropsForChaseScheme = Object.entries(newProps).reduce((schemeProps, newProp) => {
+    if (isInDefaultClueScheme(newProp[0])) schemeProps[newProp[0]] = newProp[1]
+    return schemeProps
+  }, {})
+  return db.runTransaction(async t => {
+    const oldChaseScheme = (await chaseRef.get()).data().chaseScheme
+    const chaseScheme = {
+      ...oldChaseScheme,
+      [clueId]: {
+        ...oldChaseScheme[clueId],
+        ...newPropsForChaseScheme
+      }
+    }
+    await chaseRef.update({ chaseScheme })
+    await clueRef.update({ newProps })
   })
 }
 
