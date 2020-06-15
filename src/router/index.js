@@ -44,7 +44,9 @@ export default function (/* { store, ssrContext } */) {
       //   }
       // }
 
-      return { name: 'editor' }
+      return {
+        name: 'editor'
+      }
     } else {
       return { name: 'sign' }
     }

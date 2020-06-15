@@ -4,6 +4,16 @@ import Editor from './Editor'
 const testChaseId = 'testChaseId'
 const testClueId = 'testClueId'
 
+const $route = {
+  params: {}
+}
+
+const $router = {
+  push: route => {
+    $route.params = { ...route.params }
+  }
+}
+
 const store = {
   modules: {
     editor: {
@@ -11,6 +21,24 @@ const store = {
       actions: {
         bindMyChases: jest.fn(),
         unbindMyChases: jest.fn()
+      },
+      getters: {
+        getChase: state => () => state.chaseId,
+        getClue: state => () => state.clueId
+      },
+      mutations: {
+        setChase: (state, chaseId) => {
+          state.chaseId = chaseId
+        },
+        setClue: (state, clueId) => {
+          state.clueId = clueId
+        }
+      },
+      state: () => {
+        return {
+          chaseId: undefined,
+          clueId: undefined
+        }
       }
     }
   }
@@ -20,7 +48,11 @@ describe('Editor', () => {
   let wrapper
   beforeAll(done => {
     wrapper = mountQuasar(Editor, {
-      store
+      store,
+      mocks: {
+        $route,
+        $router
+      }
     })
     wrapper.vm.$nextTick(done)
   })
@@ -45,10 +77,12 @@ describe('Editor', () => {
   })
 
   describe('when "MyChases" emits "open" with "chaseId" param', () => {
-    beforeAll(done => {
+    beforeAll(async () => {
       const myChases = wrapper.find('.MyChases_test')
       myChases.vm.$emit('open', testChaseId)
-      wrapper.vm.$nextTick(done)
+      await wrapper.vm.$nextTick()
+      wrapper.vm.$store.commit('editor/setChase', $route.params.chaseId)
+      await wrapper.vm.$nextTick()
     })
 
     it('displays no "MyChases" component', () => {
@@ -67,10 +101,12 @@ describe('Editor', () => {
     })
 
     describe('when "ChaseEditor" emits "editClue" with value "clueId"', () => {
-      beforeAll(done => {
+      beforeAll(async () => {
         const chaseEditor = wrapper.find('.ChaseEditor_test')
         chaseEditor.vm.$emit('editClue', testClueId)
-        wrapper.vm.$nextTick(done)
+        await wrapper.vm.$nextTick()
+        wrapper.vm.$store.commit('editor/setClue', $route.params.clueId)
+        await wrapper.vm.$nextTick()
       })
 
       it('displays no "MyChases" component', () => {

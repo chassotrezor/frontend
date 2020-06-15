@@ -118,7 +118,7 @@ const routes = [
         }
       },
       {
-        path: '/editor/',
+        path: '/editor',
         name: 'editor',
         component: () => import('pages/Editor.vue'),
         meta: {
@@ -129,7 +129,35 @@ const routes = [
             priority: 1,
             icon: 'edit'
           }
-        }
+        },
+        children: [{
+          path: '/editor/:chaseId',
+          name: 'chaseEditor',
+          component: () => import('pages/Editor.vue'),
+          meta: {
+            access: connected,
+            display: {
+              rule: connected,
+              group: types.displayGroups.NAVIGATION,
+              priority: 1,
+              icon: 'edit'
+            }
+          },
+          children: [{
+            path: '/editor/:chaseId/:clueId',
+            name: 'clueEditor',
+            component: () => import('pages/Editor.vue'),
+            meta: {
+              access: connected,
+              display: {
+                rule: connected,
+                group: types.displayGroups.NAVIGATION,
+                priority: 1,
+                icon: 'edit'
+              }
+            }
+          }]
+        }]
       }
     ]
   }

@@ -5,3 +5,7 @@ export function myChases (state) {
 export function getChase (state) {
   return ({ chaseId }) => state.myChases[chaseId]
 }
+
+export function getClue (state) {
+  return ({ chaseId, clueId }) => true
+}
