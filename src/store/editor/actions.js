@@ -59,6 +59,27 @@ export function deleteChase (__, chaseId) {
   return chaseRef.delete()
 }
 
+const cluesListener = {}
+
+export function bindClues ({ commit }, { chaseId }) {
+  const db = firebase.firestore()
+  const cluesRef = db.collection('chases').doc(chaseId).collection('clues')
+  cluesListener[chaseId] = cluesRef.onSnapshot(querySnapshot => {
+    querySnapshot.forEach(snapshot => {
+      commit('setClue', {
+        chaseId,
+        clueId: snapshot.id,
+        clue: snapshot.data()
+      })
+    })
+  })
+}
+
+export function unbindClues ({ commit }, { chaseId }) {
+  cluesListener[chaseId]()
+  commit('deleteClues', { chaseId })
+}
+
 const defaultClueScheme = clueId => {
   return {
     id: clueId,

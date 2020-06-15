@@ -17,17 +17,44 @@ const chase = {
   name: 'testChaseName'
 }
 
+const $route = {
+  params: {}
+}
+
+const $router = {
+  push: route => {
+    $route.params = { ...route.params }
+  }
+}
+
 const newClueId = 'newClueId'
 const store = {
   modules: {
     editor: {
       namespaced: true,
       getters: {
-        getChase: () => () => chase
+        getChase: () => () => chase,
+        getClue: state => () => state.clueId
       },
       actions: {
         updateChase: jest.fn(),
-        createClue: jest.fn().mockResolvedValue(newClueId)
+        createClue: jest.fn().mockResolvedValue(newClueId),
+        bindClues: jest.fn(),
+        unbindClues: jest.fn()
+      },
+      mutations: {
+        setChase: (state, chaseId) => {
+          state.chaseId = chaseId
+        },
+        setClue: (state, clueId) => {
+          state.clueId = clueId
+        }
+      },
+      state: () => {
+        return {
+          chaseId: undefined,
+          clueId: undefined
+        }
       }
     }
   }
@@ -40,6 +67,10 @@ describe('ChaseEditor', () => {
       store,
       propsData: {
         chaseId
+      },
+      mocks: {
+        $route,
+        $router
       }
     })
     wrapper.vm.$nextTick(done)
@@ -74,6 +105,11 @@ describe('ChaseEditor', () => {
   it('displays an "EditClue" component for each clue in chase', () => {
     const clues = wrapper.findAll('.EditClue_test')
     expect(clues.length).toBe(Object.keys(chase.chaseScheme).length)
+  })
+
+  it('displays no "ClueEditor" component', () => {
+    const clueEditor = wrapper.find('.ClueEditor_test')
+    expect(clueEditor.exists()).toBe(false)
   })
 
   describe('when one "EditClue" component emits "edit" with value "clueId"', () => {
@@ -113,4 +149,29 @@ describe('ChaseEditor', () => {
       expect(wrapper.emitted('editClue')[1][0]).toBe(newClueId)
     })
   })
+
+  // describe('when "ChaseEditor" emits "editClue" with value "clueId"', () => {
+  //   beforeAll(async () => {
+  //     const chaseEditor = wrapper.find('.ChaseEditor_test')
+  //     chaseEditor.vm.$emit('editClue', testClueId)
+  //     await wrapper.vm.$nextTick()
+  //     wrapper.vm.$store.commit('editor/setClue', $route.params.clueId)
+  //     await wrapper.vm.$nextTick()
+  //   })
+
+  //   it('displays no "MyChases" component', () => {
+  //     const myChases = wrapper.find('.MyChases_test')
+  //     expect(myChases.exists()).toBe(false)
+  //   })
+
+  //   it('displays no "ChaseEditor" component', () => {
+  //     const chaseEditor = wrapper.find('.ChaseEditor_test')
+  //     expect(chaseEditor.exists()).toBe(false)
+  //   })
+
+  //   it('displays a "ClueEditor" component', () => {
+  //     const clueEditor = wrapper.find('.ClueEditor_test')
+  //     expect(clueEditor.exists()).toBe(true)
+  //   })
+  // })
 })

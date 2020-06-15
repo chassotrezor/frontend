@@ -15,6 +15,7 @@
       v-else
       class="ClueEditor_test"
       :clue-id="selectedClue"
+      :chase-id="selectedChase"
     />
   </div>
 </template>

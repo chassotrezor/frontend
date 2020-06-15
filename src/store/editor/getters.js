@@ -7,5 +7,14 @@ export function getChase (state) {
 }
 
 export function getClue (state) {
-  return ({ chaseId, clueId }) => true
+  return ({ chaseId, clueId }) => {
+    if (
+      !state.myChases[chaseId] ||
+      !state.myChases[chaseId].clues
+    ) {
+      return undefined
+    } else {
+      return state.myChases[chaseId].clues[clueId]
+    }
+  }
 }
