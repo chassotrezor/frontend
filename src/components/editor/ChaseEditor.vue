@@ -14,6 +14,7 @@
       :key="clue.id"
       class="EditClue_test"
       :clue="clue"
+      :chase-id="chaseId"
       @edit="editClue"
     />
     <q-btn

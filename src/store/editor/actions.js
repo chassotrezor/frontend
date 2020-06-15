@@ -77,7 +77,6 @@ const defaultClue = clueId => {
 
 export function createClue (__, { chaseId }) {
   return new Promise((resolve) => {
-    // const userId = firebase.auth().currentUser.uid
     const db = firebase.firestore()
     const chaseRef = db.collection('chases').doc(chaseId)
     const clueRef = chaseRef.collection('clues').doc()
@@ -92,5 +91,17 @@ export function createClue (__, { chaseId }) {
       await clueRef.set(defaultClue(clueId))
       resolve(clueId)
     })
+  })
+}
+
+export function deleteClueInChase (__, { chaseId, clueId }) {
+  const db = firebase.firestore()
+  const chaseRef = db.collection('chases').doc(chaseId)
+  const clueRef = chaseRef.collection('clues').doc(clueId)
+  return db.runTransaction(async t => {
+    const chaseScheme = (await chaseRef.get()).data().chaseScheme
+    delete chaseScheme[clueId]
+    await chaseRef.update({ chaseScheme })
+    await clueRef.delete()
   })
 }
