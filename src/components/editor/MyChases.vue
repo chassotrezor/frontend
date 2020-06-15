@@ -9,6 +9,8 @@
     />
     <q-btn
       class="CreateChase_test"
+      icon="add"
+      label="create chase"
       @click="createAndEditChase"
     />
   </div>

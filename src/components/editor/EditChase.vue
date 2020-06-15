@@ -1,7 +1,12 @@
 <template>
   <div>
     <div
-      class="ClickToOpen_test"
+      class="
+        cursor-pointer
+        bg-grey-4
+        q-pa-sm
+        ClickToOpen_test
+      "
       @click="openChase"
     >
       {{ chase.name }}

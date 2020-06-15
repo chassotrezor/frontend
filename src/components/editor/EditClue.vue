@@ -1,5 +1,11 @@
 <template>
   <div
+    class="
+      cursor-pointer
+      bg-grey-4
+      q-pa-sm
+      q-mb-sm
+    "
     @click="edit"
   >
     {{ clue.name }}
