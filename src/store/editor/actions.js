@@ -140,7 +140,7 @@ export function updateClueInChase (__, { chaseId, clueId, newProps }) {
       }
     }
     await chaseRef.update({ chaseScheme })
-    await clueRef.update({ newProps })
+    await clueRef.update(newProps)
   })
 }
 
