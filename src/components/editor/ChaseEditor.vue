@@ -61,10 +61,10 @@ export default {
       updateChase: 'editor/updateChase',
       createClue: 'editor/createClue'
     }),
-    createAndEditClue () {
-      const vm = this
-      vm.createClue({ chaseId: vm.chaseId })
-        .then(clueId => vm.editClue(clueId))
+    async createAndEditClue () {
+      const chaseId = this.chaseId
+      const clueId = await this.createClue({ chaseId })
+      this.editClue(clueId)
     },
     editClue (clueId) {
       this.$emit('editClue', clueId)
