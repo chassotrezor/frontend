@@ -44,8 +44,8 @@ export default {
       return !!this.getChase({ chaseId })
     },
     clueExists () {
-      const chaseId = this.$route.params.selectedChase
-      const clueId = this.$route.params.selectedClue
+      const chaseId = this.$route.params.chaseId
+      const clueId = this.$route.params.clueId
       if (this.chaseExists) return !!this.getClue({ chaseId, clueId })
       else return false
     },
