@@ -58,3 +58,13 @@ export function deleteChase (__, chaseId) {
   const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
   return chaseRef.delete()
 }
+
+export function createClue (__, { chaseId }) {
+  return new Promise((resolve) => {
+    const userId = firebase.auth().currentUser.uid
+    const clueRef = firebase.firestore().collection('chases').doc(chaseId).collection('clues').doc()
+    clueRef.set(defaultChase(userId))
+      .then(() => resolve(clueRef.id))
+      .catch(error => console.log(error))
+  })
+}

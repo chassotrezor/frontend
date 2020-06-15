@@ -16,6 +16,12 @@
       :clue="clue"
       @edit="editClue"
     />
+    <q-btn
+      class="CreateClue_test"
+      icon="add"
+      label="nouvel indice"
+      @click="createAndEditClue"
+    />
   </div>
 </template>
 
@@ -52,8 +58,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateChase: 'editor/updateChase'
+      updateChase: 'editor/updateChase',
+      createClue: 'editor/createClue'
     }),
+    createAndEditClue () {
+      const vm = this
+      vm.createClue({ chaseId: vm.chaseId })
+        .then(clueId => vm.editClue(clueId))
+    },
     editClue (clueId) {
       this.$emit('editClue', clueId)
     }

@@ -17,6 +17,7 @@ const chase = {
   name: 'testChaseName'
 }
 
+const newClueId = 'newClueId'
 const store = {
   modules: {
     editor: {
@@ -25,7 +26,8 @@ const store = {
         getChase: () => () => chase
       },
       actions: {
-        updateChase: jest.fn()
+        updateChase: jest.fn(),
+        createClue: jest.fn().mockResolvedValue(newClueId)
       }
     }
   }
@@ -85,6 +87,30 @@ describe('ChaseEditor', () => {
 
     it('emits "editClue" event with value "clueId"', () => {
       expect(wrapper.emitted('editClue')[0][0]).toBe(clueId)
+    })
+  })
+
+  it('displays a "create clue" button', () => {
+    const btn = wrapper.find('.CreateClue_test')
+    expect(btn.exists()).toBe(true)
+  })
+
+  describe('when "create clue" button emits "click"', () => {
+    beforeAll(async () => {
+      const btn = wrapper.find('.CreateClue_test')
+      btn.vm.$emit('click')
+      await wrapper.vm.$nextTick()
+    })
+
+    it('creates a new clue for this chase on server', () => {
+      expect(store.modules.editor.actions.createClue).toHaveBeenCalledWith(
+        expect.any(Object),
+        { chaseId }
+      )
+    })
+
+    it('emits "editClue" with "newClueId" value', () => {
+      expect(wrapper.emitted('editClue')[1][0]).toBe(newClueId)
     })
   })
 })
