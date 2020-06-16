@@ -149,29 +149,4 @@ describe('ChaseEditor', () => {
       expect(wrapper.emitted('editClue')[1][0]).toBe(newClueId)
     })
   })
-
-  // describe('when "ChaseEditor" emits "editClue" with value "clueId"', () => {
-  //   beforeAll(async () => {
-  //     const chaseEditor = wrapper.find('.ChaseEditor_test')
-  //     chaseEditor.vm.$emit('editClue', testClueId)
-  //     await wrapper.vm.$nextTick()
-  //     wrapper.vm.$store.commit('editor/setClue', $route.params.clueId)
-  //     await wrapper.vm.$nextTick()
-  //   })
-
-  //   it('displays no "MyChases" component', () => {
-  //     const myChases = wrapper.find('.MyChases_test')
-  //     expect(myChases.exists()).toBe(false)
-  //   })
-
-  //   it('displays no "ChaseEditor" component', () => {
-  //     const chaseEditor = wrapper.find('.ChaseEditor_test')
-  //     expect(chaseEditor.exists()).toBe(false)
-  //   })
-
-  //   it('displays a "ClueEditor" component', () => {
-  //     const clueEditor = wrapper.find('.ClueEditor_test')
-  //     expect(clueEditor.exists()).toBe(true)
-  //   })
-  // })
 })
