@@ -1,9 +1,9 @@
 <template>
   <div>
-    <edit-chase
+    <chase-card
       v-for="chase in myChases"
       :key="chase.id"
-      class="EditChase_test"
+      class="ChaseCard_test"
       :chase="chase"
       @open="emitOpen(chase.id)"
     />
@@ -18,12 +18,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import EditChase from './EditChase'
+import ChaseCard from './ChaseCard'
 
 export default {
-  name: 'MyChases',
+  name: 'ChasesList',
   components: {
-    EditChase
+    ChaseCard
   },
   computed: {
     ...mapGetters({

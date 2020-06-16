@@ -102,8 +102,8 @@ describe('ChaseEditor', () => {
     })
   })
 
-  it('displays an "EditClue" component for each clue in chase', () => {
-    const clues = wrapper.findAll('.EditClue_test')
+  it('displays a "ClueCard" component for each clue in chase', () => {
+    const clues = wrapper.findAll('.ClueCard_test')
     expect(clues.length).toBe(Object.keys(chase.chaseScheme).length)
   })
 
@@ -112,10 +112,10 @@ describe('ChaseEditor', () => {
     expect(clueEditor.exists()).toBe(false)
   })
 
-  describe('when one "EditClue" component emits "edit" with value "clueId"', () => {
+  describe('when one "ClueCard" component emits "edit" with value "clueId"', () => {
     let clueId
     beforeAll(done => {
-      const clue = wrapper.find('.EditClue_test')
+      const clue = wrapper.find('.ClueCard_test')
       clueId = clue.props().clue.id
       clue.vm.$emit('edit', clueId)
       wrapper.vm.$nextTick(done)

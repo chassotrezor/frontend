@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import EditChase from './EditChase'
+import ChaseCard from './ChaseCard'
 
 const store = {
   modules: {
@@ -12,8 +12,8 @@ const store = {
   }
 }
 
-describe('EditChase', () => {
-  const wrapper = mountQuasar(EditChase, {
+describe('ChaseCard', () => {
+  const wrapper = mountQuasar(ChaseCard, {
     store,
     propsData: {
       chase: {

@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import Editor from './Editor'
+import EditorNavigation from './EditorNavigation'
 
 const testChaseId = 'testChaseId'
 const testClueId = 'testClueId'
@@ -46,10 +46,10 @@ const store = {
   }
 }
 
-describe('Editor', () => {
+describe('EditorNavigation', () => {
   let wrapper
   beforeAll(done => {
-    wrapper = mountQuasar(Editor, {
+    wrapper = mountQuasar(EditorNavigation, {
       store,
       mocks: {
         $route,
@@ -63,8 +63,8 @@ describe('Editor', () => {
     expect(store.modules.editor.actions.bindMyChases).toHaveBeenCalled()
   })
 
-  it('displays a "MyChases" component', () => {
-    const myChases = wrapper.find('.MyChases_test')
+  it('displays a "ChasesList" component', () => {
+    const myChases = wrapper.find('.ChasesList_test')
     expect(myChases.exists()).toBe(true)
   })
 
@@ -78,17 +78,17 @@ describe('Editor', () => {
     expect(clueEditor.exists()).toBe(false)
   })
 
-  describe('when "MyChases" emits "open" with "chaseId" param', () => {
+  describe('when "ChasesList" emits "open" with "chaseId" param', () => {
     beforeAll(async () => {
-      const myChases = wrapper.find('.MyChases_test')
+      const myChases = wrapper.find('.ChasesList_test')
       myChases.vm.$emit('open', testChaseId)
       await wrapper.vm.$nextTick()
       wrapper.vm.$store.commit('editor/setChase', $route.params.chaseId)
       await wrapper.vm.$nextTick()
     })
 
-    it('displays no "MyChases" component', () => {
-      const myChases = wrapper.find('.MyChases_test')
+    it('displays no "ChasesList" component', () => {
+      const myChases = wrapper.find('.ChasesList_test')
       expect(myChases.exists()).toBe(false)
     })
 
@@ -111,8 +111,8 @@ describe('Editor', () => {
         await wrapper.vm.$nextTick()
       })
 
-      it('displays no "MyChases" component', () => {
-        const myChases = wrapper.find('.MyChases_test')
+      it('displays no "ChasesList" component', () => {
+        const myChases = wrapper.find('.ChasesList_test')
         expect(myChases.exists()).toBe(false)
       })
 

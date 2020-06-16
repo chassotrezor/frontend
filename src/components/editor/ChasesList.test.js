@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import MyChases from './MyChases'
+import ChasesList from './ChasesList'
 
 const testChases = [
   {
@@ -26,24 +26,24 @@ const store = {
     }
   }
 }
-describe('MyChases', () => {
+describe('ChasesList', () => {
   let wrapper
 
   beforeAll(done => {
-    wrapper = mountQuasar(MyChases, {
+    wrapper = mountQuasar(ChasesList, {
       store
     })
     wrapper.vm.$nextTick(done)
   })
 
-  it('displays a "EditChase" component for each chase I created', () => {
-    const myChases = wrapper.findAll('.EditChase_test')
+  it('displays a "ChaseCard" component for each chase I created', () => {
+    const myChases = wrapper.findAll('.ChaseCard_test')
     expect(myChases.length).toBe(Object.keys(testChases).length)
   })
 
-  describe('when "EditChase" component emits "open"', () => {
+  describe('when "ChaseCard" component emits "open"', () => {
     beforeAll(done => {
-      const editChase = wrapper.find('.EditChase_test')
+      const editChase = wrapper.find('.ChaseCard_test')
       editChase.vm.$emit('open')
       wrapper.vm.$nextTick(done)
     })

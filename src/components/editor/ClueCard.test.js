@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import EditClue from './EditClue'
+import ClueCard from './ClueCard'
 
 const testClueId = 'testClueId'
 const testChaseId = 'testChaseId'
@@ -15,8 +15,8 @@ const store = {
   }
 }
 
-describe('EditClue', () => {
-  const wrapper = mountQuasar(EditClue, {
+describe('ClueCard', () => {
+  const wrapper = mountQuasar(ClueCard, {
     store,
     propsData: {
       clue: {

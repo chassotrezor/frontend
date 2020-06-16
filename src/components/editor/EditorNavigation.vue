@@ -1,8 +1,8 @@
 <template>
   <div>
-    <my-chases
+    <chases-list
       v-if="!selectedChase"
-      class="MyChases_test"
+      class="ChasesList_test"
       @open="openChase"
     />
     <chase-editor
@@ -23,14 +23,14 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import MyChases from './MyChases'
+import ChasesList from './ChasesList'
 import ChaseEditor from './ChaseEditor'
 import ClueEditor from './ClueEditor'
 
 export default {
-  name: 'Editor',
+  name: 'EditorNavigation',
   components: {
-    MyChases,
+    ChasesList,
     ChaseEditor,
     ClueEditor
   },

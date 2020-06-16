@@ -9,10 +9,10 @@
     />
     <br>
     <div>Clues :</div>
-    <edit-clue
+    <clue-card
       v-for="clue in chase.chaseScheme"
       :key="clue.id"
-      class="EditClue_test"
+      class="ClueCard_test"
       :clue="clue"
       :chase-id="chaseId"
       @edit="editClue"
@@ -28,12 +28,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import EditClue from './EditClue'
+import ClueCard from './ClueCard'
 
 export default {
   name: 'ChaseEditor',
   components: {
-    EditClue
+    ClueCard
   },
   props: {
     chaseId: {

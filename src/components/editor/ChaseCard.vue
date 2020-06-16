@@ -25,7 +25,7 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'EditChase',
+  name: 'ChaseCard',
   props: {
     chase: {
       type: Object,

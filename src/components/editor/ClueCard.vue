@@ -26,7 +26,7 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'EditClue',
+  name: 'ClueCard',
   props: {
     clue: {
       type: Object,

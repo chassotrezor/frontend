@@ -1,16 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-    <editor />
+    <editor-navigation />
   </q-page>
 </template>
 
 <script>
-import Editor from 'components/editor/Editor'
+import EditorNavigation from 'components/editor/EditorNavigation'
 
 export default {
   name: 'PageEditor',
   components: {
-    Editor
+    EditorNavigation
   }
 }
 </script>
