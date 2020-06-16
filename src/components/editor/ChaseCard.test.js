@@ -7,6 +7,14 @@ const store = {
       namespaced: true,
       actions: {
         deleteChase: jest.fn()
+      },
+      getters: {
+        getChase: () => () => {
+          return {
+            name: 'testChaseName',
+            id: 'testChaseId'
+          }
+        }
       }
     }
   }
@@ -16,10 +24,7 @@ describe('ChaseCard', () => {
   const wrapper = mountQuasar(ChaseCard, {
     store,
     propsData: {
-      chase: {
-        name: 'testChaseName',
-        id: 'testChaseId'
-      }
+      chaseId: 'testChaseId'
     }
   })
 

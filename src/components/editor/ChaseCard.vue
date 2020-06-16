@@ -22,14 +22,22 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ChaseCard',
   props: {
-    chase: {
-      type: Object,
+    chaseId: {
+      type: String,
       required: true
+    }
+  },
+  computed: {
+    ...mapGetters({
+      getChase: 'editor/getChase'
+    }),
+    chase () {
+      return this.getChase({ chaseId: this.chaseId })
     }
   },
   methods: {

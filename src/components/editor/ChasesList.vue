@@ -4,7 +4,7 @@
       v-for="chase in myChases"
       :key="chase.id"
       class="ChaseCard_test"
-      :chase="chase"
+      :chase-id="chase.id"
       @edit="edit(chase.id)"
     />
     <q-btn
