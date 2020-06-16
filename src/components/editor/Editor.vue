@@ -60,11 +60,21 @@ export default {
       else return undefined
     }
   },
+  watch: {
+    $route (to, from) {
+      if (from.params.chaseId) this.unbindClues({ chaseId: from.params.chaseId })
+      if (to.params.chaseId) this.bindClues({ chaseId: to.params.chaseId })
+    }
+  },
   mounted () {
     this.bindMyChases()
+    const chaseId = this.$route.params.chaseId
+    if (chaseId) this.bindClues({ chaseId })
   },
   beforeDestroy () {
     this.unbindMyChases()
+    const chaseId = this.$route.params.chaseId
+    if (chaseId) this.unbindClues({ chaseId })
   },
   methods: {
     ...mapActions({
@@ -73,19 +83,13 @@ export default {
       bindClues: 'editor/bindClues',
       unbindClues: 'editor/unbindClues'
     }),
-    async openChase (chaseId) {
-      const oldChaseId = this.$route.params.chaseId
-      this.unbindClues({ chaseId: oldChaseId })
-
-      await this.$router.push({
+    openChase (chaseId) {
+      this.$router.push({
         name: 'chaseEditor',
         params: {
           chaseId
         }
       })
-
-      const newChaseId = this.$route.params.chaseId
-      this.bindClues({ chaseId: newChaseId })
     },
     editClue (clueId) {
       const chaseId = this.$route.params.chaseId

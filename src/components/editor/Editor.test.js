@@ -10,7 +10,7 @@ const $route = {
 
 const $router = {
   push: route => {
-    $route.params = { ...route.params }
+    $route.params = route.params
   }
 }
 
@@ -20,7 +20,9 @@ const store = {
       namespaced: true,
       actions: {
         bindMyChases: jest.fn(),
-        unbindMyChases: jest.fn()
+        unbindMyChases: jest.fn(),
+        bindClues: jest.fn(),
+        unbindClues: jest.fn()
       },
       getters: {
         getChase: state => () => state.chaseId,
@@ -126,6 +128,21 @@ describe('Editor', () => {
     })
   })
 
+  /*
+    TODO: find a way to trigger the $route watcher
+    https://stackoverflow.com/questions/47835426/how-to-unit-test-vuejs-watcher-on-route
+  */
+
+  // describe('when route changes', () => {
+  //   beforeAll(async () => {
+  //     wrapper.vm.$set(wrapper.vm.$route, 'params', {
+  //       chaseId: 'newId',
+  //       clueId: 'newId'
+  //     })
+  //     await wrapper.vm.$nextTick()
+  //   })
+  // })
+
   describe('when it is destroyed', () => {
     beforeAll(done => {
       wrapper.vm.$nextTick(done)
@@ -134,6 +151,13 @@ describe('Editor', () => {
 
     it('stops listening to MyChases on server', () => {
       expect(store.modules.editor.actions.unbindMyChases).toHaveBeenCalled()
+    })
+
+    it('stops listening to clues of selected Chase on server if a chase is selected', () => {
+      expect(store.modules.editor.actions.unbindClues).toHaveBeenCalledWith(
+        expect.any(Object),
+        { chaseId: testChaseId }
+      )
     })
   })
 })
