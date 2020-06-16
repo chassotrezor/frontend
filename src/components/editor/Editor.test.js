@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import EditorNavigation from './EditorNavigation'
+import Editor from './Editor'
 
 const testChaseId = 'testChaseId'
 const testClueId = 'testClueId'
@@ -46,10 +46,10 @@ const store = {
   }
 }
 
-describe('EditorNavigation', () => {
+describe('Editor', () => {
   let wrapper
   beforeAll(done => {
-    wrapper = mountQuasar(EditorNavigation, {
+    wrapper = mountQuasar(Editor, {
       store,
       mocks: {
         $route,
