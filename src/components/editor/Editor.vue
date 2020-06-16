@@ -1,5 +1,13 @@
 <template>
   <div>
+    <editor-fast-access
+      class="EditorFastAccess_test"
+      :selected-chase="selectedChase"
+      :selected-clue="selectedClue"
+      @editChase="editChase"
+      @editClue="editClue"
+      @unselect="unselect"
+    />
     <chases-list
       v-if="!selectedChase"
       class="ChasesList_test"
@@ -23,13 +31,15 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import EditorFastAccess from './EditorFastAccess'
 import ChasesList from './ChasesList'
 import ChaseEditor from './ChaseEditor'
 import ClueEditor from './ClueEditor'
 
 export default {
-  name: 'EditorNavigation',
+  name: 'Editor',
   components: {
+    EditorFastAccess,
     ChasesList,
     ChaseEditor,
     ClueEditor
@@ -99,6 +109,12 @@ export default {
           chaseId,
           clueId
         }
+      })
+    },
+    unselect () {
+      this.$router.push({
+        name: 'editor',
+        params: { }
       })
     }
   }

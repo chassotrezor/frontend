@@ -2,7 +2,7 @@
 import { createLocalVue, shallowMount } from 'test-utils'
 
 import Vuex from 'vuex'
-// import VueRouter from 'vue-router'
+import VueRouter from 'vue-router'
 import * as All from 'quasar'
 // import langEn from 'quasar/lang/en-us' // change to any language you wish! => this breaks wallaby :(
 const { Quasar, Cookies } = All
@@ -31,11 +31,19 @@ export const mountQuasar = (component, options = {}) => {
   const localVue = createLocalVue()
   const app = {}
 
-  localVue.use(Vuex)
-  // localVue.use(VueRouter)
   localVue.use(Quasar, { components })
-  const store = new Vuex.Store(options.store)
-  // const router = new VueRouter()
+
+  let store
+  if (options.store) {
+    localVue.use(Vuex)
+    store = new Vuex.Store(options.store)
+  }
+
+  let router
+  if (options.routes) {
+    localVue.use(VueRouter)
+    router = new VueRouter({ routes: options.routes })
+  }
 
   if (options) {
     const ssrContext = options.ssr ? mockSsrContext() : null
@@ -64,6 +72,7 @@ export const mountQuasar = (component, options = {}) => {
   return shallowMount(component, {
     localVue: localVue,
     store,
+    router,
     mocks: { $t, $tc, $n, $d, ...options.mocks },
     // Injections for Components with a QPage root Element
     provide: {
