@@ -3,18 +3,21 @@
     class="row items-center"
   >
     <q-btn
+      class="UnselectBtn_test"
       icon="edit"
       @click="$emit('unselect')"
     />
     <div> > </div>
     <q-select
+      class="QSelectChase_test"
       :value="chase"
       :options="chasesOptions"
       @input="$emit('editChase', $event.value)"
     />
     <div> > </div>
     <q-select
-      v-show="chase"
+      v-if="selectedChase"
+      class="QSelectClue_test"
       :value="clue"
       :options="cluesOptions"
       @input="$emit('editClue', $event.value)"

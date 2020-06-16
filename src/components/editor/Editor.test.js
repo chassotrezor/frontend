@@ -250,6 +250,77 @@ describe('Editor', () => {
       await wrapper.vm.$nextTick()
     })
 
+    describe('when "EditorFastAccess" emits "unselect" with "chaseId" param', () => {
+      beforeAll(async () => {
+        const fastAccess = wrapper.find('.EditorFastAccess_test')
+        fastAccess.vm.$emit('unselect', testChaseId)
+        await wrapper.vm.$nextTick()
+      })
+
+      it('navigates to "/editor"', () => {
+        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
+          name: 'editor',
+          params: {}
+        })
+      })
+
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
+        $router.push.mockClear()
+      })
+    })
+
+    describe('when "EditorFastAccess" emits "editChase" with "chaseId" param', () => {
+      beforeAll(async () => {
+        const fastAccess = wrapper.find('.EditorFastAccess_test')
+        fastAccess.vm.$emit('editChase', testChaseId)
+        await wrapper.vm.$nextTick()
+      })
+
+      it('navigates to "/editor/chaseId"', () => {
+        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
+          name: 'chaseEditor',
+          params: {
+            chaseId: testChaseId
+          }
+        })
+      })
+
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
+        $router.push.mockClear()
+        await wrapper.vm.$nextTick()
+      })
+    })
+
+    describe('when "EditorFastAccess" emits "editClue" with "clueId" param', () => {
+      beforeAll(async () => {
+        wrapper.vm.$set($route, 'params', {
+          chaseId: testChaseId
+        })
+        await wrapper.vm.$nextTick()
+        const fastAccess = wrapper.find('.EditorFastAccess_test')
+        fastAccess.vm.$emit('editClue', testClueId)
+        await wrapper.vm.$nextTick()
+      })
+
+      it('navigates to "/editor/chaseId/chaseId"', () => {
+        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
+          name: 'clueEditor',
+          params: {
+            chaseId: testChaseId,
+            clueId: testClueId
+          }
+        })
+      })
+
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
+        $router.push.mockClear()
+        await wrapper.vm.$nextTick()
+      })
+    })
+
     describe('when "ChasesList" emits "editChase" with "chaseId" param', () => {
       beforeAll(async () => {
         const myChases = wrapper.find('.ChasesList_test')
@@ -266,8 +337,10 @@ describe('Editor', () => {
         })
       })
 
-      afterAll(() => {
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
         $router.push.mockClear()
+        await wrapper.vm.$nextTick()
       })
     })
 
@@ -292,8 +365,10 @@ describe('Editor', () => {
         })
       })
 
-      afterAll(() => {
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
         $router.push.mockClear()
+        await wrapper.vm.$nextTick()
       })
     })
   })
