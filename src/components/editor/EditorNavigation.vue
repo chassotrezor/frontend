@@ -3,7 +3,7 @@
     <chases-list
       v-if="!selectedChase"
       class="ChasesList_test"
-      @open="openChase"
+      @editChase="editChase"
     />
     <chase-editor
       v-else-if="!selectedClue"
@@ -83,7 +83,7 @@ export default {
       bindClues: 'editor/bindClues',
       unbindClues: 'editor/unbindClues'
     }),
-    openChase (chaseId) {
+    editChase (chaseId) {
       this.$router.push({
         name: 'chaseEditor',
         params: {

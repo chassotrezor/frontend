@@ -30,8 +30,8 @@ describe('ChaseCard', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    it('emits "open" event with "chaseId" value', () => {
-      expect(wrapper.emitted('open')).toBeTruthy()
+    it('emits "edit" event with "chaseId" value', () => {
+      expect(wrapper.emitted('edit')).toBeTruthy()
     })
   })
 

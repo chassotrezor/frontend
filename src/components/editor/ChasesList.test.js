@@ -41,15 +41,15 @@ describe('ChasesList', () => {
     expect(myChases.length).toBe(Object.keys(testChases).length)
   })
 
-  describe('when "ChaseCard" component emits "open"', () => {
+  describe('when "ChaseCard" component emits "edit"', () => {
     beforeAll(done => {
       const editChase = wrapper.find('.ChaseCard_test')
-      editChase.vm.$emit('open')
+      editChase.vm.$emit('edit')
       wrapper.vm.$nextTick(done)
     })
 
-    it('emits "open" event with "chaseId" parameter', () => {
-      expect(wrapper.emitted('open')[0][0]).toBe(testChases[0].id)
+    it('emits "editChase" event with "chaseId" parameter', () => {
+      expect(wrapper.emitted().editChase[0][0]).toBe(testChases[0].id)
     })
   })
 
@@ -69,8 +69,8 @@ describe('ChasesList', () => {
       expect(store.modules.editor.actions.createChase).toHaveBeenCalled()
     })
 
-    it('emits "open" event with value "newChaseId"', () => {
-      expect(wrapper.emitted().open[1][0]).toBe(newChaseId)
+    it('emits "editChase" event with value "newChaseId"', () => {
+      expect(wrapper.emitted().editChase[1][0]).toBe(newChaseId)
     })
   })
 })

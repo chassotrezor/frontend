@@ -78,10 +78,10 @@ describe('EditorNavigation', () => {
     expect(clueEditor.exists()).toBe(false)
   })
 
-  describe('when "ChasesList" emits "open" with "chaseId" param', () => {
+  describe('when "ChasesList" emits "editChase" with "chaseId" param', () => {
     beforeAll(async () => {
       const myChases = wrapper.find('.ChasesList_test')
-      myChases.vm.$emit('open', testChaseId)
+      myChases.vm.$emit('editChase', testChaseId)
       await wrapper.vm.$nextTick()
       wrapper.vm.$store.commit('editor/setChase', $route.params.chaseId)
       await wrapper.vm.$nextTick()

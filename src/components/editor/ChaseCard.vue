@@ -7,7 +7,7 @@
         q-pa-sm
         ClickToOpen_test
       "
-      @click="openChase"
+      @click="edit"
     >
       {{ chase.name }}
     </div>
@@ -36,8 +36,8 @@ export default {
     ...mapActions({
       deleteChase: 'editor/deleteChase'
     }),
-    openChase () {
-      this.$emit('open')
+    edit () {
+      this.$emit('edit')
     }
   }
 }

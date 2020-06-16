@@ -5,7 +5,7 @@
       :key="chase.id"
       class="ChaseCard_test"
       :chase="chase"
-      @open="emitOpen(chase.id)"
+      @edit="edit(chase.id)"
     />
     <q-btn
       class="CreateChase_test"
@@ -34,14 +34,14 @@ export default {
     ...mapActions({
       createChase: 'editor/createChase'
     }),
-    emitOpen (chaseId) {
-      this.$emit('open', chaseId)
+    edit (chaseId) {
+      this.$emit('editChase', chaseId)
     },
     createAndEditChase () {
       const vm = this
       vm.createChase()
         .then(chaseId => {
-          vm.emitOpen(chaseId)
+          vm.edit(chaseId)
         })
     }
   }
