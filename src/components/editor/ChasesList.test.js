@@ -1,16 +1,16 @@
 import { mountQuasar } from '@test'
 import ChasesList from './ChasesList'
 
-const testChases = [
-  {
+const testChases = {
+  testChaseId1: {
     id: 'testChaseId1',
     name: 'testName1'
   },
-  {
+  testChaseId2: {
     id: 'testChaseId2',
     name: 'testName2'
   }
-]
+}
 
 const newChaseId = 'newChaseId'
 const store = {
@@ -49,7 +49,7 @@ describe('ChasesList', () => {
     })
 
     it('emits "editChase" event with "chaseId" parameter', () => {
-      expect(wrapper.emitted().editChase[0][0]).toBe(testChases[0].id)
+      expect(wrapper.emitted().editChase[0][0]).toBe(testChases.testChaseId1.id)
     })
   })
 

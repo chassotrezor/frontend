@@ -1,5 +1,5 @@
 export function myChases (state) {
-  return Object.values(state.myChases)
+  return state.myChases
 }
 
 export function getChase (state) {
