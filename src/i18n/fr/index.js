@@ -21,6 +21,11 @@ export default {
       waitForClue: 'patientez pendant le chargement de l\'indice...'
     }
   },
+  editor: {
+    clue: {
+      addRow: 'nouveau segment'
+    }
+  },
   routes: {
     cluesList: 'historique des indices',
     editor: 'créer un parcours',

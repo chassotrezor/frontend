@@ -4,7 +4,19 @@ import ClueEditor from './ClueEditor'
 const clueId = 'testClueId'
 const chaseId = 'testChaseId'
 
-const testClueName = 'testClueName'
+const testClue = {
+  name: 'testClueName',
+  rows: [
+    {
+      type: 'text',
+      value: '<div>TEST TEXT</div>'
+    },
+    {
+      type: 'image',
+      value: 'url/to/image'
+    }
+  ]
+}
 const store = {
   modules: {
     editor: {
@@ -14,9 +26,7 @@ const store = {
       },
       getters: {
         getClue: () => () => {
-          return {
-            name: testClueName
-          }
+          return testClue
         }
       }
     }
@@ -37,12 +47,60 @@ describe('ClueEditor', () => {
   })
 
   it('initializes "name" data to "clue.name"', () => {
-    expect(wrapper.vm.name).toBe(testClueName)
+    expect(wrapper.vm.name).toBe(testClue.name)
+  })
+
+  it('initializes "rows" data to "clue.row"', () => {
+    expect(wrapper.vm.rows).toEqual(testClue.rows)
   })
 
   it('displays a "QInput" for "name"', () => {
     const qInput = wrapper.find('.QInputName_test')
-    expect(qInput.props().value).toBe(testClueName)
+    expect(qInput.props().value).toBe(testClue.name)
+  })
+
+  it('displays a "ClueRow" for each row', () => {
+    const rows = wrapper.findAll('.ClueRow_test')
+    expect(rows.length).toBe(testClue.rows.length)
+  })
+
+  describe('when a "ClueRow" emits "remove"', () => {
+    beforeAll(async () => {
+      const row = wrapper.find('.ClueRow_test')
+      row.vm.$emit('remove')
+      await wrapper.vm.$nextTick()
+    })
+
+    it('removes the corresponding row', () => {
+      expect(wrapper.vm.rows).toEqual([testClue.rows[1]])
+    })
+
+    afterAll(async () => {
+      wrapper.setData({ rows: [...testClue.rows] })
+      await wrapper.vm.$nextTick()
+    })
+  })
+
+  it('displays an "AddRow" button', () => {
+    const btn = wrapper.find('.AddRow_test')
+    expect(btn.exists()).toBe(true)
+  })
+
+  describe('when "AddRow" button emits "click"', () => {
+    beforeAll(async () => {
+      const btn = wrapper.find('.AddRow_test')
+      btn.vm.$emit('click')
+      await wrapper.vm.$nextTick()
+    })
+
+    it('adds one row', () => {
+      expect(wrapper.vm.rows.length).toBe(testClue.rows.length + 1)
+    })
+
+    afterAll(async () => {
+      wrapper.setData({ rows: [...testClue.rows] })
+      await wrapper.vm.$nextTick()
+    })
   })
 
   it('displays an "update" button', () => {
@@ -63,9 +121,7 @@ describe('ClueEditor', () => {
         {
           chaseId,
           clueId,
-          newProps: {
-            name: testClueName
-          }
+          newProps: testClue
         }
       )
     })
