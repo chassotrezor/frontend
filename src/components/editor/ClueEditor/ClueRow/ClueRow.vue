@@ -20,14 +20,25 @@
       :disable="last"
       @click="$emit('down')"
     />
-    <div>{{ type }}</div>
-    <div>{{ value }}</div>
+    <text-row
+      v-if="type === 'text'"
+      :value="value"
+      @input="$emit('input', $event)"
+    />
+    <div v-else>
+      {{ type }}
+    </div>
   </div>
 </template>
 
 <script>
+import TextRow from './TextRow'
+
 export default {
   name: 'ClueRow',
+  components: {
+    TextRow
+  },
   props: {
     type: {
       type: String,

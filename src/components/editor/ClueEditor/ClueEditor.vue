@@ -21,6 +21,7 @@
       @up="up(index)"
       @down="down(index)"
       @remove="removeRow(index)"
+      @input="set(index, $event)"
     />
     <q-btn
       class="AddRow_test"
@@ -68,8 +69,14 @@ export default {
     }
   },
   mounted () {
-    this.name = this.clue.name
-    this.rows = [...this.clue.rows]
+    const vm = this
+    vm.name = vm.clue.name
+    vm.clue.rows.forEach((row, rowIndex) => {
+      Object.entries(row).forEach(entry => {
+        if (!vm.rows[rowIndex]) vm.$set(vm.rows, rowIndex, {})
+        vm.$set(vm.rows[rowIndex], entry[0], entry[1])
+      })
+    })
   },
   methods: {
     ...mapActions({
@@ -103,6 +110,9 @@ export default {
       const row = this.rows[i]
       const nextRow = this.rows[i + 1]
       this.rows.splice(i, 2, nextRow, row)
+    },
+    set (index, value) {
+      this.rows[index].value = value
     }
   }
 }
