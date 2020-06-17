@@ -16,6 +16,10 @@
       class="ClueRow_test"
       :type="row.type"
       :value="row.value"
+      :first="index === 0"
+      :last="index === rows.length - 1"
+      @up="up(index)"
+      @down="down(index)"
       @remove="removeRow(index)"
     />
     <q-btn
@@ -84,11 +88,21 @@ export default {
     addRow () {
       this.rows.push({
         type: 'text',
-        value: '<div>TEXT</div>'
+        value: '<div>TEXT</div>' + Math.ceil(Math.random() * 100)
       })
     },
     removeRow (i) {
       this.rows.splice(i, 1)
+    },
+    up (i) {
+      const row = this.rows[i]
+      const previousRow = this.rows[i - 1]
+      this.rows.splice(i - 1, 2, row, previousRow)
+    },
+    down (i) {
+      const row = this.rows[i]
+      const nextRow = this.rows[i + 1]
+      this.rows.splice(i, 2, nextRow, row)
     }
   }
 }

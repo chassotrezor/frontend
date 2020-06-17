@@ -59,25 +59,77 @@ describe('ClueEditor', () => {
     expect(qInput.props().value).toBe(testClue.name)
   })
 
-  it('displays a "ClueRow" for each row', () => {
-    const rows = wrapper.findAll('.ClueRow_test')
-    expect(rows.length).toBe(testClue.rows.length)
-  })
-
-  describe('when a "ClueRow" emits "remove"', () => {
-    beforeAll(async () => {
-      const row = wrapper.find('.ClueRow_test')
-      row.vm.$emit('remove')
-      await wrapper.vm.$nextTick()
+  describe('clue rows', () => {
+    it('displays a "ClueRow" for each row', () => {
+      const rows = wrapper.findAll('.ClueRow_test')
+      expect(rows.length).toBe(testClue.rows.length)
     })
 
-    it('removes the corresponding row', () => {
-      expect(wrapper.vm.rows).toEqual([testClue.rows[1]])
+    it('sets "first" prop to true if and only if ClueRow is first of list', () => {
+      const rows = wrapper.findAll('.ClueRow_test')
+      wrapper.vm.rows.forEach((row, index) => {
+        expect(rows.at(index).props().first).toBe(index === 0)
+      })
     })
 
-    afterAll(async () => {
-      wrapper.setData({ rows: [...testClue.rows] })
-      await wrapper.vm.$nextTick()
+    it('sets "last" prop to true if and only if ClueRow is last of list', () => {
+      const rows = wrapper.findAll('.ClueRow_test')
+      wrapper.vm.rows.forEach((row, index) => {
+        expect(rows.at(index).props().last).toBe(index === rows.length - 1)
+      })
+    })
+
+    describe('when a "ClueRow" emits "remove"', () => {
+      beforeAll(async () => {
+        const row = wrapper.find('.ClueRow_test')
+        row.vm.$emit('remove')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('removes the corresponding row', () => {
+        expect(wrapper.vm.rows).toEqual([testClue.rows[1]])
+      })
+
+      afterAll(async () => {
+        wrapper.setData({ rows: [...testClue.rows] })
+        await wrapper.vm.$nextTick()
+      })
+    })
+
+    describe('when a "ClueRow" emits "up"', () => {
+      beforeAll(async () => {
+        const rows = wrapper.findAll('.ClueRow_test')
+        rows.at(1).vm.$emit('up')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('permutes corresponding row and previous row', () => {
+        expect(wrapper.vm.rows[1]).toEqual(testClue.rows[0])
+        expect(wrapper.vm.rows[0]).toEqual(testClue.rows[1])
+      })
+
+      afterAll(async () => {
+        wrapper.setData({ rows: [...testClue.rows] })
+        await wrapper.vm.$nextTick()
+      })
+    })
+
+    describe('when a "ClueRow" emits "down"', () => {
+      beforeAll(async () => {
+        const rows = wrapper.findAll('.ClueRow_test')
+        rows.at(0).vm.$emit('down')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('permutes corresponding row and next row', () => {
+        expect(wrapper.vm.rows[1]).toEqual(testClue.rows[0])
+        expect(wrapper.vm.rows[0]).toEqual(testClue.rows[1])
+      })
+
+      afterAll(async () => {
+        wrapper.setData({ rows: [...testClue.rows] })
+        await wrapper.vm.$nextTick()
+      })
     })
   })
 
