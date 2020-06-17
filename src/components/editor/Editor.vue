@@ -32,9 +32,9 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import EditorFastAccess from './EditorFastAccess'
-import ChasesList from './ChasesList'
-import ChaseEditor from './ChaseEditor'
-import ClueEditor from './ClueEditor'
+import ChasesList from './ChasesList/ChasesList'
+import ChaseEditor from './ChaseEditor/ChaseEditor'
+import ClueEditor from './ClueEditor/ClueEditor'
 
 export default {
   name: 'Editor',

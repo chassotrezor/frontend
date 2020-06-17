@@ -33,7 +33,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ClueRow from './ClueRow'
+import ClueRow from './ClueRow/ClueRow'
 
 export default {
   name: 'ClueEditor',
