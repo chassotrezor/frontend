@@ -1,6 +1,7 @@
 <template>
   <q-editor
-    :value="$sanitize(value)"
+    class="QEditor_test"
+    :value="sanitizedText"
     @input="$emit('input', $event)"
   />
 </template>
@@ -12,6 +13,11 @@ export default {
     value: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    sanitizedText () {
+      return this.$sanitize(this.value)
     }
   }
 }
