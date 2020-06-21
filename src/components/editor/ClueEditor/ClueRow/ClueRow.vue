@@ -25,6 +25,11 @@
       :value="value"
       @input="$emit('input', $event)"
     />
+    <image-row
+      v-else-if="type === 'image'"
+      :value="value"
+      @input="$emit('input', $event)"
+    />
     <div v-else>
       {{ type }}
     </div>
@@ -33,11 +38,13 @@
 
 <script>
 import TextRow from './TextRow'
+import ImageRow from './ImageRow'
 
 export default {
   name: 'ClueRow',
   components: {
-    TextRow
+    TextRow,
+    ImageRow
   },
   props: {
     type: {

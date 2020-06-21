@@ -45,8 +45,16 @@ export default function (/* { store, ssrContext } */) {
       // }
 
       return {
-        name: 'editor'
+        name: 'clueEditor',
+        params: {
+          chaseId: 'testChaseID',
+          clueId: 'testClueID'
+        }
       }
+
+      // return {
+      //   name: 'editor'
+      // }
     } else {
       return { name: 'sign' }
     }
