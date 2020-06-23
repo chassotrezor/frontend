@@ -10,11 +10,11 @@ const clue = {
   rows: [
     {
       type: 'text',
-      value: 'testText'
+      rawHtml: 'testText'
     },
     {
       type: 'image',
-      value: 'testSrc'
+      url: 'testSrc'
     }
   ]
 }
