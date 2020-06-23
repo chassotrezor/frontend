@@ -81,6 +81,7 @@ export default {
           const url = await snapshot.ref.getDownloadURL()
           this.$emit('uploaded', { url, fileId })
           vm.__updateFile(file, 'uploaded')
+          vm.reset()
           vm.uploadTask = undefined
         })
         this.$emit('uploading', this.uploadTask)
