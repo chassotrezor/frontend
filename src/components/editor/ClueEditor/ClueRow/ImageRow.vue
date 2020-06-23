@@ -5,7 +5,7 @@
     />
     <firebase-uploader
       :path="path"
-      :name="value.name"
+      :file-id="value.fileId"
       @uploaded="$emit('input', $event)"
     />
   </div>
