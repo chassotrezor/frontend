@@ -4,8 +4,9 @@ import TextRow from './TextRow'
 describe('TextRow', () => {
   const wrapper = mountQuasar(TextRow, {
     propsData: {
-      type: 'text',
-      value: '<div>TEST</div>'
+      row: {
+        rawHtml: '<div>TEST</div>'
+      }
     },
     mocks: {
       $sanitize: () => '<div>Sanitized</div>'
