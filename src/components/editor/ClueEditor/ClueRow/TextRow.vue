@@ -2,7 +2,7 @@
   <q-editor
     class="QEditor_test"
     :value="sanitizedText"
-    @input="$emit('input', $event)"
+    @input="$emit('input', { rawHtml: $event })"
   />
 </template>
 
@@ -11,13 +11,13 @@ export default {
   name: 'TextRow',
   props: {
     value: {
-      type: String,
+      type: Object,
       required: true
     }
   },
   computed: {
     sanitizedText () {
-      return this.$sanitize(this.value)
+      return this.$sanitize(this.value.rawHtml)
     }
   }
 }

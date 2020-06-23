@@ -155,24 +155,3 @@ export function deleteClueInChase (__, { chaseId, clueId }) {
     await clueRef.delete()
   })
 }
-
-export async function uploadImage (__, { file, subPath, onProgress, onComplete }) {
-  const userId = firebase.auth().currentUser.uid
-  const path = `${userId}/${subPath}`
-  const storageRef = firebase.storage().ref().child(path)
-  const list = await storageRef.listAll()
-  let name
-  do {
-    name = Math.random().toString(36).substring(2)
-  } while (list.items.some(item => item.location.path === `${path}/${name}`))
-  const uploadTask = storageRef.child(name).put(file)
-  uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, {
-    next: onProgress,
-    complete: onComplete
-  })
-  let url
-  await uploadTask.then(async snapshot => {
-    url = await snapshot.ref.getDownloadURL()
-  })
-  return url
-}

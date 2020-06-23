@@ -1,27 +1,32 @@
 <template>
-  <image-loader
-    :sub-path="subPath"
-    :initial-src="value"
-    @url="$emit('input', $event)"
-  />
+  <div>
+    <q-img
+      :src="value.url"
+    />
+    <firebase-uploader
+      :path="path"
+      :name="value.name"
+      @uploaded="$emit('input', $event)"
+    />
+  </div>
 </template>
 
 <script>
-import ImageLoader from './ImageLoader'
+import FirebaseUploader from 'src/store/FirebaseUploader'
 
 export default {
   name: 'ImageRow',
   components: {
-    ImageLoader
+    FirebaseUploader
   },
   props: {
     value: {
-      type: String,
+      type: Object,
       default: () => null
     }
   },
   computed: {
-    subPath () {
+    path () {
       const chaseId = this.$route.params.chaseId
       const clueId = this.$route.params.clueId
       return `${chaseId}/${clueId}`

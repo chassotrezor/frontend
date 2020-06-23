@@ -29,6 +29,7 @@
       :label="$t('editor.clue.addRow')"
       @click="addRow"
     />
+    {{ rows }}
   </div>
 </template>
 
@@ -112,7 +113,7 @@ export default {
       this.rows.splice(i, 2, nextRow, row)
     },
     set (index, value) {
-      this.rows[index].value = value
+      this.$set(this.rows[index], 'value', value)
     }
   }
 }
