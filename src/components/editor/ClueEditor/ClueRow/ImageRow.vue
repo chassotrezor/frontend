@@ -5,8 +5,8 @@
     />
     <firebase-uploader
       :path="path"
-      :file-id="value.fileId"
-      @uploaded="$emit('input', $event)"
+      :file-id="value.rowId"
+      @uploaded="emitImageData"
     />
   </div>
 </template>
@@ -30,6 +30,14 @@ export default {
       const chaseId = this.$route.params.chaseId
       const clueId = this.$route.params.clueId
       return `${chaseId}/${clueId}`
+    }
+  },
+  methods: {
+    emitImageData (event) {
+      this.$emit('input', {
+        ...event,
+        rowId: event.fileId
+      })
     }
   }
 }

@@ -103,7 +103,12 @@ export default {
       })
     },
     addRow (type) {
+      let rowId
+      do {
+        rowId = Math.random().toString(36).substring(2)
+      } while (this.rows.some(row => row.rowId === rowId))
       this.rows.push({
+        rowId,
         type,
         value: {}
       })
