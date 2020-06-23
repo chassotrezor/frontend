@@ -1,12 +1,14 @@
 <template>
   <div>
     <q-btn
+      class="RemoveBtn_test"
       round
       icon="close"
       color="negative"
       @click="$emit('remove')"
     />
     <q-btn
+      class="UpBtn_test"
       round
       icon="keyboard_arrow_up"
       color="primary"
@@ -14,6 +16,7 @@
       @click="$emit('up')"
     />
     <q-btn
+      class="DownBtn_test"
       round
       icon="keyboard_arrow_down"
       color="primary"
@@ -22,11 +25,13 @@
     />
     <text-row
       v-if="row.type === 'text'"
+      class="TextRow_test"
       :row="row"
       @input="$emit('input', $event)"
     />
     <image-row
       v-else-if="row.type === 'image'"
+      class="ImageRow_test"
       :row="row"
       @input="$emit('input', $event)"
     />
