@@ -8,12 +8,14 @@ const testClue = {
   name: 'testClueName',
   rows: [
     {
+      rowId: 'id1',
       type: 'text',
-      value: '<div>TEST TEXT</div>'
+      rawHtml: '<div>TEST TEXT</div>'
     },
     {
+      rowId: 'id2',
       type: 'image',
-      value: 'url/to/image'
+      url: 'url/to/image'
     }
   ]
 }
@@ -133,23 +135,27 @@ describe('ClueEditor', () => {
     })
   })
 
-  it('displays an "AddRow" button', () => {
-    const btn = wrapper.find('.AddRow_test')
-    expect(btn.exists()).toBe(true)
-  })
-
-  describe('when "AddRow" button emits "click"', () => {
-    beforeAll(async () => {
-      const btn = wrapper.find('.AddRow_test')
+  describe('"AddRow" button group', () => {
+    it('adds one TextRow when "AddText" button emits "click"', async () => {
+      const btn = wrapper.find('.AddText_test')
       btn.vm.$emit('click')
+      await wrapper.vm.$nextTick()
+      const length = wrapper.vm.rows.length
+      expect(length).toBe(testClue.rows.length + 1)
+      const lastRow = wrapper.vm.rows[length - 1]
+      expect(lastRow.type).toBe('text')
+      wrapper.setData({ rows: [...testClue.rows] })
       await wrapper.vm.$nextTick()
     })
 
-    it('adds one row', () => {
-      expect(wrapper.vm.rows.length).toBe(testClue.rows.length + 1)
-    })
-
-    afterAll(async () => {
+    it('adds one ImageRow when "AddImage" button emits "click"', async () => {
+      const btn = wrapper.find('.AddImage_test')
+      btn.vm.$emit('click')
+      await wrapper.vm.$nextTick()
+      const length = wrapper.vm.rows.length
+      expect(length).toBe(testClue.rows.length + 1)
+      const lastRow = wrapper.vm.rows[length - 1]
+      expect(lastRow.type).toBe('image')
       wrapper.setData({ rows: [...testClue.rows] })
       await wrapper.vm.$nextTick()
     })
