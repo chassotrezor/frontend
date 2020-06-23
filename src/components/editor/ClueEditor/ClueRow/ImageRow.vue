@@ -1,9 +1,11 @@
 <template>
   <div>
     <q-img
+      class="QImg_test"
       :src="row.url"
     />
     <firebase-uploader
+      class="FirebaseUploader_test"
       :path="path"
       :file-id="row.fileId ? row.fileId : row.rowId"
       @uploaded="emitImageData"
