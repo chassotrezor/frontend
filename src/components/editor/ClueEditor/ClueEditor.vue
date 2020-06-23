@@ -12,10 +12,9 @@
     />
     <clue-row
       v-for="(row, index) in rows"
-      :key="`clueRow-${index}`"
+      :key="row.rowId"
       class="ClueRow_test"
-      :type="row.type"
-      :value="row.value"
+      :row="row"
       :first="index === 0"
       :last="index === rows.length - 1"
       @up="up(index)"
@@ -109,8 +108,7 @@ export default {
       } while (this.rows.some(row => row.rowId === rowId))
       this.rows.push({
         rowId,
-        type,
-        value: {}
+        type
       })
     },
     removeRow (i) {
@@ -126,8 +124,8 @@ export default {
       const nextRow = this.rows[i + 1]
       this.rows.splice(i, 2, nextRow, row)
     },
-    set (index, value) {
-      this.$set(this.rows[index], 'value', value)
+    set (index, row) {
+      this.$set(this.rows, index, row)
     }
   }
 }

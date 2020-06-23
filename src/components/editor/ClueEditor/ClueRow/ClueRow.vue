@@ -21,13 +21,13 @@
       @click="$emit('down')"
     />
     <text-row
-      v-if="type === 'text'"
-      :value="value"
+      v-if="row.type === 'text'"
+      :row="row"
       @input="$emit('input', $event)"
     />
     <image-row
-      v-else-if="type === 'image'"
-      :value="value"
+      v-else-if="row.type === 'image'"
+      :row="row"
       @input="$emit('input', $event)"
     />
     <div v-else>
@@ -47,11 +47,7 @@ export default {
     ImageRow
   },
   props: {
-    type: {
-      type: String,
-      required: true
-    },
-    value: {
+    row: {
       type: Object,
       required: true
     },

@@ -1,11 +1,11 @@
 <template>
   <div>
     <q-img
-      :src="value.url"
+      :src="row.url"
     />
     <firebase-uploader
       :path="path"
-      :file-id="value.rowId"
+      :file-id="row.fileId ? row.fileId : row.rowId"
       @uploaded="emitImageData"
     />
   </div>
@@ -20,9 +20,9 @@ export default {
     FirebaseUploader
   },
   props: {
-    value: {
+    row: {
       type: Object,
-      default: () => null
+      required: true
     }
   },
   computed: {
@@ -35,8 +35,8 @@ export default {
   methods: {
     emitImageData (event) {
       this.$emit('input', {
-        ...event,
-        rowId: event.fileId
+        ...this.row,
+        ...event
       })
     }
   }

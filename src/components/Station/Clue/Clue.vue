@@ -3,17 +3,17 @@
     <div>Title</div>
     <div
       v-for="row in clue.rows"
-      :key="row.value.rowId"
+      :key="row.rowId"
     >
       <clue-image
         v-if="row.type === 'image'"
         class="ClueImage_test"
-        :src="row.value.url"
+        :src="row.url"
       />
       <clue-text
         v-if="row.type === 'text'"
         class="ClueText_test"
-        :raw-html="row.value.rawHtml"
+        :raw-html="row.rawHtml"
       />
     </div>
   </div>
