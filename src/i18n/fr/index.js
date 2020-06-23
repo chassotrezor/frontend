@@ -23,7 +23,10 @@ export default {
   },
   editor: {
     clue: {
-      addRow: 'nouveau segment'
+      addRow: {
+        text: 'texte',
+        image: 'image'
+      }
     }
   },
   routes: {

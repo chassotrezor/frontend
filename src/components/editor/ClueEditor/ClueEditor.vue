@@ -23,13 +23,22 @@
       @remove="removeRow(index)"
       @input="set(index, $event)"
     />
-    <q-btn
+    <q-btn-group
       class="AddRow_test"
-      icon="add"
-      :label="$t('editor.clue.addRow')"
-      @click="addRow"
-    />
-    {{ rows }}
+    >
+      <q-btn
+        class="AddText_test"
+        icon="edit"
+        :label="$t('editor.clue.addRow.text')"
+        @click="addRow('text')"
+      />
+      <q-btn
+        class="AddImage_test"
+        icon="image"
+        :label="$t('editor.clue.addRow.image')"
+        @click="addRow('image')"
+      />
+    </q-btn-group>
   </div>
 </template>
 
@@ -93,10 +102,10 @@ export default {
         }
       })
     },
-    addRow () {
+    addRow (type) {
       this.rows.push({
-        type: 'text',
-        value: '<div>TEXT</div>' + Math.ceil(Math.random() * 100)
+        type,
+        value: {}
       })
     },
     removeRow (i) {
