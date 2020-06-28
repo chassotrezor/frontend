@@ -27,6 +27,9 @@ export default {
         text: 'texte',
         image: 'image'
       }
+    },
+    chase: {
+      downloadQrCodes: 'télécharger les codes QR'
     }
   },
   routes: {

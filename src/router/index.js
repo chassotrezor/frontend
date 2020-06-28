@@ -44,11 +44,18 @@ export default function (/* { store, ssrContext } */) {
       //   }
       // }
 
+      // return {
+      //   name: 'clueEditor',
+      //   params: {
+      //     chaseId: 'testChaseID',
+      //     clueId: 'testClueID'
+      //   }
+      // }
+
       return {
-        name: 'clueEditor',
+        name: 'chaseEditor',
         params: {
-          chaseId: 'testChaseID',
-          clueId: 'testClueID'
+          chaseId: 'testChaseID'
         }
       }
 

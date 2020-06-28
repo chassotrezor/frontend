@@ -23,17 +23,24 @@
       label="nouvel indice"
       @click="createAndEditClue"
     />
+    <qr-codes-generator
+      :chase-id="chaseId"
+      :chase-name="chase.name"
+      :chase-scheme="chase.chaseScheme"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import ClueCard from './ClueCard'
+import QrCodesGenerator from './QrCodesGenerator'
 
 export default {
   name: 'ChaseEditor',
   components: {
-    ClueCard
+    ClueCard,
+    QrCodesGenerator
   },
   props: {
     chaseId: {
@@ -52,6 +59,9 @@ export default {
     }),
     chase () {
       return this.getChase({ chaseId: this.chaseId })
+    },
+    clueIds () {
+      return Object.values(this.chase.chaseScheme).map(clue => clue.id)
     }
   },
   mounted () {
