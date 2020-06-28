@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-btn
+      class="QBtn_test"
       icon="cloud_download"
       :label="$t('editor.chase.downloadQrCodes')"
       @click="makePdf"
@@ -10,9 +11,12 @@
         v-for="clue in clues"
         :key="clue.clueId"
         :ref="clue.clueId"
+        class="QrCodeModule_test"
         style="page-break-after: always"
       >
-        <div v-html="clue.qrCode" />
+        <div
+          v-html="clue.qrCode"
+        />
         <div class="text-h6">
           {{ clue.name }}
         </div>
