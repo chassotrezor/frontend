@@ -34,7 +34,7 @@ export default function (/* { store, ssrContext } */) {
 
   const getReplacingRoute = (connectionState) => {
     if (connectionState === types.connection.CONNECTED) {
-      // return { name: 'home' }
+      return { name: 'home' }
 
       // return {
       //   name: 'clue',
@@ -52,12 +52,12 @@ export default function (/* { store, ssrContext } */) {
       //   }
       // }
 
-      return {
-        name: 'chaseEditor',
-        params: {
-          chaseId: 'testChaseID'
-        }
-      }
+      // return {
+      //   name: 'chaseEditor',
+      //   params: {
+      //     chaseId: 'testChaseID'
+      //   }
+      // }
 
       // return {
       //   name: 'editor'

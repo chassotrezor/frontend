@@ -5,7 +5,7 @@ let myChasesListener
 export function bindMyChases ({ commit }) {
   const userId = firebase.auth().currentUser.uid
   const chasesRef = firebase.firestore().collection('chases')
-  myChasesListener = chasesRef.where('editors', 'array-contains', userId).onSnapshot(querySnapshot => {
+  myChasesListener = chasesRef.where('editor', '==', userId).onSnapshot(querySnapshot => {
     querySnapshot.docChanges().forEach(change => {
       const id = change.doc.id
       if (change.type === 'removed') {
@@ -29,7 +29,7 @@ export function unbindMyChases ({ commit }) {
 const defaultChase = userId => {
   return {
     chaseScheme: {},
-    editors: [userId],
+    editor: userId,
     name: ''
   }
 }
