@@ -6,7 +6,7 @@ import html2pdf from 'html2pdf.js'
 
 const trailId = 'testTrailId'
 const trailName = 'testTrailName'
-const trailScheme = {
+const trailNodes = {
   testStationId1: {
     id: 'testStationId1',
     name: 'testStationName1'
@@ -22,14 +22,14 @@ describe('QrCodesGenerator', () => {
     propsData: {
       trailName,
       trailId,
-      trailScheme
+      trailNodes
     }
   })
 
   const modules = wrapper.findAll('.QrCodeModule_test')
-  const expectedLength = Object.keys(trailScheme).length
+  const expectedLength = Object.keys(trailNodes).length
 
-  it('displays a QR Code Module for each station in trailScheme', () => {
+  it('displays a QR Code Module for each station in nodes', () => {
     expect(modules.length).toBe(expectedLength)
   })
 

@@ -10,7 +10,7 @@
     <br>
     <div>Stations :</div>
     <station-card
-      v-for="station in trail.trailScheme"
+      v-for="station in trail.nodes"
       :key="station.id"
       class="StationCard_test"
       :station="station"
@@ -26,7 +26,7 @@
     <qr-codes-generator
       :trail-id="trailId"
       :trail-name="trail.name"
-      :trail-scheme="trail.trailScheme"
+      :trail-nodes="trail.nodes"
     />
   </div>
 </template>
@@ -61,7 +61,7 @@ export default {
       return this.getTrail({ trailId: this.trailId })
     },
     stationIds () {
-      return Object.values(this.trail.trailScheme).map(station => station.id)
+      return Object.values(this.trail.nodes).map(station => station.id)
     }
   },
   mounted () {

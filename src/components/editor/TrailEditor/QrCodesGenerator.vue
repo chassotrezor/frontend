@@ -43,7 +43,7 @@ export default {
       type: String,
       required: true
     },
-    trailScheme: {
+    trailNodes: {
       type: Object,
       required: true
     }
@@ -51,7 +51,7 @@ export default {
   computed: {
     stations () {
       const vm = this
-      return Object.values(this.trailScheme).map(station => {
+      return Object.values(this.trailNodes).map(station => {
         const stationId = station.id
         const url = generateString(vm.trailId, stationId)
         const name = station.name

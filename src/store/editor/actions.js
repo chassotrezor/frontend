@@ -28,7 +28,7 @@ export function unbindMyTrails ({ commit }) {
 
 const defaultTrail = userId => {
   return {
-    trailScheme: {},
+    nodes: {},
     editor: userId,
     name: ''
   }
@@ -110,12 +110,12 @@ export function createStation (__, { trailId }) {
     const stationRef = trailRef.collection('stations').doc()
     const stationId = stationRef.id
     db.runTransaction(async t => {
-      const actualTrailScheme = (await trailRef.get()).data().trailScheme
-      const trailScheme = {
-        ...actualTrailScheme,
+      const actualNodes = (await trailRef.get()).data().nodes
+      const nodes = {
+        ...actualNodes,
         [stationId]: defaultStationScheme(stationId)
       }
-      await trailRef.update({ trailScheme })
+      await trailRef.update({ nodes })
       await stationRef.set(defaultStation(stationId))
       resolve(stationId)
     })
@@ -126,20 +126,20 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(stationId)
-  const newPropsForTrailScheme = Object.entries(newProps).reduce((schemeProps, newProp) => {
+  const newPropsForNodes = Object.entries(newProps).reduce((schemeProps, newProp) => {
     if (isInDefaultStationScheme(newProp[0])) schemeProps[newProp[0]] = newProp[1]
     return schemeProps
   }, {})
   return db.runTransaction(async t => {
-    const oldTrailScheme = (await trailRef.get()).data().trailScheme
-    const trailScheme = {
-      ...oldTrailScheme,
+    const oldNodes = (await trailRef.get()).data().nodes
+    const nodes = {
+      ...oldNodes,
       [stationId]: {
-        ...oldTrailScheme[stationId],
-        ...newPropsForTrailScheme
+        ...oldNodes[stationId],
+        ...newPropsForNodes
       }
     }
-    await trailRef.update({ trailScheme })
+    await trailRef.update({ nodes })
     await stationRef.update(newProps)
   })
 }
@@ -149,9 +149,9 @@ export function deleteStationInTrail (__, { trailId, stationId }) {
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(stationId)
   return db.runTransaction(async t => {
-    const trailScheme = (await trailRef.get()).data().trailScheme
-    delete trailScheme[stationId]
-    await trailRef.update({ trailScheme })
+    const nodes = (await trailRef.get()).data().nodes
+    delete nodes[stationId]
+    await trailRef.update({ nodes })
     await stationRef.delete()
   })
 }

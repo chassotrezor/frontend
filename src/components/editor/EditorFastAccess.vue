@@ -55,8 +55,8 @@ export default {
     },
     stationsOptions () {
       if (this.selectedTrail) {
-        const trailScheme = this.getTrail({ trailId: this.selectedTrail }).trailScheme
-        return Object.values(trailScheme).map(station => {
+        const nodes = this.getTrail({ trailId: this.selectedTrail }).nodes
+        return Object.values(nodes).map(station => {
           return {
             value: station.id,
             label: station.name

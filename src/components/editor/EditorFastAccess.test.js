@@ -16,7 +16,7 @@ const store = {
           return {
             name: 'testTrailName',
             id: 'testTrailId',
-            trailScheme: {}
+            nodes: {}
           }
         }
       }

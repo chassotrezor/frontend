@@ -4,7 +4,7 @@ import TrailEditor from './TrailEditor'
 const trailId = 'testTrailId'
 
 const trail = {
-  trailScheme: {
+  nodes: {
     testStationId1: {
       id: 'testStationId1',
       name: 'testStationName1'
@@ -104,7 +104,7 @@ describe('TrailEditor', () => {
 
   it('displays a "StationCard" component for each station in trail', () => {
     const stations = wrapper.findAll('.StationCard_test')
-    expect(stations.length).toBe(Object.keys(trail.trailScheme).length)
+    expect(stations.length).toBe(Object.keys(trail.nodes).length)
   })
 
   it('displays no "StationEditor" component', () => {
