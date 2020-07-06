@@ -1,52 +1,52 @@
 import firebase from 'firebase/app'
 
-let myChasesListener
+let myTrailsListener
 
-export function bindMyChases ({ commit }) {
+export function bindMyTrails ({ commit }) {
   const userId = firebase.auth().currentUser.uid
-  const chasesRef = firebase.firestore().collection('chases')
-  myChasesListener = chasesRef.where('editor', '==', userId).onSnapshot(querySnapshot => {
+  const trailsRef = firebase.firestore().collection('trails')
+  myTrailsListener = trailsRef.where('editor', '==', userId).onSnapshot(querySnapshot => {
     querySnapshot.docChanges().forEach(change => {
       const id = change.doc.id
       if (change.type === 'removed') {
-        commit('deleteChase', id)
+        commit('deleteTrail', id)
       } else {
-        const chase = {
+        const trail = {
           ...change.doc.data(),
           id
         }
-        commit('setChase', chase)
+        commit('setTrail', trail)
       }
     })
   })
 }
 
-export function unbindMyChases ({ commit }) {
-  myChasesListener()
-  commit('deleteChases')
+export function unbindMyTrails ({ commit }) {
+  myTrailsListener()
+  commit('deleteTrails')
 }
 
-const defaultChase = userId => {
+const defaultTrail = userId => {
   return {
-    chaseScheme: {},
+    trailScheme: {},
     editor: userId,
     name: ''
   }
 }
 
-export function createChase () {
+export function createTrail () {
   return new Promise((resolve) => {
     const userId = firebase.auth().currentUser.uid
-    const chaseRef = firebase.firestore().collection('chases').doc()
-    chaseRef.set(defaultChase(userId))
-      .then(() => resolve(chaseRef.id))
+    const trailRef = firebase.firestore().collection('trails').doc()
+    trailRef.set(defaultTrail(userId))
+      .then(() => resolve(trailRef.id))
       .catch(error => console.log(error))
   })
 }
 
-export function updateChase (__, { chaseId, newProps }) {
-  const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
-  chaseRef.update(newProps)
+export function updateTrail (__, { trailId, newProps }) {
+  const trailRef = firebase.firestore().collection('trails').doc(trailId)
+  trailRef.update(newProps)
 }
 
 /*
@@ -54,20 +54,20 @@ export function updateChase (__, { chaseId, newProps }) {
   needs to use cloud functions
   https://firebase.google.com/docs/firestore/solutions/delete-collections
 */
-export function deleteChase (__, chaseId) {
-  const chaseRef = firebase.firestore().collection('chases').doc(chaseId)
-  return chaseRef.delete()
+export function deleteTrail (__, trailId) {
+  const trailRef = firebase.firestore().collection('trails').doc(trailId)
+  return trailRef.delete()
 }
 
 const cluesListener = {}
 
-export function bindClues ({ commit }, { chaseId }) {
+export function bindClues ({ commit }, { trailId }) {
   const db = firebase.firestore()
-  const cluesRef = db.collection('chases').doc(chaseId).collection('clues')
-  cluesListener[chaseId] = cluesRef.onSnapshot(querySnapshot => {
+  const cluesRef = db.collection('trails').doc(trailId).collection('clues')
+  cluesListener[trailId] = cluesRef.onSnapshot(querySnapshot => {
     querySnapshot.forEach(snapshot => {
       commit('setClue', {
-        chaseId,
+        trailId,
         clueId: snapshot.id,
         clue: snapshot.data()
       })
@@ -75,11 +75,11 @@ export function bindClues ({ commit }, { chaseId }) {
   })
 }
 
-export function unbindClues ({ commit }, { chaseId }) {
-  if (cluesListener[chaseId]) {
-    cluesListener[chaseId]()
-    delete cluesListener[chaseId]
-    commit('deleteClues', { chaseId })
+export function unbindClues ({ commit }, { trailId }) {
+  if (cluesListener[trailId]) {
+    cluesListener[trailId]()
+    delete cluesListener[trailId]
+    commit('deleteClues', { trailId })
   }
 }
 
@@ -98,60 +98,60 @@ const defaultClue = clueId => {
   return {
     id: clueId,
     name: '',
-    isChaseEntry: false,
+    isTrailEntry: false,
     rows: []
   }
 }
 
-export function createClue (__, { chaseId }) {
+export function createClue (__, { trailId }) {
   return new Promise((resolve) => {
     const db = firebase.firestore()
-    const chaseRef = db.collection('chases').doc(chaseId)
-    const clueRef = chaseRef.collection('clues').doc()
+    const trailRef = db.collection('trails').doc(trailId)
+    const clueRef = trailRef.collection('clues').doc()
     const clueId = clueRef.id
     db.runTransaction(async t => {
-      const actualChaseScheme = (await chaseRef.get()).data().chaseScheme
-      const chaseScheme = {
-        ...actualChaseScheme,
+      const actualTrailScheme = (await trailRef.get()).data().trailScheme
+      const trailScheme = {
+        ...actualTrailScheme,
         [clueId]: defaultClueScheme(clueId)
       }
-      await chaseRef.update({ chaseScheme })
+      await trailRef.update({ trailScheme })
       await clueRef.set(defaultClue(clueId))
       resolve(clueId)
     })
   })
 }
 
-export function updateClueInChase (__, { chaseId, clueId, newProps }) {
+export function updateClueInTrail (__, { trailId, clueId, newProps }) {
   const db = firebase.firestore()
-  const chaseRef = db.collection('chases').doc(chaseId)
-  const clueRef = chaseRef.collection('clues').doc(clueId)
-  const newPropsForChaseScheme = Object.entries(newProps).reduce((schemeProps, newProp) => {
+  const trailRef = db.collection('trails').doc(trailId)
+  const clueRef = trailRef.collection('clues').doc(clueId)
+  const newPropsForTrailScheme = Object.entries(newProps).reduce((schemeProps, newProp) => {
     if (isInDefaultClueScheme(newProp[0])) schemeProps[newProp[0]] = newProp[1]
     return schemeProps
   }, {})
   return db.runTransaction(async t => {
-    const oldChaseScheme = (await chaseRef.get()).data().chaseScheme
-    const chaseScheme = {
-      ...oldChaseScheme,
+    const oldTrailScheme = (await trailRef.get()).data().trailScheme
+    const trailScheme = {
+      ...oldTrailScheme,
       [clueId]: {
-        ...oldChaseScheme[clueId],
-        ...newPropsForChaseScheme
+        ...oldTrailScheme[clueId],
+        ...newPropsForTrailScheme
       }
     }
-    await chaseRef.update({ chaseScheme })
+    await trailRef.update({ trailScheme })
     await clueRef.update(newProps)
   })
 }
 
-export function deleteClueInChase (__, { chaseId, clueId }) {
+export function deleteClueInTrail (__, { trailId, clueId }) {
   const db = firebase.firestore()
-  const chaseRef = db.collection('chases').doc(chaseId)
-  const clueRef = chaseRef.collection('clues').doc(clueId)
+  const trailRef = db.collection('trails').doc(trailId)
+  const clueRef = trailRef.collection('clues').doc(clueId)
   return db.runTransaction(async t => {
-    const chaseScheme = (await chaseRef.get()).data().chaseScheme
-    delete chaseScheme[clueId]
-    await chaseRef.update({ chaseScheme })
+    const trailScheme = (await trailRef.get()).data().trailScheme
+    delete trailScheme[clueId]
+    await trailRef.update({ trailScheme })
     await clueRef.delete()
   })
 }

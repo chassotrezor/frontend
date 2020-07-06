@@ -9,14 +9,14 @@
       "
       @click="edit"
     >
-      {{ chase.name }}
+      {{ trail.name }}
     </div>
     <q-btn
       class="DeleteBtn_test"
       round
       icon="close"
       color="negative"
-      @click="deleteChase(chase.id)"
+      @click="deleteTrail(trail.id)"
     />
   </div>
 </template>
@@ -25,24 +25,24 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'ChaseCard',
+  name: 'TrailCard',
   props: {
-    chaseId: {
+    trailId: {
       type: String,
       required: true
     }
   },
   computed: {
     ...mapGetters({
-      getChase: 'editor/getChase'
+      getTrail: 'editor/getTrail'
     }),
-    chase () {
-      return this.getChase({ chaseId: this.chaseId })
+    trail () {
+      return this.getTrail({ trailId: this.trailId })
     }
   },
   methods: {
     ...mapActions({
-      deleteChase: 'editor/deleteChase'
+      deleteTrail: 'editor/deleteTrail'
     }),
     edit () {
       this.$emit('edit')

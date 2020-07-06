@@ -13,9 +13,9 @@ export default {
     pleaseWait: 'Veuillez patienter',
     sendingMail: 'envoi du lien de connexion...'
   },
-  chase: {
+  trail: {
     manage: {
-      start: 'Commencer la chasse au trésor'
+      start: 'Commencer le parcours'
     },
     clue: {
       waitForClue: 'patientez pendant le chargement de l\'indice...'
@@ -28,7 +28,7 @@ export default {
         image: 'image'
       }
     },
-    chase: {
+    trail: {
       downloadQrCodes: 'télécharger les codes QR'
     }
   },

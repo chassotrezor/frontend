@@ -1,20 +1,20 @@
 import firebase from 'firebase/app'
 
-function getChaseRef (chaseId) {
-  return firebase.firestore().collection('chases').doc(chaseId)
+function getTrailRef (trailId) {
+  return firebase.firestore().collection('trails').doc(trailId)
 }
 
-function getClueRef (chaseId, clueId) {
-  return getChaseRef(chaseId).collection('clues').doc(clueId)
+function getClueRef (trailId, clueId) {
+  return getTrailRef(trailId).collection('clues').doc(clueId)
 }
 
 // TODO: change promise to async function if possible
-export function downloadClue ({ commit }, { chaseId, clueId }) {
+export function downloadClue ({ commit }, { trailId, clueId }) {
   return new Promise((resolve, reject) => {
-    const clueRef = getClueRef(chaseId, clueId)
+    const clueRef = getClueRef(trailId, clueId)
     clueRef.get()
       .then(doc => {
-        commit('setClue', { chaseId, clueId, clue: doc.data() })
+        commit('setClue', { trailId, clueId, clue: doc.data() })
         resolve()
       })
       .catch(error => {
@@ -23,7 +23,7 @@ export function downloadClue ({ commit }, { chaseId, clueId }) {
   })
 }
 
-export async function start (__, { chaseId }) {
+export async function start (__, { trailId }) {
   const db = firebase.firestore()
   const userId = firebase.auth().currentUser.uid
   const userRef = db.collection('users').doc(userId)
@@ -31,8 +31,8 @@ export async function start (__, { chaseId }) {
   try {
     await db.runTransaction(async (t) => {
       const doc = await t.get(userRef)
-      const openChases = [...doc.data().openChases, chaseId]
-      t.update(userRef, { openChases })
+      const openTrails = [...doc.data().openTrails, trailId]
+      t.update(userRef, { openTrails })
     })
     console.log('Transaction success!')
   } catch (err) {
@@ -40,27 +40,27 @@ export async function start (__, { chaseId }) {
   }
 }
 
-export async function saveClueAccess (__, { chaseId, clueId }) {
+export async function saveClueAccess (__, { trailId, clueId }) {
   const db = firebase.firestore()
   const userId = firebase.auth().currentUser.uid
   const userRef = db.collection('users').doc(userId)
   try {
     await db.runTransaction(async (t) => {
       const doc = await t.get(userRef)
-      const chaseIsOpen = doc.data().openChases.some(id => id === chaseId)
+      const trailIsOpen = doc.data().openTrails.some(id => id === trailId)
       const currentAccessibleClues = doc.data().accessibleClues
-      if (chaseIsOpen) {
+      if (trailIsOpen) {
         const update = {
-          lastChase: chaseId,
+          lastTrail: trailId,
           lastClue: clueId
         }
         // TODO: improve checks and case handling
-        if (!currentAccessibleClues[chaseId]) {
+        if (!currentAccessibleClues[trailId]) {
           const accessibleClues = {
             ...currentAccessibleClues,
-            [chaseId]: {
+            [trailId]: {
               data: {
-                name: 'chase name' // TODO: handle chase data
+                name: 'trail name' // TODO: handle trail data
               },
               clues: {
                 [clueId]: {
@@ -72,17 +72,17 @@ export async function saveClueAccess (__, { chaseId, clueId }) {
           update.accessibleClues = accessibleClues
         } else {
           const currentClueIsNotAccessible =
-            Object.keys(currentAccessibleClues[chaseId].clues).every(id => id !== clueId)
+            Object.keys(currentAccessibleClues[trailId].clues).every(id => id !== clueId)
 
           if (currentClueIsNotAccessible) {
             const accessibleClues = {
               ...currentAccessibleClues,
-              [chaseId]: {
+              [trailId]: {
                 data: {
-                  name: 'chase name' // TODO: handle chase data
+                  name: 'trail name' // TODO: handle trail data
                 },
                 clues: {
-                  ...currentAccessibleClues[chaseId].clues,
+                  ...currentAccessibleClues[trailId].clues,
                   [clueId]: {
                     name: 'clue name' // TODO: handle clue data
                   }

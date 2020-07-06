@@ -1,20 +1,20 @@
-export function myChases (state) {
-  return state.myChases
+export function myTrails (state) {
+  return state.myTrails
 }
 
-export function getChase (state) {
-  return ({ chaseId }) => state.myChases[chaseId]
+export function getTrail (state) {
+  return ({ trailId }) => state.myTrails[trailId]
 }
 
 export function getClue (state) {
-  return ({ chaseId, clueId }) => {
+  return ({ trailId, clueId }) => {
     if (
-      !state.myChases[chaseId] ||
-      !state.myChases[chaseId].clues
+      !state.myTrails[trailId] ||
+      !state.myTrails[trailId].clues
     ) {
       return undefined
     } else {
-      return state.myChases[chaseId].clues[clueId]
+      return state.myTrails[trailId].clues[clueId]
     }
   }
 }

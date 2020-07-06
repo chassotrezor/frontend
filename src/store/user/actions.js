@@ -1,9 +1,9 @@
 import firebase from 'firebase/app'
 
 const defaultUser = {
-  openChases: [],
+  openTrails: [],
   accessibleClues: {},
-  lastChase: '',
+  lastTrail: '',
   lastClue: ''
 }
 

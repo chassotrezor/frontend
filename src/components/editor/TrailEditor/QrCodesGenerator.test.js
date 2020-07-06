@@ -4,9 +4,9 @@ import QrCodesGenerator from './QrCodesGenerator'
 jest.mock('html2pdf.js', () => jest.fn())
 import html2pdf from 'html2pdf.js'
 
-const chaseId = 'testChaseId'
-const chaseName = 'testChaseName'
-const chaseScheme = {
+const trailId = 'testTrailId'
+const trailName = 'testTrailName'
+const trailScheme = {
   testClueId1: {
     id: 'testClueId1',
     name: 'testClueName1'
@@ -20,16 +20,16 @@ const chaseScheme = {
 describe('QrCodesGenerator', () => {
   const wrapper = mountQuasar(QrCodesGenerator, {
     propsData: {
-      chaseName,
-      chaseId,
-      chaseScheme
+      trailName,
+      trailId,
+      trailScheme
     }
   })
 
   const modules = wrapper.findAll('.QrCodeModule_test')
-  const expectedLength = Object.keys(chaseScheme).length
+  const expectedLength = Object.keys(trailScheme).length
 
-  it('displays a QR Code Module for each clue in chaseScheme', () => {
+  it('displays a QR Code Module for each clue in trailScheme', () => {
     expect(modules.length).toBe(expectedLength)
   })
 

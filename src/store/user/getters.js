@@ -1,13 +1,13 @@
-export function openChases (state) {
-  return state.openChases
+export function openTrails (state) {
+  return state.openTrails
 }
 
 export function accessibleClues (state) {
   return state.accessibleClues
 }
 
-export function lastChase (state) {
-  return state.lastChase
+export function lastTrail (state) {
+  return state.lastTrail
 }
 
 export function lastClue (state) {

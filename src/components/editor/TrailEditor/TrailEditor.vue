@@ -5,16 +5,16 @@
       class="UpdateBtn_test"
       icon="send"
       color="primary"
-      @click="updateChase({ chaseId, newProps: { name } })"
+      @click="updateTrail({ trailId, newProps: { name } })"
     />
     <br>
     <div>Clues :</div>
     <clue-card
-      v-for="clue in chase.chaseScheme"
+      v-for="clue in trail.trailScheme"
       :key="clue.id"
       class="ClueCard_test"
       :clue="clue"
-      :chase-id="chaseId"
+      :trail-id="trailId"
       @edit="editClue"
     />
     <q-btn
@@ -24,9 +24,9 @@
       @click="createAndEditClue"
     />
     <qr-codes-generator
-      :chase-id="chaseId"
-      :chase-name="chase.name"
-      :chase-scheme="chase.chaseScheme"
+      :trail-id="trailId"
+      :trail-name="trail.name"
+      :trail-scheme="trail.trailScheme"
     />
   </div>
 </template>
@@ -37,13 +37,13 @@ import ClueCard from './ClueCard'
 import QrCodesGenerator from './QrCodesGenerator'
 
 export default {
-  name: 'ChaseEditor',
+  name: 'TrailEditor',
   components: {
     ClueCard,
     QrCodesGenerator
   },
   props: {
-    chaseId: {
+    trailId: {
       type: String,
       required: true
     }
@@ -55,26 +55,26 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getChase: 'editor/getChase'
+      getTrail: 'editor/getTrail'
     }),
-    chase () {
-      return this.getChase({ chaseId: this.chaseId })
+    trail () {
+      return this.getTrail({ trailId: this.trailId })
     },
     clueIds () {
-      return Object.values(this.chase.chaseScheme).map(clue => clue.id)
+      return Object.values(this.trail.trailScheme).map(clue => clue.id)
     }
   },
   mounted () {
-    this.name = this.chase.name
+    this.name = this.trail.name
   },
   methods: {
     ...mapActions({
-      updateChase: 'editor/updateChase',
+      updateTrail: 'editor/updateTrail',
       createClue: 'editor/createClue'
     }),
     async createAndEditClue () {
-      const chaseId = this.chaseId
-      const clueId = await this.createClue({ chaseId })
+      const trailId = this.trailId
+      const clueId = await this.createClue({ trailId })
       this.editClue(clueId)
     },
     editClue (clueId) {

@@ -65,7 +65,7 @@ ____
 ```
 {
   name: String,
-  isChaseEntry: Boolean,
+  isTrailEntry: Boolean,
   rows: Array
 }
 ```

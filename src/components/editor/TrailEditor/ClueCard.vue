@@ -32,21 +32,21 @@ export default {
       type: Object,
       required: true
     },
-    chaseId: {
+    trailId: {
       type: String,
       required: true
     }
   },
   methods: {
     ...mapActions({
-      deleteClueInChase: 'editor/deleteClueInChase'
+      deleteClueInTrail: 'editor/deleteClueInTrail'
     }),
     edit () {
       this.$emit('edit', this.clue.id)
     },
     deleteClue () {
-      this.deleteClueInChase({
-        chaseId: this.chaseId,
+      this.deleteClueInTrail({
+        trailId: this.trailId,
         clueId: this.clue.id
       })
     }

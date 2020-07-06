@@ -39,7 +39,7 @@ export default function (/* { store, ssrContext } */) {
       // return {
       //   name: 'clue',
       //   params: {
-      //     chaseId: 'testChaseID',
+      //     trailId: 'testTrailID',
       //     clueId: 'testClueID'
       //   }
       // }
@@ -47,15 +47,15 @@ export default function (/* { store, ssrContext } */) {
       // return {
       //   name: 'clueEditor',
       //   params: {
-      //     chaseId: 'testChaseID',
+      //     trailId: 'testTrailID',
       //     clueId: 'testClueID'
       //   }
       // }
 
       // return {
-      //   name: 'chaseEditor',
+      //   name: 'trailEditor',
       //   params: {
-      //     chaseId: 'testChaseID'
+      //     trailId: 'testTrailID'
       //   }
       // }
 

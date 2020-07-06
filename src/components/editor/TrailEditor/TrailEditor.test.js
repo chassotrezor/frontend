@@ -1,10 +1,10 @@
 import { mountQuasar } from '@test'
-import ChaseEditor from './ChaseEditor'
+import TrailEditor from './TrailEditor'
 
-const chaseId = 'testChaseId'
+const trailId = 'testTrailId'
 
-const chase = {
-  chaseScheme: {
+const trail = {
+  trailScheme: {
     testClueId1: {
       id: 'testClueId1',
       name: 'testClueName1'
@@ -14,7 +14,7 @@ const chase = {
       name: 'testClueName2'
     }
   },
-  name: 'testChaseName'
+  name: 'testTrailName'
 }
 
 const $route = {
@@ -33,18 +33,18 @@ const store = {
     editor: {
       namespaced: true,
       getters: {
-        getChase: () => () => chase,
+        getTrail: () => () => trail,
         getClue: state => () => state.clueId
       },
       actions: {
-        updateChase: jest.fn(),
+        updateTrail: jest.fn(),
         createClue: jest.fn().mockResolvedValue(newClueId),
         bindClues: jest.fn(),
         unbindClues: jest.fn()
       },
       mutations: {
-        setChase: (state, chaseId) => {
-          state.chaseId = chaseId
+        setTrail: (state, trailId) => {
+          state.trailId = trailId
         },
         setClue: (state, clueId) => {
           state.clueId = clueId
@@ -52,7 +52,7 @@ const store = {
       },
       state: () => {
         return {
-          chaseId: undefined,
+          trailId: undefined,
           clueId: undefined
         }
       }
@@ -60,13 +60,13 @@ const store = {
   }
 }
 
-describe('ChaseEditor', () => {
+describe('TrailEditor', () => {
   let wrapper
   beforeAll(done => {
-    wrapper = mountQuasar(ChaseEditor, {
+    wrapper = mountQuasar(TrailEditor, {
       store,
       propsData: {
-        chaseId
+        trailId
       },
       mocks: {
         $route,
@@ -89,11 +89,11 @@ describe('ChaseEditor', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    it('updates the name of this chase on server', () => {
-      expect(store.modules.editor.actions.updateChase).toHaveBeenCalledWith(
+    it('updates the name of this trail on server', () => {
+      expect(store.modules.editor.actions.updateTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
-          chaseId,
+          trailId,
           newProps: {
             name: 'newName'
           }
@@ -102,9 +102,9 @@ describe('ChaseEditor', () => {
     })
   })
 
-  it('displays a "ClueCard" component for each clue in chase', () => {
+  it('displays a "ClueCard" component for each clue in trail', () => {
     const clues = wrapper.findAll('.ClueCard_test')
-    expect(clues.length).toBe(Object.keys(chase.chaseScheme).length)
+    expect(clues.length).toBe(Object.keys(trail.trailScheme).length)
   })
 
   it('displays no "ClueEditor" component', () => {
@@ -138,10 +138,10 @@ describe('ChaseEditor', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('creates a new clue for this chase on server', () => {
+    it('creates a new clue for this trail on server', () => {
       expect(store.modules.editor.actions.createClue).toHaveBeenCalledWith(
         expect.any(Object),
-        { chaseId }
+        { trailId }
       )
     })
 

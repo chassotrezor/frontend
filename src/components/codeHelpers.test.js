@@ -1,27 +1,27 @@
 import {
   generateString,
-  getchaseId,
+  gettrailId,
   getclueId,
   checkCodeValidity
 } from './codeHelpers'
 
 describe('codeHelpers.js', () => {
-  const testchaseId = 'testchaseId'
+  const testtrailId = 'testtrailId'
   const testclueId = 'testclueId'
 
-  test('generateString and (getchaseId, getclueId) are inverse functions', () => {
-    const codeString = generateString(testchaseId, testclueId)
-    const inverseChaseId = getchaseId(codeString)
+  test('generateString and (gettrailId, getclueId) are inverse functions', () => {
+    const codeString = generateString(testtrailId, testclueId)
+    const inverseTrailId = gettrailId(codeString)
     const inverseClueId = getclueId(codeString)
-    expect([inverseChaseId, inverseClueId]).toEqual([testchaseId, testclueId])
+    expect([inverseTrailId, inverseClueId]).toEqual([testtrailId, testclueId])
   })
 
-  describe('checkCodeValidity checks if code has format "https://chassotrezor.web.app/chase/chaseId/clue/clueId"', () => {
-    const validCodes = ['https://chassotrezor.web.app/chase/chaseId/clue/clueId']
+  describe('checkCodeValidity checks if code has format "https://chassotrezor.web.app/trail/trailId/clue/clueId"', () => {
+    const validCodes = ['https://chassotrezor.web.app/trail/trailId/clue/clueId']
     const invalidCodes = [
-      'http://chassotrezor.web.app/chase/chaseId/clue/clueId',
-      'https://chassotrezor.web.app/chase//clue/clueId',
-      'https://chassotrezor.web.app/chase/chaseId/clue/'
+      'http://chassotrezor.web.app/trail/trailId/clue/clueId',
+      'https://chassotrezor.web.app/trail//clue/clueId',
+      'https://chassotrezor.web.app/trail/trailId/clue/'
     ]
     for (let i = 0; i < validCodes.length; i++) {
       test('valid codes', () => {

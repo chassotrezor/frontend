@@ -1,12 +1,12 @@
 import { mountQuasar } from '@test'
 import Clue from './Clue'
 
-const chaseId = 'testChaseId'
+const trailId = 'testTrailId'
 const clueId = 'testClueId'
 
 const clue = {
   title: 'Test Clue Title',
-  isChaseEntry: false,
+  isTrailEntry: false,
   rows: [
     {
       type: 'text',
@@ -26,14 +26,14 @@ function nbRowsOfType (type) {
 
 const $route = {
   params: {
-    chaseId,
+    trailId,
     clueId
   }
 }
 
 const store = {
   modules: {
-    chase: {
+    trail: {
       namespaced: true,
       actions: {
         saveClueAccess: jest.fn()
@@ -54,7 +54,7 @@ const wrapper = mountQuasar(Clue, {
 
 describe('Clue', () => {
   it('saves access for this clue for this user on the server', () => {
-    expect(store.modules.chase.actions.saveClueAccess).toHaveBeenCalled()
+    expect(store.modules.trail.actions.saveClueAccess).toHaveBeenCalled()
   })
 
   it('displays as many "ClueImage" components as rows with type "image" in clue', () => {

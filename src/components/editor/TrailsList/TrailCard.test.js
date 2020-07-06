@@ -1,18 +1,18 @@
 import { mountQuasar } from '@test'
-import ChaseCard from './ChaseCard'
+import TrailCard from './TrailCard'
 
 const store = {
   modules: {
     editor: {
       namespaced: true,
       actions: {
-        deleteChase: jest.fn()
+        deleteTrail: jest.fn()
       },
       getters: {
-        getChase: () => () => {
+        getTrail: () => () => {
           return {
-            name: 'testChaseName',
-            id: 'testChaseId'
+            name: 'testTrailName',
+            id: 'testTrailId'
           }
         }
       }
@@ -20,11 +20,11 @@ const store = {
   }
 }
 
-describe('ChaseCard', () => {
-  const wrapper = mountQuasar(ChaseCard, {
+describe('TrailCard', () => {
+  const wrapper = mountQuasar(TrailCard, {
     store,
     propsData: {
-      chaseId: 'testChaseId'
+      trailId: 'testTrailId'
     }
   })
 
@@ -35,7 +35,7 @@ describe('ChaseCard', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    it('emits "edit" event with "chaseId" value', () => {
+    it('emits "edit" event with "trailId" value', () => {
       expect(wrapper.emitted('edit')).toBeTruthy()
     })
   })
@@ -47,8 +47,8 @@ describe('ChaseCard', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    it('deletes chase on server', () => {
-      expect(store.modules.editor.actions.deleteChase).toHaveBeenCalled()
+    it('deletes trail on server', () => {
+      expect(store.modules.editor.actions.deleteTrail).toHaveBeenCalled()
     })
   })
 })

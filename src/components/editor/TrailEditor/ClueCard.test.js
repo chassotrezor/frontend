@@ -2,14 +2,14 @@ import { mountQuasar } from '@test'
 import ClueCard from './ClueCard'
 
 const testClueId = 'testClueId'
-const testChaseId = 'testChaseId'
+const testTrailId = 'testTrailId'
 
 const store = {
   modules: {
     editor: {
       namespaced: true,
       actions: {
-        deleteClueInChase: jest.fn()
+        deleteClueInTrail: jest.fn()
       }
     }
   }
@@ -22,7 +22,7 @@ describe('ClueCard', () => {
       clue: {
         id: testClueId
       },
-      chaseId: testChaseId
+      trailId: testTrailId
     }
   })
 
@@ -45,10 +45,10 @@ describe('ClueCard', () => {
     })
 
     it('deletes clue on server', () => {
-      expect(store.modules.editor.actions.deleteClueInChase).toHaveBeenCalledWith(
+      expect(store.modules.editor.actions.deleteClueInTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
-          chaseId: testChaseId,
+          trailId: testTrailId,
           clueId: testClueId
         }
       )

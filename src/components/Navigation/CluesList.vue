@@ -2,12 +2,12 @@
   <div>
     Clues List
     <div
-      v-if="hasChases"
+      v-if="hasTrails"
     >
       <q-select
-        v-model="selectedChase"
+        v-model="selectedTrail"
         class="QSelect_test"
-        :options="chases"
+        :options="trails"
       />
       <q-list>
         <q-item
@@ -39,20 +39,20 @@ export default {
   name: 'CluesList',
   data () {
     return {
-      selectedChase: undefined
+      selectedTrail: undefined
     }
   },
   computed: {
     ...mapGetters({
       accessibleClues: 'user/accessibleClues',
-      lastChase: 'user/lastChase'
+      lastTrail: 'user/lastTrail'
     }),
-    chases () {
+    trails () {
       if (this.accessibleClues) {
-        return Object.entries(this.accessibleClues).map(chase => {
+        return Object.entries(this.accessibleClues).map(trail => {
           return {
-            label: chase[1].data.name,
-            value: chase[0]
+            label: trail[1].data.name,
+            value: trail[0]
           }
         })
       } else {
@@ -61,30 +61,30 @@ export default {
     },
     clues () {
       if (
-        this.selectedChase &&
+        this.selectedTrail &&
         this.accessibleClues &&
-        this.accessibleClues[this.selectedChase.value] &&
-        this.accessibleClues[this.selectedChase.value].clues
+        this.accessibleClues[this.selectedTrail.value] &&
+        this.accessibleClues[this.selectedTrail.value].clues
       ) {
-        return Object.keys(this.accessibleClues[this.selectedChase.value].clues)
+        return Object.keys(this.accessibleClues[this.selectedTrail.value].clues)
       } else {
         return undefined
       }
     },
-    hasChases () {
-      return Object.keys(this.chases).length > 0
+    hasTrails () {
+      return Object.keys(this.trails).length > 0
     }
   },
   mounted () {
     const vm = this
-    vm.selectedChase = vm.chases.find(option => option.value === vm.lastChase)
+    vm.selectedTrail = vm.trails.find(option => option.value === vm.lastTrail)
   },
   methods: {
     push (clue) {
       const route = {
         name: 'clue',
         params: {
-          chaseId: this.selectedChase.value,
+          trailId: this.selectedTrail.value,
           clueId: clue
         }
       }

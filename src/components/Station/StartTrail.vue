@@ -1,8 +1,8 @@
 <template>
   <q-btn
-    @click="start({ chaseId })"
+    @click="start({ trailId })"
   >
-    {{ $t('chase.manage.start') }}
+    {{ $t('trail.manage.start') }}
   </q-btn>
 </template>
 
@@ -10,15 +10,15 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'StartChase',
+  name: 'StartTrail',
   computed: {
-    chaseId () {
-      return this.$route.params.chaseId
+    trailId () {
+      return this.$route.params.trailId
     }
   },
   methods: {
     ...mapActions({
-      start: 'chase/start'
+      start: 'trail/start'
     })
   }
 }

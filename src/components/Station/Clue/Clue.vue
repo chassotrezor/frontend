@@ -32,22 +32,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getClue: 'chase/getClue'
+      getClue: 'trail/getClue'
     }),
     clue () {
-      const chaseId = this.$route.params.chaseId
+      const trailId = this.$route.params.trailId
       const clueId = this.$route.params.clueId
-      return this.getClue({ chaseId, clueId })
+      return this.getClue({ trailId, clueId })
     }
   },
   mounted () {
-    const chaseId = this.$route.params.chaseId
+    const trailId = this.$route.params.trailId
     const clueId = this.$route.params.clueId
-    this.saveClueAccess({ chaseId, clueId })
+    this.saveClueAccess({ trailId, clueId })
   },
   methods: {
     ...mapActions({
-      saveClueAccess: 'chase/saveClueAccess'
+      saveClueAccess: 'trail/saveClueAccess'
     })
   }
 }

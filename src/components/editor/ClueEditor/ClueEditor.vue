@@ -55,7 +55,7 @@ export default {
       type: String,
       required: true
     },
-    chaseId: {
+    trailId: {
       type: String,
       required: true
     }
@@ -72,7 +72,7 @@ export default {
     }),
     clue () {
       return this.getClue({
-        chaseId: this.chaseId,
+        trailId: this.trailId,
         clueId: this.clueId
       })
     }
@@ -89,11 +89,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateClueInChase: 'editor/updateClueInChase'
+      updateClueInTrail: 'editor/updateClueInTrail'
     }),
     update () {
-      this.updateClueInChase({
-        chaseId: this.chaseId,
+      this.updateClueInTrail({
+        trailId: this.trailId,
         clueId: this.clueId,
         newProps: {
           name: this.name,

@@ -2,28 +2,28 @@
   <div>
     <editor-fast-access
       class="EditorFastAccess_test"
-      :selected-chase="selectedChase"
+      :selected-trail="selectedTrail"
       :selected-clue="selectedClue"
-      @editChase="editChase"
+      @editTrail="editTrail"
       @editClue="editClue"
       @unselect="unselect"
     />
-    <chases-list
-      v-if="!selectedChase"
-      class="ChasesList_test"
-      @editChase="editChase"
+    <trails-list
+      v-if="!selectedTrail"
+      class="TrailsList_test"
+      @editTrail="editTrail"
     />
-    <chase-editor
+    <trail-editor
       v-else-if="!selectedClue"
-      class="ChaseEditor_test"
-      :chase-id="selectedChase"
+      class="TrailEditor_test"
+      :trail-id="selectedTrail"
       @editClue="editClue"
     />
     <clue-editor
       v-else
       class="ClueEditor_test"
       :clue-id="selectedClue"
-      :chase-id="selectedChase"
+      :trail-id="selectedTrail"
     />
   </div>
 </template>
@@ -32,36 +32,36 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import EditorFastAccess from './EditorFastAccess'
-import ChasesList from './ChasesList/ChasesList'
-import ChaseEditor from './ChaseEditor/ChaseEditor'
+import TrailsList from './TrailsList/TrailsList'
+import TrailEditor from './TrailEditor/TrailEditor'
 import ClueEditor from './ClueEditor/ClueEditor'
 
 export default {
   name: 'Editor',
   components: {
     EditorFastAccess,
-    ChasesList,
-    ChaseEditor,
+    TrailsList,
+    TrailEditor,
     ClueEditor
   },
   computed: {
     ...mapGetters({
-      getChase: 'editor/getChase',
+      getTrail: 'editor/getTrail',
       getClue: 'editor/getClue'
     }),
-    chaseExists () {
-      const chaseId = this.$route.params.chaseId
-      return !!this.getChase({ chaseId })
+    trailExists () {
+      const trailId = this.$route.params.trailId
+      return !!this.getTrail({ trailId })
     },
     clueExists () {
-      const chaseId = this.$route.params.chaseId
+      const trailId = this.$route.params.trailId
       const clueId = this.$route.params.clueId
-      if (this.chaseExists) return !!this.getClue({ chaseId, clueId })
+      if (this.trailExists) return !!this.getClue({ trailId, clueId })
       else return false
     },
-    selectedChase () {
-      const chaseId = this.$route.params.chaseId
-      if (this.chaseExists) return chaseId
+    selectedTrail () {
+      const trailId = this.$route.params.trailId
+      if (this.trailExists) return trailId
       else return undefined
     },
     selectedClue () {
@@ -72,41 +72,41 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (from.params.chaseId) this.unbindClues({ chaseId: from.params.chaseId })
-      if (to.params.chaseId) this.bindClues({ chaseId: to.params.chaseId })
+      if (from.params.trailId) this.unbindClues({ trailId: from.params.trailId })
+      if (to.params.trailId) this.bindClues({ trailId: to.params.trailId })
     }
   },
   mounted () {
-    this.bindMyChases()
-    const chaseId = this.$route.params.chaseId
-    if (chaseId) this.bindClues({ chaseId })
+    this.bindMyTrails()
+    const trailId = this.$route.params.trailId
+    if (trailId) this.bindClues({ trailId })
   },
   beforeDestroy () {
-    this.unbindMyChases()
-    const chaseId = this.$route.params.chaseId
-    if (chaseId) this.unbindClues({ chaseId })
+    this.unbindMyTrails()
+    const trailId = this.$route.params.trailId
+    if (trailId) this.unbindClues({ trailId })
   },
   methods: {
     ...mapActions({
-      bindMyChases: 'editor/bindMyChases',
-      unbindMyChases: 'editor/unbindMyChases',
+      bindMyTrails: 'editor/bindMyTrails',
+      unbindMyTrails: 'editor/unbindMyTrails',
       bindClues: 'editor/bindClues',
       unbindClues: 'editor/unbindClues'
     }),
-    editChase (chaseId) {
+    editTrail (trailId) {
       this.$router.push({
-        name: 'chaseEditor',
+        name: 'trailEditor',
         params: {
-          chaseId
+          trailId
         }
       })
     },
     editClue (clueId) {
-      const chaseId = this.$route.params.chaseId
+      const trailId = this.$route.params.trailId
       this.$router.push({
         name: 'clueEditor',
         params: {
-          chaseId,
+          trailId,
           clueId
         }
       })

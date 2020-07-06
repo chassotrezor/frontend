@@ -6,62 +6,62 @@
         class="Clue_test"
       />
       <div v-else>
-        <chase-info
-          class="ChaseInfo_test"
+        <trail-info
+          class="TrailInfo_test"
         />
-        <start-chase
-          v-if="clue.isChaseEntry"
-          class="StartChase_test"
+        <start-trail
+          v-if="clue.isTrailEntry"
+          class="StartTrail_test"
         />
       </div>
     </div>
     <spinner-with-message
       v-else
       class="SpinnerWithMessage_test"
-      :message="$t('chase.clue.waitForClue')"
+      :message="$t('trail.clue.waitForClue')"
     />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ChaseInfo from './ChaseInfo'
+import TrailInfo from './TrailInfo'
 import Clue from './Clue/Clue'
 import SpinnerWithMessage from 'components/Navigation/SpinnerWithMessage'
-import StartChase from './StartChase'
+import StartTrail from './StartTrail'
 
 export default {
   name: 'StationLayout',
   components: {
-    ChaseInfo,
+    TrailInfo,
     Clue,
     SpinnerWithMessage,
-    StartChase
+    StartTrail
   },
   computed: {
     ...mapGetters({
-      getClue: 'chase/getClue',
-      openChases: 'user/openChases'
+      getClue: 'trail/getClue',
+      openTrails: 'user/openTrails'
     }),
     clue () {
-      const chaseId = this.$route.params.chaseId
+      const trailId = this.$route.params.trailId
       const clueId = this.$route.params.clueId
-      return this.getClue({ chaseId, clueId })
+      return this.getClue({ trailId, clueId })
     },
     playerIsChasing () {
-      const chaseId = this.$route.params.chaseId
-      if (this.openChases) return this.openChases.some(id => id === chaseId)
+      const trailId = this.$route.params.trailId
+      if (this.openTrails) return this.openTrails.some(id => id === trailId)
       else return false
     }
   },
   mounted () {
-    const chaseId = this.$route.params.chaseId
+    const trailId = this.$route.params.trailId
     const clueId = this.$route.params.clueId
-    this.downloadClue({ chaseId, clueId })
+    this.downloadClue({ trailId, clueId })
   },
   methods: {
     ...mapActions({
-      downloadClue: 'chase/downloadClue'
+      downloadClue: 'trail/downloadClue'
     })
   }
 }

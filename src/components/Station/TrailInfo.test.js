@@ -1,8 +1,8 @@
 import { mountQuasar } from '@test'
-import ChaseInfo from './ChaseInfo'
+import TrailInfo from './TrailInfo'
 
-describe('ChaseInfo', () => {
-  const wrapper = mountQuasar(ChaseInfo)
+describe('TrailInfo', () => {
+  const wrapper = mountQuasar(TrailInfo)
   it('exists', () => {
     expect(wrapper.exists()).toBeTruthy()
   })

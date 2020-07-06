@@ -2,7 +2,7 @@ import { mountQuasar } from '@test'
 import CluesList from './CluesList'
 
 const defaultAccessibleClues = {
-  testChaseId1: {
+  testTrailId1: {
     clues: {
       testClueId11: {
         name: 'test clue name 11'
@@ -12,22 +12,22 @@ const defaultAccessibleClues = {
       }
     },
     data: {
-      name: 'test chase name 1'
+      name: 'test trail name 1'
     }
   },
-  testChaseId2: {
+  testTrailId2: {
     clues: {
       testClueId21: {
         name: 'test clue name 21'
       }
     },
     data: {
-      name: 'test chase name 2'
+      name: 'test trail name 2'
     }
   }
 }
 
-const defaultLastChase = 'testChaseId1'
+const defaultLastTrail = 'testTrailId1'
 
 const store = {
   modules: {
@@ -35,16 +35,16 @@ const store = {
       namespaced: true,
       getters: {
         accessibleClues: state => state.accessibleClues,
-        lastChase: state => state.lastChase
+        lastTrail: state => state.lastTrail
       },
       mutations: {
         setAccessibleClues: (state, value) => { state.accessibleClues = value },
-        setLastchase: (state, value) => { state.lastChase = value }
+        setLasttrail: (state, value) => { state.lastTrail = value }
       },
       state: () => {
         return {
           accessibleClues: defaultAccessibleClues,
-          lastChase: defaultLastChase
+          lastTrail: defaultLastTrail
         }
       }
     }
@@ -67,26 +67,26 @@ describe('CluesList', () => {
     wrapper.vm.$nextTick(done)
   })
 
-  it('sets value of "selectedChase" to { value: lastChaseId, label: lastChaseName }', () => {
-    const chaseName = defaultAccessibleClues[defaultLastChase].data.name
-    expect(wrapper.vm.selectedChase).toEqual({
-      value: defaultLastChase,
-      label: chaseName
+  it('sets value of "selectedTrail" to { value: lastTrailId, label: lastTrailName }', () => {
+    const trailName = defaultAccessibleClues[defaultLastTrail].data.name
+    expect(wrapper.vm.selectedTrail).toEqual({
+      value: defaultLastTrail,
+      label: trailName
     })
   })
 
-  describe('when "selectedChase" and "accessibleClues" match', () => {
-    it('displays a "QSelect" component with options [{ value: chaseId, label: chaseName }]', () => {
+  describe('when "selectedTrail" and "accessibleClues" match', () => {
+    it('displays a "QSelect" component with options [{ value: trailId, label: trailName }]', () => {
       const select = wrapper.find('.QSelect_test')
       expect(select.props().options).toEqual([
-        { value: 'testChaseId1', label: 'test chase name 1' },
-        { value: 'testChaseId2', label: 'test chase name 2' }
+        { value: 'testTrailId1', label: 'test trail name 1' },
+        { value: 'testTrailId2', label: 'test trail name 2' }
       ])
     })
 
-    it('displays a "QItem" component for each clue in accessibleClues[chaseId].clues', () => {
+    it('displays a "QItem" component for each clue in accessibleClues[trailId].clues', () => {
       const qItems = wrapper.findAll('.QItem_test')
-      const expectedLength = Object.keys(defaultAccessibleClues[defaultLastChase].clues).length
+      const expectedLength = Object.keys(defaultAccessibleClues[defaultLastTrail].clues).length
       expect(qItems.length).toBe(expectedLength)
     })
 
@@ -97,11 +97,11 @@ describe('CluesList', () => {
         wrapper.vm.$nextTick(done)
       })
 
-      test('router pushes to /chase/[chaseId]/clue/[clueId]', () => {
+      test('router pushes to /trail/[trailId]/clue/[clueId]', () => {
         const expectedRoute = {
           name: 'clue',
           params: {
-            chaseId: 'testChaseId1',
+            trailId: 'testTrailId1',
             clueId: 'testClueId11'
           }
         }
@@ -110,17 +110,17 @@ describe('CluesList', () => {
     })
   })
 
-  describe('when "selectedChase" does not match "accessibleClues', () => {
+  describe('when "selectedTrail" does not match "accessibleClues', () => {
     beforeAll(done => {
-      wrapper.vm.selectedChase = 'NO_MATCH'
+      wrapper.vm.selectedTrail = 'NO_MATCH'
       wrapper.vm.$nextTick(done)
     })
 
-    it('displays a "QSelect" component with options [{ value: chaseId, label: chaseName }]', () => {
+    it('displays a "QSelect" component with options [{ value: trailId, label: trailName }]', () => {
       const select = wrapper.find('.QSelect_test')
       expect(select.props().options).toEqual([
-        { value: 'testChaseId1', label: 'test chase name 1' },
-        { value: 'testChaseId2', label: 'test chase name 2' }
+        { value: 'testTrailId1', label: 'test trail name 1' },
+        { value: 'testTrailId2', label: 'test trail name 2' }
       ])
     })
 

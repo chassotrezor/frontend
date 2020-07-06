@@ -29,9 +29,9 @@ export default {
   },
   computed: {
     path () {
-      const chaseId = this.$route.params.chaseId
+      const trailId = this.$route.params.trailId
       const clueId = this.$route.params.clueId
-      return `${chaseId}/${clueId}`
+      return `${trailId}/${clueId}`
     }
   },
   methods: {

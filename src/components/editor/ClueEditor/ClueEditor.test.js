@@ -2,7 +2,7 @@ import { mountQuasar } from '@test'
 import ClueEditor from './ClueEditor'
 
 const clueId = 'testClueId'
-const chaseId = 'testChaseId'
+const trailId = 'testTrailId'
 
 const testClue = {
   name: 'testClueName',
@@ -24,7 +24,7 @@ const store = {
     editor: {
       namespaced: true,
       actions: {
-        updateClueInChase: jest.fn()
+        updateClueInTrail: jest.fn()
       },
       getters: {
         getClue: () => () => {
@@ -41,7 +41,7 @@ describe('ClueEditor', () => {
     wrapper = mountQuasar(ClueEditor, {
       propsData: {
         clueId,
-        chaseId
+        trailId
       },
       store
     })
@@ -173,11 +173,11 @@ describe('ClueEditor', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('updates the clue in the chase on server', () => {
-      expect(store.modules.editor.actions.updateClueInChase).toHaveBeenCalledWith(
+    it('updates the clue in the trail on server', () => {
+      expect(store.modules.editor.actions.updateClueInTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
-          chaseId,
+          trailId,
           clueId,
           newProps: testClue
         }

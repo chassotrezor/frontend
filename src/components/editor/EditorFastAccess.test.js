@@ -1,7 +1,7 @@
 import { mountQuasar } from '@test'
 import EditorFastAccess from './EditorFastAccess'
 
-const testChaseId = 'testChaseId'
+const testTrailId = 'testTrailId'
 const testClueId = 'testClueId'
 
 const store = {
@@ -9,14 +9,14 @@ const store = {
     editor: {
       namespaced: true,
       getters: {
-        myChases: () => {
+        myTrails: () => {
           return {}
         },
-        getChase: () => () => {
+        getTrail: () => () => {
           return {
-            name: 'testChaseName',
-            id: 'testChaseId',
-            chaseScheme: {}
+            name: 'testTrailName',
+            id: 'testTrailId',
+            trailScheme: {}
           }
         }
       }
@@ -40,21 +40,21 @@ describe('EditorFastAccess', () => {
     expect(wrapper.emitted().unselect).toBeTruthy()
   })
 
-  it('displays a "QSelect" for chase', () => {
-    const qSelect = wrapper.find('.QSelectChase_test')
+  it('displays a "QSelect" for trail', () => {
+    const qSelect = wrapper.find('.QSelectTrail_test')
     expect(qSelect.exists()).toBe(true)
   })
 
-  it('emits "editChase" value when "QSelect" for chase emits "input"', () => {
-    const qSelect = wrapper.find('.QSelectChase_test')
-    qSelect.vm.$emit('input', { value: testChaseId })
-    expect(wrapper.emitted().editChase[0][0]).toBe(testChaseId)
+  it('emits "editTrail" value when "QSelect" for trail emits "input"', () => {
+    const qSelect = wrapper.find('.QSelectTrail_test')
+    qSelect.vm.$emit('input', { value: testTrailId })
+    expect(wrapper.emitted().editTrail[0][0]).toBe(testTrailId)
   })
 
-  describe('when "selectedChase" is undefined', () => {
+  describe('when "selectedTrail" is undefined', () => {
     beforeAll(async () => {
       wrapper.setProps({
-        selectedChase: undefined,
+        selectedTrail: undefined,
         selectedClue: undefined
       })
       await wrapper.vm.$nextTick()
@@ -66,10 +66,10 @@ describe('EditorFastAccess', () => {
     })
   })
 
-  describe('when "selectedChase" is defined', () => {
+  describe('when "selectedTrail" is defined', () => {
     beforeAll(async () => {
       wrapper.setProps({
-        selectedChase: testChaseId
+        selectedTrail: testTrailId
       })
       await wrapper.vm.$nextTick()
     })

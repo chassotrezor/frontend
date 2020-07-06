@@ -65,7 +65,7 @@ const routes = [
         }
       },
       {
-        path: '/chase/:chaseId/clue/:clueId',
+        path: '/trail/:trailId/clue/:clueId',
         name: 'clue',
         component: () => import('pages/Station.vue'),
         meta: {
@@ -131,8 +131,8 @@ const routes = [
           }
         },
         children: [{
-          path: '/editor/:chaseId',
-          name: 'chaseEditor',
+          path: '/editor/:trailId',
+          name: 'trailEditor',
           component: () => import('pages/Editor.vue'),
           meta: {
             access: connected,
@@ -144,7 +144,7 @@ const routes = [
             }
           },
           children: [{
-            path: '/editor/:chaseId/:clueId',
+            path: '/editor/:trailId/:clueId',
             name: 'clueEditor',
             component: () => import('pages/Editor.vue'),
             meta: {

@@ -3,7 +3,7 @@
     <q-btn
       class="QBtn_test"
       icon="cloud_download"
-      :label="$t('editor.chase.downloadQrCodes')"
+      :label="$t('editor.trail.downloadQrCodes')"
       @click="makePdf"
     />
     <div ref="qrCodes">
@@ -35,15 +35,15 @@ import { generateString } from 'components/codeHelpers.js'
 export default {
   name: 'QrCodesGenerator',
   props: {
-    chaseId: {
+    trailId: {
       type: String,
       required: true
     },
-    chaseName: {
+    trailName: {
       type: String,
       required: true
     },
-    chaseScheme: {
+    trailScheme: {
       type: Object,
       required: true
     }
@@ -51,9 +51,9 @@ export default {
   computed: {
     clues () {
       const vm = this
-      return Object.values(this.chaseScheme).map(clue => {
+      return Object.values(this.trailScheme).map(clue => {
         const clueId = clue.id
-        const url = generateString(vm.chaseId, clueId)
+        const url = generateString(vm.trailId, clueId)
         const name = clue.name
         const qrCode = new QRCode({
           content: url

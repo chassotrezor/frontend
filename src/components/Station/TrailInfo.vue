@@ -1,11 +1,11 @@
 <template>
   <div>
-    ChaseInfo
+    TrailInfo
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ChaseInfo'
+  name: 'TrailInfo'
 }
 </script>

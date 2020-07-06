@@ -14,7 +14,7 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == userId
     }
 
-    match /chases/{chaseId} {
+    match /trails/{trailId} {
       allow read;
       allow create: if request.auth != null
       allow update, delete: if request.auth.uid == resource.data.editor
@@ -22,7 +22,7 @@ service cloud.firestore {
       match /clues/{clueId} {
 
         function getRoot() {
-          let path = /databases/$(database)/documents/chases/$(chaseId);
+          let path = /databases/$(database)/documents/trails/$(trailId);
           return get(path);
         }
 

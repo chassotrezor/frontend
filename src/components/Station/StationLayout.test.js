@@ -1,19 +1,19 @@
 import { mountQuasar } from '@test'
 import StationLayout from './StationLayout'
 
-const chaseId = 'testChaseId'
+const trailId = 'testTrailId'
 const clueId = 'testClueId'
 
 const $route = {
   params: {
-    chaseId,
+    trailId,
     clueId
   }
 }
 
 const store = {
   modules: {
-    chase: {
+    trail: {
       namespaced: true,
       actions: {
         downloadClue: jest.fn()
@@ -33,14 +33,14 @@ const store = {
     user: {
       namespaced: true,
       getters: {
-        openChases: state => state.openChases
+        openTrails: state => state.openTrails
       },
       mutations: {
-        setopenChases: (state, openChases) => { state.openChases = openChases }
+        setopenTrails: (state, openTrails) => { state.openTrails = openTrails }
       },
       state: () => {
         return {
-          openChases: []
+          openTrails: []
         }
       }
     }
@@ -62,14 +62,14 @@ describe('StationLayout', () => {
 
   describe('when "playerIsChasing" is true', () => {
     beforeAll(done => {
-      wrapper.vm.$store.commit('user/setopenChases', [chaseId])
+      wrapper.vm.$store.commit('user/setopenTrails', [trailId])
       wrapper.vm.$nextTick(done)
     })
 
     describe('when clue data is downloaded', () => {
       beforeAll(done => {
-        store.modules.chase.actions.downloadClue.mockResolvedValue()
-        wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+        store.modules.trail.actions.downloadClue.mockResolvedValue()
+        wrapper.vm.$store.commit('trail/setClue', { isTrailEntry: true })
         wrapper.vm.$nextTick(done)
       })
 
@@ -83,20 +83,20 @@ describe('StationLayout', () => {
         expect(clue.exists()).toBe(true)
       })
 
-      it('does not display chaseInfo component', () => {
-        const chaseInfo = wrapper.find('.ChaseInfo_test')
-        expect(chaseInfo.exists()).toBe(false)
+      it('does not display trailInfo component', () => {
+        const trailInfo = wrapper.find('.TrailInfo_test')
+        expect(trailInfo.exists()).toBe(false)
       })
 
-      describe('when "clue.isChaseEntry" is true', () => {
+      describe('when "clue.isTrailEntry" is true', () => {
         beforeAll(done => {
-          wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+          wrapper.vm.$store.commit('trail/setClue', { isTrailEntry: true })
           wrapper.vm.$nextTick(done)
         })
 
-        it('does not display a "StartChase" component', () => {
-          const startChase = wrapper.find('.StartChase_test')
-          expect(startChase.exists()).toBe(false)
+        it('does not display a "StartTrail" component', () => {
+          const startTrail = wrapper.find('.StartTrail_test')
+          expect(startTrail.exists()).toBe(false)
         })
       })
     })
@@ -104,7 +104,7 @@ describe('StationLayout', () => {
 
   describe('when "playerIsChasing" is false', () => {
     beforeAll(done => {
-      wrapper.vm.$store.commit('user/setopenChases', [])
+      wrapper.vm.$store.commit('user/setopenTrails', [])
       wrapper.vm.$nextTick(done)
     })
 
@@ -113,20 +113,20 @@ describe('StationLayout', () => {
       expect(clue.exists()).toBe(false)
     })
 
-    it('displays chaseInfo slot', () => {
-      const chaseInfo = wrapper.find('.ChaseInfo_test')
-      expect(chaseInfo.exists()).toBe(true)
+    it('displays trailInfo slot', () => {
+      const trailInfo = wrapper.find('.TrailInfo_test')
+      expect(trailInfo.exists()).toBe(true)
     })
 
-    describe('when "isChaseEntry" prop is true', () => {
+    describe('when "isTrailEntry" prop is true', () => {
       beforeAll(done => {
-        wrapper.vm.$store.commit('chase/setClue', { isChaseEntry: true })
+        wrapper.vm.$store.commit('trail/setClue', { isTrailEntry: true })
         wrapper.vm.$nextTick(done)
       })
 
-      it('displays a "StartChase" component', () => {
-        const startChase = wrapper.find('.StartChase_test')
-        expect(startChase.exists()).toBe(true)
+      it('displays a "StartTrail" component', () => {
+        const startTrail = wrapper.find('.StartTrail_test')
+        expect(startTrail.exists()).toBe(true)
       })
     })
   })

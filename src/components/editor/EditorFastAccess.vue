@@ -9,14 +9,14 @@
     />
     <div> > </div>
     <q-select
-      class="QSelectChase_test"
-      :value="chase"
-      :options="chasesOptions"
-      @input="$emit('editChase', $event.value)"
+      class="QSelectTrail_test"
+      :value="trail"
+      :options="trailsOptions"
+      @input="$emit('editTrail', $event.value)"
     />
     <div> > </div>
     <q-select
-      v-if="selectedChase"
+      v-if="selectedTrail"
       class="QSelectClue_test"
       :value="clue"
       :options="cluesOptions"
@@ -31,7 +31,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'EditorFastAccess',
   props: {
-    selectedChase: {
+    selectedTrail: {
       type: String,
       default: () => undefined
     },
@@ -42,21 +42,21 @@ export default {
   },
   computed: {
     ...mapGetters({
-      myChases: 'editor/myChases',
-      getChase: 'editor/getChase'
+      myTrails: 'editor/myTrails',
+      getTrail: 'editor/getTrail'
     }),
-    chasesOptions () {
-      return Object.values(this.myChases).map(chase => {
+    trailsOptions () {
+      return Object.values(this.myTrails).map(trail => {
         return {
-          value: chase.id,
-          label: chase.name
+          value: trail.id,
+          label: trail.name
         }
       })
     },
     cluesOptions () {
-      if (this.selectedChase) {
-        const chaseScheme = this.getChase({ chaseId: this.selectedChase }).chaseScheme
-        return Object.values(chaseScheme).map(clue => {
+      if (this.selectedTrail) {
+        const trailScheme = this.getTrail({ trailId: this.selectedTrail }).trailScheme
+        return Object.values(trailScheme).map(clue => {
           return {
             value: clue.id,
             label: clue.name
@@ -66,8 +66,8 @@ export default {
         return []
       }
     },
-    chase () {
-      return this.chasesOptions.find(option => option.value === this.selectedChase)
+    trail () {
+      return this.trailsOptions.find(option => option.value === this.selectedTrail)
     },
     clue () {
       return this.cluesOptions.find(option => option.value === this.selectedClue)

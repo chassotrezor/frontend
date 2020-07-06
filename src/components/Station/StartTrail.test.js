@@ -1,11 +1,11 @@
 import { mountQuasar } from '@test'
-import StartChase from './StartChase'
+import StartTrail from './StartTrail'
 
-describe('StartChase', () => {
-  const chaseId = 'testChaseId'
+describe('StartTrail', () => {
+  const trailId = 'testTrailId'
   const store = {
     modules: {
-      chase: {
+      trail: {
         namespaced: true,
         actions: {
           start: jest.fn()
@@ -14,27 +14,27 @@ describe('StartChase', () => {
       }
     }
   }
-  const wrapper = mountQuasar(StartChase, {
+  const wrapper = mountQuasar(StartTrail, {
     store,
     mocks: {
       $route: {
         params: {
-          chaseId
+          trailId
         }
       }
     }
   })
 
-  describe('when clicking on "start chase" button', () => {
+  describe('when clicking on "start trail" button', () => {
     beforeAll(done => {
       const button = wrapper.findComponent({ name: 'QBtn' })
       button.vm.$emit('click')
       wrapper.vm.$nextTick(done)
     })
 
-    it('fires "start" method with "chaseId" parameter', () => {
-      const start = store.modules.chase.actions.start
-      expect(start).toHaveBeenCalledWith(expect.any(Object), { chaseId })
+    it('fires "start" method with "trailId" parameter', () => {
+      const start = store.modules.trail.actions.start
+      expect(start).toHaveBeenCalledWith(expect.any(Object), { trailId })
     })
   })
 })
