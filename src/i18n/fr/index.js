@@ -18,7 +18,7 @@ export default {
       start: 'Commencer le parcours'
     },
     station: {
-      waitForStation: 'patientez pendant le chargement de l\'indice...'
+      waitForStation: 'patientez pendant le chargement du poste...'
     }
   },
   editor: {
@@ -33,12 +33,12 @@ export default {
     }
   },
   routes: {
-    stationsList: 'historique des indices',
+    stationsList: 'historique des postes',
     editor: 'créer un parcours',
     home: 'accueil',
     logout: 'se déconnecter',
     map: 'trouver un parcours',
-    scanner: 'scanner un indice',
+    scanner: 'scanner un code QR',
     sign: 'se connecter'
   }
 }
