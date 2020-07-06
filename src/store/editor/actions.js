@@ -50,7 +50,7 @@ export function updateTrail (__, { trailId, newProps }) {
 }
 
 /*
-  TODO: delete clue subcollection as well
+  TODO: delete station subcollection as well
   needs to use cloud functions
   https://firebase.google.com/docs/firestore/solutions/delete-collections
 */
@@ -59,99 +59,99 @@ export function deleteTrail (__, trailId) {
   return trailRef.delete()
 }
 
-const cluesListener = {}
+const stationsListener = {}
 
-export function bindClues ({ commit }, { trailId }) {
+export function bindStations ({ commit }, { trailId }) {
   const db = firebase.firestore()
-  const cluesRef = db.collection('trails').doc(trailId).collection('clues')
-  cluesListener[trailId] = cluesRef.onSnapshot(querySnapshot => {
+  const stationsRef = db.collection('trails').doc(trailId).collection('stations')
+  stationsListener[trailId] = stationsRef.onSnapshot(querySnapshot => {
     querySnapshot.forEach(snapshot => {
-      commit('setClue', {
+      commit('setStation', {
         trailId,
-        clueId: snapshot.id,
-        clue: snapshot.data()
+        stationId: snapshot.id,
+        station: snapshot.data()
       })
     })
   })
 }
 
-export function unbindClues ({ commit }, { trailId }) {
-  if (cluesListener[trailId]) {
-    cluesListener[trailId]()
-    delete cluesListener[trailId]
-    commit('deleteClues', { trailId })
+export function unbindStations ({ commit }, { trailId }) {
+  if (stationsListener[trailId]) {
+    stationsListener[trailId]()
+    delete stationsListener[trailId]
+    commit('deleteStations', { trailId })
   }
 }
 
-const defaultClueScheme = clueId => {
+const defaultStationScheme = stationId => {
   return {
-    id: clueId,
+    id: stationId,
     name: ''
   }
 }
 
-const isInDefaultClueScheme = key => {
-  return Object.keys(defaultClueScheme('')).some(schemeKey => key === schemeKey)
+const isInDefaultStationScheme = key => {
+  return Object.keys(defaultStationScheme('')).some(schemeKey => key === schemeKey)
 }
 
-const defaultClue = clueId => {
+const defaultStation = stationId => {
   return {
-    id: clueId,
+    id: stationId,
     name: '',
     isTrailEntry: false,
     rows: []
   }
 }
 
-export function createClue (__, { trailId }) {
+export function createStation (__, { trailId }) {
   return new Promise((resolve) => {
     const db = firebase.firestore()
     const trailRef = db.collection('trails').doc(trailId)
-    const clueRef = trailRef.collection('clues').doc()
-    const clueId = clueRef.id
+    const stationRef = trailRef.collection('stations').doc()
+    const stationId = stationRef.id
     db.runTransaction(async t => {
       const actualTrailScheme = (await trailRef.get()).data().trailScheme
       const trailScheme = {
         ...actualTrailScheme,
-        [clueId]: defaultClueScheme(clueId)
+        [stationId]: defaultStationScheme(stationId)
       }
       await trailRef.update({ trailScheme })
-      await clueRef.set(defaultClue(clueId))
-      resolve(clueId)
+      await stationRef.set(defaultStation(stationId))
+      resolve(stationId)
     })
   })
 }
 
-export function updateClueInTrail (__, { trailId, clueId, newProps }) {
+export function updateStationInTrail (__, { trailId, stationId, newProps }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
-  const clueRef = trailRef.collection('clues').doc(clueId)
+  const stationRef = trailRef.collection('stations').doc(stationId)
   const newPropsForTrailScheme = Object.entries(newProps).reduce((schemeProps, newProp) => {
-    if (isInDefaultClueScheme(newProp[0])) schemeProps[newProp[0]] = newProp[1]
+    if (isInDefaultStationScheme(newProp[0])) schemeProps[newProp[0]] = newProp[1]
     return schemeProps
   }, {})
   return db.runTransaction(async t => {
     const oldTrailScheme = (await trailRef.get()).data().trailScheme
     const trailScheme = {
       ...oldTrailScheme,
-      [clueId]: {
-        ...oldTrailScheme[clueId],
+      [stationId]: {
+        ...oldTrailScheme[stationId],
         ...newPropsForTrailScheme
       }
     }
     await trailRef.update({ trailScheme })
-    await clueRef.update(newProps)
+    await stationRef.update(newProps)
   })
 }
 
-export function deleteClueInTrail (__, { trailId, clueId }) {
+export function deleteStationInTrail (__, { trailId, stationId }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
-  const clueRef = trailRef.collection('clues').doc(clueId)
+  const stationRef = trailRef.collection('stations').doc(stationId)
   return db.runTransaction(async t => {
     const trailScheme = (await trailRef.get()).data().trailScheme
-    delete trailScheme[clueId]
+    delete trailScheme[stationId]
     await trailRef.update({ trailScheme })
-    await clueRef.delete()
+    await stationRef.delete()
   })
 }

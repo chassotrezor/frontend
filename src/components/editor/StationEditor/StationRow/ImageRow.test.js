@@ -4,7 +4,7 @@ import ImageRow from './ImageRow'
 const $route = {
   params: {
     trailId: 'testTrailId',
-    clueId: 'testClueId'
+    stationId: 'testStationId'
   }
 }
 
@@ -34,10 +34,10 @@ describe('ImageRow', () => {
   describe('FirebaseUploader', () => {
     const fu = wrapper.find('.FirebaseUploader_test')
 
-    test('its "path" prop is "trailId/clueId"', () => {
+    test('its "path" prop is "trailId/stationId"', () => {
       const trailId = $route.params.trailId
-      const clueId = $route.params.clueId
-      const expectedPath = `${trailId}/${clueId}`
+      const stationId = $route.params.stationId
+      const expectedPath = `${trailId}/${stationId}`
       expect(fu.props().path).toBe(expectedPath)
     })
 

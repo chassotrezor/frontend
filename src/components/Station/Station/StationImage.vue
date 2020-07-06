@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'ClueImage',
+  name: 'StationImage',
   props: {
     src: {
       type: String,

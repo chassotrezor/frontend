@@ -4,17 +4,17 @@ function getTrailRef (trailId) {
   return firebase.firestore().collection('trails').doc(trailId)
 }
 
-function getClueRef (trailId, clueId) {
-  return getTrailRef(trailId).collection('clues').doc(clueId)
+function getStationRef (trailId, stationId) {
+  return getTrailRef(trailId).collection('stations').doc(stationId)
 }
 
 // TODO: change promise to async function if possible
-export function downloadClue ({ commit }, { trailId, clueId }) {
+export function downloadStation ({ commit }, { trailId, stationId }) {
   return new Promise((resolve, reject) => {
-    const clueRef = getClueRef(trailId, clueId)
-    clueRef.get()
+    const stationRef = getStationRef(trailId, stationId)
+    stationRef.get()
       .then(doc => {
-        commit('setClue', { trailId, clueId, clue: doc.data() })
+        commit('setStation', { trailId, stationId, station: doc.data() })
         resolve()
       })
       .catch(error => {
@@ -40,7 +40,7 @@ export async function start (__, { trailId }) {
   }
 }
 
-export async function saveClueAccess (__, { trailId, clueId }) {
+export async function saveStationAccess (__, { trailId, stationId }) {
   const db = firebase.firestore()
   const userId = firebase.auth().currentUser.uid
   const userRef = db.collection('users').doc(userId)
@@ -48,48 +48,48 @@ export async function saveClueAccess (__, { trailId, clueId }) {
     await db.runTransaction(async (t) => {
       const doc = await t.get(userRef)
       const trailIsOpen = doc.data().openTrails.some(id => id === trailId)
-      const currentAccessibleClues = doc.data().accessibleClues
+      const currentAccessibleStations = doc.data().accessibleStations
       if (trailIsOpen) {
         const update = {
           lastTrail: trailId,
-          lastClue: clueId
+          lastStation: stationId
         }
         // TODO: improve checks and case handling
-        if (!currentAccessibleClues[trailId]) {
-          const accessibleClues = {
-            ...currentAccessibleClues,
+        if (!currentAccessibleStations[trailId]) {
+          const accessibleStations = {
+            ...currentAccessibleStations,
             [trailId]: {
               data: {
                 name: 'trail name' // TODO: handle trail data
               },
-              clues: {
-                [clueId]: {
-                  name: 'clue name' // TODO: handle clue data
+              stations: {
+                [stationId]: {
+                  name: 'station name' // TODO: handle station data
                 }
               }
             }
           }
-          update.accessibleClues = accessibleClues
+          update.accessibleStations = accessibleStations
         } else {
-          const currentClueIsNotAccessible =
-            Object.keys(currentAccessibleClues[trailId].clues).every(id => id !== clueId)
+          const currentStationIsNotAccessible =
+            Object.keys(currentAccessibleStations[trailId].stations).every(id => id !== stationId)
 
-          if (currentClueIsNotAccessible) {
-            const accessibleClues = {
-              ...currentAccessibleClues,
+          if (currentStationIsNotAccessible) {
+            const accessibleStations = {
+              ...currentAccessibleStations,
               [trailId]: {
                 data: {
                   name: 'trail name' // TODO: handle trail data
                 },
-                clues: {
-                  ...currentAccessibleClues[trailId].clues,
-                  [clueId]: {
-                    name: 'clue name' // TODO: handle clue data
+                stations: {
+                  ...currentAccessibleStations[trailId].stations,
+                  [stationId]: {
+                    name: 'station name' // TODO: handle station data
                   }
                 }
               }
             }
-            update.accessibleClues = accessibleClues
+            update.accessibleStations = accessibleStations
           }
         }
         t.update(userRef, update)

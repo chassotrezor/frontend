@@ -17,12 +17,12 @@ export default {
     manage: {
       start: 'Commencer le parcours'
     },
-    clue: {
-      waitForClue: 'patientez pendant le chargement de l\'indice...'
+    station: {
+      waitForStation: 'patientez pendant le chargement de l\'indice...'
     }
   },
   editor: {
-    clue: {
+    station: {
       addRow: {
         text: 'texte',
         image: 'image'
@@ -33,7 +33,7 @@ export default {
     }
   },
   routes: {
-    cluesList: 'historique des indices',
+    stationsList: 'historique des indices',
     editor: 'créer un parcours',
     home: 'accueil',
     logout: 'se déconnecter',

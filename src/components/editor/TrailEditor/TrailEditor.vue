@@ -8,20 +8,20 @@
       @click="updateTrail({ trailId, newProps: { name } })"
     />
     <br>
-    <div>Clues :</div>
-    <clue-card
-      v-for="clue in trail.trailScheme"
-      :key="clue.id"
-      class="ClueCard_test"
-      :clue="clue"
+    <div>Stations :</div>
+    <station-card
+      v-for="station in trail.trailScheme"
+      :key="station.id"
+      class="StationCard_test"
+      :station="station"
       :trail-id="trailId"
-      @edit="editClue"
+      @edit="editStation"
     />
     <q-btn
-      class="CreateClue_test"
+      class="CreateStation_test"
       icon="add"
       label="nouvel indice"
-      @click="createAndEditClue"
+      @click="createAndEditStation"
     />
     <qr-codes-generator
       :trail-id="trailId"
@@ -33,13 +33,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ClueCard from './ClueCard'
+import StationCard from './StationCard'
 import QrCodesGenerator from './QrCodesGenerator'
 
 export default {
   name: 'TrailEditor',
   components: {
-    ClueCard,
+    StationCard,
     QrCodesGenerator
   },
   props: {
@@ -60,8 +60,8 @@ export default {
     trail () {
       return this.getTrail({ trailId: this.trailId })
     },
-    clueIds () {
-      return Object.values(this.trail.trailScheme).map(clue => clue.id)
+    stationIds () {
+      return Object.values(this.trail.trailScheme).map(station => station.id)
     }
   },
   mounted () {
@@ -70,15 +70,15 @@ export default {
   methods: {
     ...mapActions({
       updateTrail: 'editor/updateTrail',
-      createClue: 'editor/createClue'
+      createStation: 'editor/createStation'
     }),
-    async createAndEditClue () {
+    async createAndEditStation () {
       const trailId = this.trailId
-      const clueId = await this.createClue({ trailId })
-      this.editClue(clueId)
+      const stationId = await this.createStation({ trailId })
+      this.editStation(stationId)
     },
-    editClue (clueId) {
-      this.$emit('editClue', clueId)
+    editStation (stationId) {
+      this.$emit('editStation', stationId)
     }
   }
 }

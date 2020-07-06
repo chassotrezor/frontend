@@ -1,8 +1,8 @@
 import { mountQuasar } from '@test'
-import ClueText from './ClueText'
+import StationText from './StationText'
 
 const $sanitize = rawHtml => '<div>sanitized</div>'
-const wrapper = mountQuasar(ClueText, {
+const wrapper = mountQuasar(StationText, {
   propsData: {
     rawHtml: '<div>unsanitized</div>'
   },
@@ -11,7 +11,7 @@ const wrapper = mountQuasar(ClueText, {
   }
 })
 
-describe('ClueText', () => {
+describe('StationText', () => {
   it('displays the sanitized html text', () => {
     expect(wrapper.text()).toBe('sanitized')
   })

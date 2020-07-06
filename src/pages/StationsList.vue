@@ -1,16 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-    <clues-list />
+    <stations-list />
   </q-page>
 </template>
 
 <script>
-import CluesList from 'components/Navigation/CluesList'
+import StationsList from 'components/Navigation/StationsList'
 
 export default {
-  name: 'PageCluesList',
+  name: 'PageStationsList',
   components: {
-    CluesList
+    StationsList
   }
 }
 </script>

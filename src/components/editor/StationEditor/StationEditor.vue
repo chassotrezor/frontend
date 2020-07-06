@@ -10,10 +10,10 @@
       color="primary"
       @click="update"
     />
-    <clue-row
+    <station-row
       v-for="(row, index) in rows"
       :key="row.rowId"
-      class="ClueRow_test"
+      class="StationRow_test"
       :row="row"
       :first="index === 0"
       :last="index === rows.length - 1"
@@ -28,13 +28,13 @@
       <q-btn
         class="AddText_test"
         icon="edit"
-        :label="$t('editor.clue.addRow.text')"
+        :label="$t('editor.station.addRow.text')"
         @click="addRow('text')"
       />
       <q-btn
         class="AddImage_test"
         icon="image"
-        :label="$t('editor.clue.addRow.image')"
+        :label="$t('editor.station.addRow.image')"
         @click="addRow('image')"
       />
     </q-btn-group>
@@ -43,15 +43,15 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import ClueRow from './ClueRow/ClueRow'
+import StationRow from './StationRow/StationRow'
 
 export default {
-  name: 'ClueEditor',
+  name: 'StationEditor',
   components: {
-    ClueRow
+    StationRow
   },
   props: {
-    clueId: {
+    stationId: {
       type: String,
       required: true
     },
@@ -68,19 +68,19 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getClue: 'editor/getClue'
+      getStation: 'editor/getStation'
     }),
-    clue () {
-      return this.getClue({
+    station () {
+      return this.getStation({
         trailId: this.trailId,
-        clueId: this.clueId
+        stationId: this.stationId
       })
     }
   },
   mounted () {
     const vm = this
-    vm.name = vm.clue.name
-    vm.clue.rows.forEach((row, rowIndex) => {
+    vm.name = vm.station.name
+    vm.station.rows.forEach((row, rowIndex) => {
       Object.entries(row).forEach(entry => {
         if (!vm.rows[rowIndex]) vm.$set(vm.rows, rowIndex, {})
         vm.$set(vm.rows[rowIndex], entry[0], entry[1])
@@ -89,12 +89,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateClueInTrail: 'editor/updateClueInTrail'
+      updateStationInTrail: 'editor/updateStationInTrail'
     }),
     update () {
-      this.updateClueInTrail({
+      this.updateStationInTrail({
         trailId: this.trailId,
-        clueId: this.clueId,
+        stationId: this.stationId,
         newProps: {
           name: this.name,
           rows: this.rows

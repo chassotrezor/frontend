@@ -10,14 +10,14 @@
       "
       @click="edit"
     >
-      {{ clue.name }}
+      {{ station.name }}
     </div>
     <q-btn
       class="DeleteBtn_test"
       round
       color="negative"
       icon="close"
-      @click="deleteClue"
+      @click="deleteStation"
     />
   </div>
 </template>
@@ -26,9 +26,9 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'ClueCard',
+  name: 'StationCard',
   props: {
-    clue: {
+    station: {
       type: Object,
       required: true
     },
@@ -39,15 +39,15 @@ export default {
   },
   methods: {
     ...mapActions({
-      deleteClueInTrail: 'editor/deleteClueInTrail'
+      deleteStationInTrail: 'editor/deleteStationInTrail'
     }),
     edit () {
-      this.$emit('edit', this.clue.id)
+      this.$emit('edit', this.station.id)
     },
-    deleteClue () {
-      this.deleteClueInTrail({
+    deleteStation () {
+      this.deleteStationInTrail({
         trailId: this.trailId,
-        clueId: this.clue.id
+        stationId: this.station.id
       })
     }
   }

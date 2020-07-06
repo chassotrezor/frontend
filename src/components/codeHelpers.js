@@ -1,5 +1,5 @@
-export function generateString (trailId, clueId) {
-  return `https://chassotrezor.web.app/trail/${trailId}/clue/${clueId}`
+export function generateString (trailId, stationId) {
+  return `https://chassotrezor.web.app/trail/${trailId}/station/${stationId}`
 }
 
 function getPart (code, index) {
@@ -11,13 +11,13 @@ export function gettrailId (code) {
   return getPart(code, 4)
 }
 
-export function getclueId (code) {
+export function getstationId (code) {
   return getPart(code, 6)
 }
 
 export function checkCodeValidity (code) {
   const anyString = 'anyString'
-  const expectedParts = ['https:', '', 'chassotrezor.web.app', 'trail', anyString, 'clue', anyString]
+  const expectedParts = ['https:', '', 'chassotrezor.web.app', 'trail', anyString, 'station', anyString]
   const parts = code.split('/')
   const hasCorrectPartsAmount = parts.length === expectedParts.length
   if (hasCorrectPartsAmount) {

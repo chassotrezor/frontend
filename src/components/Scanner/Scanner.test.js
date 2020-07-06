@@ -22,13 +22,13 @@ describe('Scanner', () => {
       })
 
       const onDecode = wrapper.vm.onDecode
-      it('pushes to clue when code is valid', () => {
-        onDecode('https://chassotrezor.web.app/trail/testTrail/clue/testClue')
+      it('pushes to station when code is valid', () => {
+        onDecode('https://chassotrezor.web.app/trail/testTrail/station/testStation')
         expect(push).toHaveBeenCalledWith({
-          name: 'clue',
+          name: 'station',
           params: {
             trailId: 'testTrail',
-            clueId: 'testClue'
+            stationId: 'testStation'
           }
         })
       })

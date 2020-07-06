@@ -2,9 +2,9 @@ import firebase from 'firebase/app'
 
 const defaultUser = {
   openTrails: [],
-  accessibleClues: {},
+  accessibleStations: {},
   lastTrail: '',
-  lastClue: ''
+  lastStation: ''
 }
 
 function getUserRef (userId) {

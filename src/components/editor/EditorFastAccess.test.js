@@ -2,7 +2,7 @@ import { mountQuasar } from '@test'
 import EditorFastAccess from './EditorFastAccess'
 
 const testTrailId = 'testTrailId'
-const testClueId = 'testClueId'
+const testStationId = 'testStationId'
 
 const store = {
   modules: {
@@ -55,13 +55,13 @@ describe('EditorFastAccess', () => {
     beforeAll(async () => {
       wrapper.setProps({
         selectedTrail: undefined,
-        selectedClue: undefined
+        selectedStation: undefined
       })
       await wrapper.vm.$nextTick()
     })
 
-    it('displays no "QSelect" for clue', () => {
-      const qSelect = wrapper.find('.QSelectClue_test')
+    it('displays no "QSelect" for station', () => {
+      const qSelect = wrapper.find('.QSelectStation_test')
       expect(qSelect.exists()).toBe(false)
     })
   })
@@ -74,15 +74,15 @@ describe('EditorFastAccess', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('displays a "QSelect" for clue', () => {
-      const qSelect = wrapper.find('.QSelectClue_test')
+    it('displays a "QSelect" for station', () => {
+      const qSelect = wrapper.find('.QSelectStation_test')
       expect(qSelect.exists()).toBe(true)
     })
 
-    it('emits "editClue" value when "QSelect" for clue emits "input"', () => {
-      const qSelect = wrapper.find('.QSelectClue_test')
-      qSelect.vm.$emit('input', { value: testClueId })
-      expect(wrapper.emitted().editClue[0][0]).toBe(testClueId)
+    it('emits "editStation" value when "QSelect" for station emits "input"', () => {
+      const qSelect = wrapper.find('.QSelectStation_test')
+      qSelect.vm.$emit('input', { value: testStationId })
+      expect(wrapper.emitted().editStation[0][0]).toBe(testStationId)
     })
   })
 })

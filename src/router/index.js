@@ -37,18 +37,18 @@ export default function (/* { store, ssrContext } */) {
       return { name: 'home' }
 
       // return {
-      //   name: 'clue',
+      //   name: 'station',
       //   params: {
       //     trailId: 'testTrailID',
-      //     clueId: 'testClueID'
+      //     stationId: 'testStationID'
       //   }
       // }
 
       // return {
-      //   name: 'clueEditor',
+      //   name: 'stationEditor',
       //   params: {
       //     trailId: 'testTrailID',
-      //     clueId: 'testClueID'
+      //     stationId: 'testStationID'
       //   }
       // }
 

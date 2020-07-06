@@ -8,19 +8,19 @@
     />
     <div ref="qrCodes">
       <div
-        v-for="clue in clues"
-        :key="clue.clueId"
-        :ref="clue.clueId"
+        v-for="station in stations"
+        :key="station.stationId"
+        :ref="station.stationId"
         class="QrCodeModule_test"
         style="page-break-after: always"
       >
         <div
-          v-html="clue.qrCode"
+          v-html="station.qrCode"
         />
         <div class="text-h6">
-          {{ clue.name }}
+          {{ station.name }}
         </div>
-        <div>{{ clue.url }}</div>
+        <div>{{ station.url }}</div>
         <br>
       </div>
     </div>
@@ -49,16 +49,16 @@ export default {
     }
   },
   computed: {
-    clues () {
+    stations () {
       const vm = this
-      return Object.values(this.trailScheme).map(clue => {
-        const clueId = clue.id
-        const url = generateString(vm.trailId, clueId)
-        const name = clue.name
+      return Object.values(this.trailScheme).map(station => {
+        const stationId = station.id
+        const url = generateString(vm.trailId, stationId)
+        const name = station.name
         const qrCode = new QRCode({
           content: url
         }).svg()
-        return { clueId, name, url, qrCode }
+        return { stationId, name, url, qrCode }
       })
     }
   },

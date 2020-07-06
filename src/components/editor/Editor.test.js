@@ -2,7 +2,7 @@ import { mountQuasar } from '@test'
 import Editor from './Editor'
 
 const testTrailId = 'testTrailId'
-const testClueId = 'testClueId'
+const testStationId = 'testStationId'
 
 const $route = {
   params: {}
@@ -20,8 +20,8 @@ const routes = [
       path: '/editor/:trailId',
       name: 'trailEditor',
       children: [{
-        path: '/editor/:trailId/:clueId',
-        name: 'clueEditor'
+        path: '/editor/:trailId/:stationId',
+        name: 'stationEditor'
       }]
     }]
   }
@@ -34,28 +34,28 @@ const store = {
       actions: {
         bindMyTrails: jest.fn(),
         unbindMyTrails: jest.fn(),
-        bindClues: jest.fn(),
-        unbindClues: jest.fn()
+        bindStations: jest.fn(),
+        unbindStations: jest.fn()
       },
       getters: {
         getTrail: () => () => testTrailId,
-        getClue: () => () => testClueId
+        getStation: () => () => testStationId
       }
       //   getTrail: state => () => state.trailId,
-      //   getClue: state => () => state.clueId
+      //   getStation: state => () => state.stationId
       // },
       // mutations: {
       //   setTrail: (state, trailId) => {
       //     state.trailId = trailId
       //   },
-      //   setClue: (state, clueId) => {
-      //     state.clueId = clueId
+      //   setStation: (state, stationId) => {
+      //     state.stationId = stationId
       //   }
       // },
       // state: () => {
       //   return {
       //     trailId: undefined,
-      //     clueId: undefined
+      //     stationId: undefined
       //   }
       // }
     }
@@ -97,13 +97,13 @@ describe('Editor', () => {
         expect(trailEditor.exists()).toBe(false)
       })
 
-      it('displays no "ClueEditor" component', () => {
-        const clueEditor = wrapper.find('.ClueEditor_test')
-        expect(clueEditor.exists()).toBe(false)
+      it('displays no "StationEditor" component', () => {
+        const stationEditor = wrapper.find('.StationEditor_test')
+        expect(stationEditor.exists()).toBe(false)
       })
     })
 
-    describe('when "route.params.trailId" exists and "route.params.clueId" does not', () => {
+    describe('when "route.params.trailId" exists and "route.params.stationId" does not', () => {
       beforeAll(async () => {
         wrapper.vm.$router.push({
           name: 'trailEditor',
@@ -124,19 +124,19 @@ describe('Editor', () => {
         expect(trailEditor.props().trailId).toBe(testTrailId)
       })
 
-      it('displays no "ClueEditor" component', () => {
-        const clueEditor = wrapper.find('.ClueEditor_test')
-        expect(clueEditor.exists()).toBe(false)
+      it('displays no "StationEditor" component', () => {
+        const stationEditor = wrapper.find('.StationEditor_test')
+        expect(stationEditor.exists()).toBe(false)
       })
     })
 
-    describe('when "route.params.trailId" and "route.params.clueId" exist', () => {
+    describe('when "route.params.trailId" and "route.params.stationId" exist', () => {
       beforeAll(async () => {
         wrapper.vm.$router.push({
-          name: 'clueEditor',
+          name: 'stationEditor',
           params: {
             trailId: testTrailId,
-            clueId: testClueId
+            stationId: testStationId
           }
         })
         await wrapper.vm.$nextTick()
@@ -152,9 +152,9 @@ describe('Editor', () => {
         expect(trailEditor.exists()).toBe(false)
       })
 
-      it('displays a "ClueEditor" component', () => {
-        const clueEditor = wrapper.find('.ClueEditor_test')
-        expect(clueEditor.exists()).toBe(true)
+      it('displays a "StationEditor" component', () => {
+        const stationEditor = wrapper.find('.StationEditor_test')
+        expect(stationEditor.exists()).toBe(true)
       })
     })
 
@@ -190,8 +190,8 @@ describe('Editor', () => {
         await wrapper.vm.$nextTick()
       })
 
-      it('starts listening to changes of clues in trail', () => {
-        expect(store.modules.editor.actions.bindClues).toHaveBeenCalledWith(
+      it('starts listening to changes of stations in trail', () => {
+        expect(store.modules.editor.actions.bindStations).toHaveBeenCalledWith(
           expect.any(Object),
           { trailId: testTrailId }
         )
@@ -206,8 +206,8 @@ describe('Editor', () => {
         await wrapper.vm.$nextTick()
       })
 
-      it('stops listening to changes of clues in trail', () => {
-        expect(store.modules.editor.actions.unbindClues).toHaveBeenCalledWith(
+      it('stops listening to changes of stations in trail', () => {
+        expect(store.modules.editor.actions.unbindStations).toHaveBeenCalledWith(
           expect.any(Object),
           { trailId: testTrailId }
         )
@@ -223,8 +223,8 @@ describe('Editor', () => {
         expect(store.modules.editor.actions.unbindMyTrails).toHaveBeenCalled()
       })
 
-      it('stops listening to clues of selected Trail on server if a trail is selected', () => {
-        expect(store.modules.editor.actions.unbindClues).toHaveBeenCalledWith(
+      it('stops listening to stations of selected Trail on server if a trail is selected', () => {
+        expect(store.modules.editor.actions.unbindStations).toHaveBeenCalledWith(
           expect.any(Object),
           { trailId: testTrailId }
         )
@@ -244,7 +244,7 @@ describe('Editor', () => {
           $route,
           $router,
           selectedTrail: false,
-          selectedClue: false
+          selectedStation: false
         }
       })
       await wrapper.vm.$nextTick()
@@ -293,23 +293,23 @@ describe('Editor', () => {
       })
     })
 
-    describe('when "EditorFastAccess" emits "editClue" with "clueId" param', () => {
+    describe('when "EditorFastAccess" emits "editStation" with "stationId" param', () => {
       beforeAll(async () => {
         wrapper.vm.$set($route, 'params', {
           trailId: testTrailId
         })
         await wrapper.vm.$nextTick()
         const fastAccess = wrapper.find('.EditorFastAccess_test')
-        fastAccess.vm.$emit('editClue', testClueId)
+        fastAccess.vm.$emit('editStation', testStationId)
         await wrapper.vm.$nextTick()
       })
 
       it('navigates to "/editor/trailId/trailId"', () => {
         expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
-          name: 'clueEditor',
+          name: 'stationEditor',
           params: {
             trailId: testTrailId,
-            clueId: testClueId
+            stationId: testStationId
           }
         })
       })
@@ -344,23 +344,23 @@ describe('Editor', () => {
       })
     })
 
-    describe('when "TrailEditor" emits "editClue" with "clueId" param', () => {
+    describe('when "TrailEditor" emits "editStation" with "stationId" param', () => {
       beforeAll(async () => {
         wrapper.vm.$set($route, 'params', {
           trailId: testTrailId
         })
         await wrapper.vm.$nextTick()
         const trailEditor = wrapper.find('.TrailEditor_test')
-        trailEditor.vm.$emit('editClue', testClueId)
+        trailEditor.vm.$emit('editStation', testStationId)
         await wrapper.vm.$nextTick()
       })
 
-      it('navigates to "/editor/trailId/clueId"', () => {
+      it('navigates to "/editor/trailId/stationId"', () => {
         expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
-          name: 'clueEditor',
+          name: 'stationEditor',
           params: {
             trailId: testTrailId,
-            clueId: testClueId
+            stationId: testStationId
           }
         })
       })

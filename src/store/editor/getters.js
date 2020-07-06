@@ -6,15 +6,15 @@ export function getTrail (state) {
   return ({ trailId }) => state.myTrails[trailId]
 }
 
-export function getClue (state) {
-  return ({ trailId, clueId }) => {
+export function getStation (state) {
+  return ({ trailId, stationId }) => {
     if (
       !state.myTrails[trailId] ||
-      !state.myTrails[trailId].clues
+      !state.myTrails[trailId].stations
     ) {
       return undefined
     } else {
-      return state.myTrails[trailId].clues[clueId]
+      return state.myTrails[trailId].stations[stationId]
     }
   }
 }

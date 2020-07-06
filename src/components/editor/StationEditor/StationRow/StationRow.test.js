@@ -1,8 +1,8 @@
 import { mountQuasar } from '@test'
-import ClueRow from './ClueRow'
+import StationRow from './StationRow'
 
-describe('ClueRow', () => {
-  const wrapper = mountQuasar(ClueRow, {
+describe('StationRow', () => {
+  const wrapper = mountQuasar(StationRow, {
     propsData: {
       row: {}
     }

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div v-if="clue">
-      <clue
+    <div v-if="station">
+      <station
         v-if="playerIsChasing"
-        class="Clue_test"
+        class="Station_test"
       />
       <div v-else>
         <trail-info
           class="TrailInfo_test"
         />
         <start-trail
-          v-if="clue.isTrailEntry"
+          v-if="station.isTrailEntry"
           class="StartTrail_test"
         />
       </div>
@@ -18,7 +18,7 @@
     <spinner-with-message
       v-else
       class="SpinnerWithMessage_test"
-      :message="$t('trail.clue.waitForClue')"
+      :message="$t('trail.station.waitForStation')"
     />
   </div>
 </template>
@@ -26,7 +26,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import TrailInfo from './TrailInfo'
-import Clue from './Clue/Clue'
+import Station from './Station/Station'
 import SpinnerWithMessage from 'components/Navigation/SpinnerWithMessage'
 import StartTrail from './StartTrail'
 
@@ -34,19 +34,19 @@ export default {
   name: 'StationLayout',
   components: {
     TrailInfo,
-    Clue,
+    Station,
     SpinnerWithMessage,
     StartTrail
   },
   computed: {
     ...mapGetters({
-      getClue: 'trail/getClue',
+      getStation: 'trail/getStation',
       openTrails: 'user/openTrails'
     }),
-    clue () {
+    station () {
       const trailId = this.$route.params.trailId
-      const clueId = this.$route.params.clueId
-      return this.getClue({ trailId, clueId })
+      const stationId = this.$route.params.stationId
+      return this.getStation({ trailId, stationId })
     },
     playerIsChasing () {
       const trailId = this.$route.params.trailId
@@ -56,12 +56,12 @@ export default {
   },
   mounted () {
     const trailId = this.$route.params.trailId
-    const clueId = this.$route.params.clueId
-    this.downloadClue({ trailId, clueId })
+    const stationId = this.$route.params.stationId
+    this.downloadStation({ trailId, stationId })
   },
   methods: {
     ...mapActions({
-      downloadClue: 'trail/downloadClue'
+      downloadStation: 'trail/downloadStation'
     })
   }
 }

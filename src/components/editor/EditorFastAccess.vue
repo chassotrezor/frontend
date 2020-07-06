@@ -17,10 +17,10 @@
     <div> > </div>
     <q-select
       v-if="selectedTrail"
-      class="QSelectClue_test"
-      :value="clue"
-      :options="cluesOptions"
-      @input="$emit('editClue', $event.value)"
+      class="QSelectStation_test"
+      :value="station"
+      :options="stationsOptions"
+      @input="$emit('editStation', $event.value)"
     />
   </div>
 </template>
@@ -35,7 +35,7 @@ export default {
       type: String,
       default: () => undefined
     },
-    selectedClue: {
+    selectedStation: {
       type: String,
       default: () => undefined
     }
@@ -53,13 +53,13 @@ export default {
         }
       })
     },
-    cluesOptions () {
+    stationsOptions () {
       if (this.selectedTrail) {
         const trailScheme = this.getTrail({ trailId: this.selectedTrail }).trailScheme
-        return Object.values(trailScheme).map(clue => {
+        return Object.values(trailScheme).map(station => {
           return {
-            value: clue.id,
-            label: clue.name
+            value: station.id,
+            label: station.name
           }
         })
       } else {
@@ -69,8 +69,8 @@ export default {
     trail () {
       return this.trailsOptions.find(option => option.value === this.selectedTrail)
     },
-    clue () {
-      return this.cluesOptions.find(option => option.value === this.selectedClue)
+    station () {
+      return this.stationsOptions.find(option => option.value === this.selectedStation)
     }
   }
 }

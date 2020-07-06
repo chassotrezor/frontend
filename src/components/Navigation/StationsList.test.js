@@ -1,14 +1,14 @@
 import { mountQuasar } from '@test'
-import CluesList from './CluesList'
+import StationsList from './StationsList'
 
-const defaultAccessibleClues = {
+const defaultAccessibleStations = {
   testTrailId1: {
-    clues: {
-      testClueId11: {
-        name: 'test clue name 11'
+    stations: {
+      testStationId11: {
+        name: 'test station name 11'
       },
-      testClueId12: {
-        name: 'test clue name 12'
+      testStationId12: {
+        name: 'test station name 12'
       }
     },
     data: {
@@ -16,9 +16,9 @@ const defaultAccessibleClues = {
     }
   },
   testTrailId2: {
-    clues: {
-      testClueId21: {
-        name: 'test clue name 21'
+    stations: {
+      testStationId21: {
+        name: 'test station name 21'
       }
     },
     data: {
@@ -34,16 +34,16 @@ const store = {
     user: {
       namespaced: true,
       getters: {
-        accessibleClues: state => state.accessibleClues,
+        accessibleStations: state => state.accessibleStations,
         lastTrail: state => state.lastTrail
       },
       mutations: {
-        setAccessibleClues: (state, value) => { state.accessibleClues = value },
+        setAccessibleStations: (state, value) => { state.accessibleStations = value },
         setLasttrail: (state, value) => { state.lastTrail = value }
       },
       state: () => {
         return {
-          accessibleClues: defaultAccessibleClues,
+          accessibleStations: defaultAccessibleStations,
           lastTrail: defaultLastTrail
         }
       }
@@ -55,10 +55,10 @@ const $router = {
   push: jest.fn()
 }
 
-describe('CluesList', () => {
+describe('StationsList', () => {
   let wrapper
   beforeAll(done => {
-    wrapper = mountQuasar(CluesList, {
+    wrapper = mountQuasar(StationsList, {
       store,
       mocks: {
         $router
@@ -68,14 +68,14 @@ describe('CluesList', () => {
   })
 
   it('sets value of "selectedTrail" to { value: lastTrailId, label: lastTrailName }', () => {
-    const trailName = defaultAccessibleClues[defaultLastTrail].data.name
+    const trailName = defaultAccessibleStations[defaultLastTrail].data.name
     expect(wrapper.vm.selectedTrail).toEqual({
       value: defaultLastTrail,
       label: trailName
     })
   })
 
-  describe('when "selectedTrail" and "accessibleClues" match', () => {
+  describe('when "selectedTrail" and "accessibleStations" match', () => {
     it('displays a "QSelect" component with options [{ value: trailId, label: trailName }]', () => {
       const select = wrapper.find('.QSelect_test')
       expect(select.props().options).toEqual([
@@ -84,25 +84,25 @@ describe('CluesList', () => {
       ])
     })
 
-    it('displays a "QItem" component for each clue in accessibleClues[trailId].clues', () => {
+    it('displays a "QItem" component for each station in accessibleStations[trailId].stations', () => {
       const qItems = wrapper.findAll('.QItem_test')
-      const expectedLength = Object.keys(defaultAccessibleClues[defaultLastTrail].clues).length
+      const expectedLength = Object.keys(defaultAccessibleStations[defaultLastTrail].stations).length
       expect(qItems.length).toBe(expectedLength)
     })
 
     describe('when "QItem" emits "click" event', () => {
       beforeAll(done => {
-        const qItem = wrapper.find('.testClueId11_test')
+        const qItem = wrapper.find('.testStationId11_test')
         qItem.vm.$emit('click')
         wrapper.vm.$nextTick(done)
       })
 
-      test('router pushes to /trail/[trailId]/clue/[clueId]', () => {
+      test('router pushes to /trail/[trailId]/station/[stationId]', () => {
         const expectedRoute = {
-          name: 'clue',
+          name: 'station',
           params: {
             trailId: 'testTrailId1',
-            clueId: 'testClueId11'
+            stationId: 'testStationId11'
           }
         }
         expect($router.push).toHaveBeenCalledWith(expectedRoute)
@@ -110,7 +110,7 @@ describe('CluesList', () => {
     })
   })
 
-  describe('when "selectedTrail" does not match "accessibleClues', () => {
+  describe('when "selectedTrail" does not match "accessibleStations', () => {
     beforeAll(done => {
       wrapper.vm.selectedTrail = 'NO_MATCH'
       wrapper.vm.$nextTick(done)
@@ -130,9 +130,9 @@ describe('CluesList', () => {
     })
   })
 
-  describe('when "accessibleClues" is empty or undefined', () => {
+  describe('when "accessibleStations" is empty or undefined', () => {
     beforeAll(done => {
-      wrapper.vm.$store.commit('user/setAccessibleClues', undefined)
+      wrapper.vm.$store.commit('user/setAccessibleStations', undefined)
       wrapper.vm.$nextTick(done)
     })
 
@@ -146,8 +146,8 @@ describe('CluesList', () => {
       expect(item.exists()).toBe(false)
     })
 
-    it('displays "no clue yet"', () => {
-      expect(wrapper.text().includes('no clue yet')).toBe(true)
+    it('displays "no station yet"', () => {
+      expect(wrapper.text().includes('no station yet')).toBe(true)
     })
   })
 })

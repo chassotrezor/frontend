@@ -7,13 +7,13 @@ import html2pdf from 'html2pdf.js'
 const trailId = 'testTrailId'
 const trailName = 'testTrailName'
 const trailScheme = {
-  testClueId1: {
-    id: 'testClueId1',
-    name: 'testClueName1'
+  testStationId1: {
+    id: 'testStationId1',
+    name: 'testStationName1'
   },
-  testClueId2: {
-    id: 'testClueId2',
-    name: 'testClueName2'
+  testStationId2: {
+    id: 'testStationId2',
+    name: 'testStationName2'
   }
 }
 
@@ -29,7 +29,7 @@ describe('QrCodesGenerator', () => {
   const modules = wrapper.findAll('.QrCodeModule_test')
   const expectedLength = Object.keys(trailScheme).length
 
-  it('displays a QR Code Module for each clue in trailScheme', () => {
+  it('displays a QR Code Module for each station in trailScheme', () => {
     expect(modules.length).toBe(expectedLength)
   })
 

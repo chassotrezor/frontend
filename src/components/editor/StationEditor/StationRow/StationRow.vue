@@ -46,7 +46,7 @@ import TextRow from './TextRow'
 import ImageRow from './ImageRow'
 
 export default {
-  name: 'ClueRow',
+  name: 'StationRow',
   components: {
     TextRow,
     ImageRow

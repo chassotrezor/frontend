@@ -1,14 +1,14 @@
 import { mountQuasar } from '@test'
-import ClueImage from './ClueImage'
+import StationImage from './StationImage'
 
 const src = 'sourceImage'
-const wrapper = mountQuasar(ClueImage, {
+const wrapper = mountQuasar(StationImage, {
   propsData: {
     src
   }
 })
 
-describe('ClueImage', () => {
+describe('StationImage', () => {
   it('displays a "QImg" with "src" prop as source', () => {
     const img = wrapper.find('.QImg_test')
     expect(img.props().src).toBe(src)

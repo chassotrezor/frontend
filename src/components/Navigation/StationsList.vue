@@ -1,6 +1,6 @@
 <template>
   <div>
-    Clues List
+    Stations List
     <div
       v-if="hasTrails"
     >
@@ -11,23 +11,23 @@
       />
       <q-list>
         <q-item
-          v-for="clue in clues"
-          :key="clue"
+          v-for="station in stations"
+          :key="station"
           class="QItem_test"
-          :class="`${clue}_test`"
+          :class="`${station}_test`"
           clickable
-          @click="() => push(clue)"
+          @click="() => push(station)"
         >
           <q-item-section>
             <q-item-label>
-              {{ clue }}
+              {{ station }}
             </q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
     </div>
     <div v-else>
-      no clue yet
+      no station yet
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'CluesList',
+  name: 'StationsList',
   data () {
     return {
       selectedTrail: undefined
@@ -44,12 +44,12 @@ export default {
   },
   computed: {
     ...mapGetters({
-      accessibleClues: 'user/accessibleClues',
+      accessibleStations: 'user/accessibleStations',
       lastTrail: 'user/lastTrail'
     }),
     trails () {
-      if (this.accessibleClues) {
-        return Object.entries(this.accessibleClues).map(trail => {
+      if (this.accessibleStations) {
+        return Object.entries(this.accessibleStations).map(trail => {
           return {
             label: trail[1].data.name,
             value: trail[0]
@@ -59,14 +59,14 @@ export default {
         return []
       }
     },
-    clues () {
+    stations () {
       if (
         this.selectedTrail &&
-        this.accessibleClues &&
-        this.accessibleClues[this.selectedTrail.value] &&
-        this.accessibleClues[this.selectedTrail.value].clues
+        this.accessibleStations &&
+        this.accessibleStations[this.selectedTrail.value] &&
+        this.accessibleStations[this.selectedTrail.value].stations
       ) {
-        return Object.keys(this.accessibleClues[this.selectedTrail.value].clues)
+        return Object.keys(this.accessibleStations[this.selectedTrail.value].stations)
       } else {
         return undefined
       }
@@ -80,12 +80,12 @@ export default {
     vm.selectedTrail = vm.trails.find(option => option.value === vm.lastTrail)
   },
   methods: {
-    push (clue) {
+    push (station) {
       const route = {
-        name: 'clue',
+        name: 'station',
         params: {
           trailId: this.selectedTrail.value,
-          clueId: clue
+          stationId: station
         }
       }
       this.$router.push(route)

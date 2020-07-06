@@ -1,11 +1,11 @@
 import { mountQuasar } from '@test'
-import ClueEditor from './ClueEditor'
+import StationEditor from './StationEditor'
 
-const clueId = 'testClueId'
+const stationId = 'testStationId'
 const trailId = 'testTrailId'
 
-const testClue = {
-  name: 'testClueName',
+const testStation = {
+  name: 'testStationName',
   rows: [
     {
       rowId: 'id1',
@@ -24,23 +24,23 @@ const store = {
     editor: {
       namespaced: true,
       actions: {
-        updateClueInTrail: jest.fn()
+        updateStationInTrail: jest.fn()
       },
       getters: {
-        getClue: () => () => {
-          return testClue
+        getStation: () => () => {
+          return testStation
         }
       }
     }
   }
 }
 
-describe('ClueEditor', () => {
+describe('StationEditor', () => {
   let wrapper
   beforeAll(async () => {
-    wrapper = mountQuasar(ClueEditor, {
+    wrapper = mountQuasar(StationEditor, {
       propsData: {
-        clueId,
+        stationId,
         trailId
       },
       store
@@ -48,88 +48,88 @@ describe('ClueEditor', () => {
     await wrapper.vm.$nextTick()
   })
 
-  it('initializes "name" data to "clue.name"', () => {
-    expect(wrapper.vm.name).toBe(testClue.name)
+  it('initializes "name" data to "station.name"', () => {
+    expect(wrapper.vm.name).toBe(testStation.name)
   })
 
-  it('initializes "rows" data to "clue.row"', () => {
-    expect(wrapper.vm.rows).toEqual(testClue.rows)
+  it('initializes "rows" data to "station.row"', () => {
+    expect(wrapper.vm.rows).toEqual(testStation.rows)
   })
 
   it('displays a "QInput" for "name"', () => {
     const qInput = wrapper.find('.QInputName_test')
-    expect(qInput.props().value).toBe(testClue.name)
+    expect(qInput.props().value).toBe(testStation.name)
   })
 
-  describe('clue rows', () => {
-    it('displays a "ClueRow" for each row', () => {
-      const rows = wrapper.findAll('.ClueRow_test')
-      expect(rows.length).toBe(testClue.rows.length)
+  describe('station rows', () => {
+    it('displays a "StationRow" for each row', () => {
+      const rows = wrapper.findAll('.StationRow_test')
+      expect(rows.length).toBe(testStation.rows.length)
     })
 
-    it('sets "first" prop to true if and only if ClueRow is first of list', () => {
-      const rows = wrapper.findAll('.ClueRow_test')
+    it('sets "first" prop to true if and only if StationRow is first of list', () => {
+      const rows = wrapper.findAll('.StationRow_test')
       wrapper.vm.rows.forEach((row, index) => {
         expect(rows.at(index).props().first).toBe(index === 0)
       })
     })
 
-    it('sets "last" prop to true if and only if ClueRow is last of list', () => {
-      const rows = wrapper.findAll('.ClueRow_test')
+    it('sets "last" prop to true if and only if StationRow is last of list', () => {
+      const rows = wrapper.findAll('.StationRow_test')
       wrapper.vm.rows.forEach((row, index) => {
         expect(rows.at(index).props().last).toBe(index === rows.length - 1)
       })
     })
 
-    describe('when a "ClueRow" emits "remove"', () => {
+    describe('when a "StationRow" emits "remove"', () => {
       beforeAll(async () => {
-        const row = wrapper.find('.ClueRow_test')
+        const row = wrapper.find('.StationRow_test')
         row.vm.$emit('remove')
         await wrapper.vm.$nextTick()
       })
 
       it('removes the corresponding row', () => {
-        expect(wrapper.vm.rows).toEqual([testClue.rows[1]])
+        expect(wrapper.vm.rows).toEqual([testStation.rows[1]])
       })
 
       afterAll(async () => {
-        wrapper.setData({ rows: [...testClue.rows] })
+        wrapper.setData({ rows: [...testStation.rows] })
         await wrapper.vm.$nextTick()
       })
     })
 
-    describe('when a "ClueRow" emits "up"', () => {
+    describe('when a "StationRow" emits "up"', () => {
       beforeAll(async () => {
-        const rows = wrapper.findAll('.ClueRow_test')
+        const rows = wrapper.findAll('.StationRow_test')
         rows.at(1).vm.$emit('up')
         await wrapper.vm.$nextTick()
       })
 
       it('permutes corresponding row and previous row', () => {
-        expect(wrapper.vm.rows[1]).toEqual(testClue.rows[0])
-        expect(wrapper.vm.rows[0]).toEqual(testClue.rows[1])
+        expect(wrapper.vm.rows[1]).toEqual(testStation.rows[0])
+        expect(wrapper.vm.rows[0]).toEqual(testStation.rows[1])
       })
 
       afterAll(async () => {
-        wrapper.setData({ rows: [...testClue.rows] })
+        wrapper.setData({ rows: [...testStation.rows] })
         await wrapper.vm.$nextTick()
       })
     })
 
-    describe('when a "ClueRow" emits "down"', () => {
+    describe('when a "StationRow" emits "down"', () => {
       beforeAll(async () => {
-        const rows = wrapper.findAll('.ClueRow_test')
+        const rows = wrapper.findAll('.StationRow_test')
         rows.at(0).vm.$emit('down')
         await wrapper.vm.$nextTick()
       })
 
       it('permutes corresponding row and next row', () => {
-        expect(wrapper.vm.rows[1]).toEqual(testClue.rows[0])
-        expect(wrapper.vm.rows[0]).toEqual(testClue.rows[1])
+        expect(wrapper.vm.rows[1]).toEqual(testStation.rows[0])
+        expect(wrapper.vm.rows[0]).toEqual(testStation.rows[1])
       })
 
       afterAll(async () => {
-        wrapper.setData({ rows: [...testClue.rows] })
+        wrapper.setData({ rows: [...testStation.rows] })
         await wrapper.vm.$nextTick()
       })
     })
@@ -141,10 +141,10 @@ describe('ClueEditor', () => {
       btn.vm.$emit('click')
       await wrapper.vm.$nextTick()
       const length = wrapper.vm.rows.length
-      expect(length).toBe(testClue.rows.length + 1)
+      expect(length).toBe(testStation.rows.length + 1)
       const lastRow = wrapper.vm.rows[length - 1]
       expect(lastRow.type).toBe('text')
-      wrapper.setData({ rows: [...testClue.rows] })
+      wrapper.setData({ rows: [...testStation.rows] })
       await wrapper.vm.$nextTick()
     })
 
@@ -153,10 +153,10 @@ describe('ClueEditor', () => {
       btn.vm.$emit('click')
       await wrapper.vm.$nextTick()
       const length = wrapper.vm.rows.length
-      expect(length).toBe(testClue.rows.length + 1)
+      expect(length).toBe(testStation.rows.length + 1)
       const lastRow = wrapper.vm.rows[length - 1]
       expect(lastRow.type).toBe('image')
-      wrapper.setData({ rows: [...testClue.rows] })
+      wrapper.setData({ rows: [...testStation.rows] })
       await wrapper.vm.$nextTick()
     })
   })
@@ -173,13 +173,13 @@ describe('ClueEditor', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('updates the clue in the trail on server', () => {
-      expect(store.modules.editor.actions.updateClueInTrail).toHaveBeenCalledWith(
+    it('updates the station in the trail on server', () => {
+      expect(store.modules.editor.actions.updateStationInTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
           trailId,
-          clueId,
-          newProps: testClue
+          stationId,
+          newProps: testStation
         }
       )
     })

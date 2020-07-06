@@ -30,8 +30,8 @@ export default {
   computed: {
     path () {
       const trailId = this.$route.params.trailId
-      const clueId = this.$route.params.clueId
-      return `${trailId}/${clueId}`
+      const stationId = this.$route.params.stationId
+      return `${trailId}/${stationId}`
     }
   },
   methods: {

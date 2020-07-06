@@ -2,12 +2,12 @@ import { mountQuasar } from '@test'
 import StationLayout from './StationLayout'
 
 const trailId = 'testTrailId'
-const clueId = 'testClueId'
+const stationId = 'testStationId'
 
 const $route = {
   params: {
     trailId,
-    clueId
+    stationId
   }
 }
 
@@ -16,17 +16,17 @@ const store = {
     trail: {
       namespaced: true,
       actions: {
-        downloadClue: jest.fn()
+        downloadStation: jest.fn()
       },
       getters: {
-        getClue: state => () => state.clue
+        getStation: state => () => state.station
       },
       mutations: {
-        setClue: (state, clue) => { state.clue = clue }
+        setStation: (state, station) => { state.station = station }
       },
       state: () => {
         return {
-          clue: undefined
+          station: undefined
         }
       }
     },
@@ -66,10 +66,10 @@ describe('StationLayout', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    describe('when clue data is downloaded', () => {
+    describe('when station data is downloaded', () => {
       beforeAll(done => {
-        store.modules.trail.actions.downloadClue.mockResolvedValue()
-        wrapper.vm.$store.commit('trail/setClue', { isTrailEntry: true })
+        store.modules.trail.actions.downloadStation.mockResolvedValue()
+        wrapper.vm.$store.commit('trail/setStation', { isTrailEntry: true })
         wrapper.vm.$nextTick(done)
       })
 
@@ -78,9 +78,9 @@ describe('StationLayout', () => {
         expect(spinner.exists()).toBe(false)
       })
 
-      it('displays "Clue" component', () => {
-        const clue = wrapper.find('.Clue_test')
-        expect(clue.exists()).toBe(true)
+      it('displays "Station" component', () => {
+        const station = wrapper.find('.Station_test')
+        expect(station.exists()).toBe(true)
       })
 
       it('does not display trailInfo component', () => {
@@ -88,9 +88,9 @@ describe('StationLayout', () => {
         expect(trailInfo.exists()).toBe(false)
       })
 
-      describe('when "clue.isTrailEntry" is true', () => {
+      describe('when "station.isTrailEntry" is true', () => {
         beforeAll(done => {
-          wrapper.vm.$store.commit('trail/setClue', { isTrailEntry: true })
+          wrapper.vm.$store.commit('trail/setStation', { isTrailEntry: true })
           wrapper.vm.$nextTick(done)
         })
 
@@ -108,9 +108,9 @@ describe('StationLayout', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    it('does not display clue component', () => {
-      const clue = wrapper.find('.Clue_test')
-      expect(clue.exists()).toBe(false)
+    it('does not display station component', () => {
+      const station = wrapper.find('.Station_test')
+      expect(station.exists()).toBe(false)
     })
 
     it('displays trailInfo slot', () => {
@@ -120,7 +120,7 @@ describe('StationLayout', () => {
 
     describe('when "isTrailEntry" prop is true', () => {
       beforeAll(done => {
-        wrapper.vm.$store.commit('trail/setClue', { isTrailEntry: true })
+        wrapper.vm.$store.commit('trail/setStation', { isTrailEntry: true })
         wrapper.vm.$nextTick(done)
       })
 

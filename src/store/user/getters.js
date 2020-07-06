@@ -2,14 +2,14 @@ export function openTrails (state) {
   return state.openTrails
 }
 
-export function accessibleClues (state) {
-  return state.accessibleClues
+export function accessibleStations (state) {
+  return state.accessibleStations
 }
 
 export function lastTrail (state) {
   return state.lastTrail
 }
 
-export function lastClue (state) {
-  return state.lastClue
+export function lastStation (state) {
+  return state.lastStation
 }

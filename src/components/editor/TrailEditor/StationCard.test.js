@@ -1,7 +1,7 @@
 import { mountQuasar } from '@test'
-import ClueCard from './ClueCard'
+import StationCard from './StationCard'
 
-const testClueId = 'testClueId'
+const testStationId = 'testStationId'
 const testTrailId = 'testTrailId'
 
 const store = {
@@ -9,18 +9,18 @@ const store = {
     editor: {
       namespaced: true,
       actions: {
-        deleteClueInTrail: jest.fn()
+        deleteStationInTrail: jest.fn()
       }
     }
   }
 }
 
-describe('ClueCard', () => {
-  const wrapper = mountQuasar(ClueCard, {
+describe('StationCard', () => {
+  const wrapper = mountQuasar(StationCard, {
     store,
     propsData: {
-      clue: {
-        id: testClueId
+      station: {
+        id: testStationId
       },
       trailId: testTrailId
     }
@@ -32,8 +32,8 @@ describe('ClueCard', () => {
       clickToEdit.trigger('click')
     })
 
-    it('emits "edit" event with value "clueId"', () => {
-      expect(wrapper.emitted('edit')[0][0]).toBe(testClueId)
+    it('emits "edit" event with value "stationId"', () => {
+      expect(wrapper.emitted('edit')[0][0]).toBe(testStationId)
     })
   })
 
@@ -44,12 +44,12 @@ describe('ClueCard', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('deletes clue on server', () => {
-      expect(store.modules.editor.actions.deleteClueInTrail).toHaveBeenCalledWith(
+    it('deletes station on server', () => {
+      expect(store.modules.editor.actions.deleteStationInTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
           trailId: testTrailId,
-          clueId: testClueId
+          stationId: testStationId
         }
       )
     })

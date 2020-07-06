@@ -8,7 +8,7 @@
 import StationLayout from 'components/Station/StationLayout'
 
 export default {
-  name: 'PageClue',
+  name: 'PageStation',
   components: {
     StationLayout
   }

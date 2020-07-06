@@ -1,11 +1,11 @@
 import Vue from 'vue'
 
 export function setTrail (state, trail) {
-  if (!state.myTrails[trail.id] || !state.myTrails[trail.id].clues) {
-    Vue.set(state.myTrails, trail.id, { ...trail, clues: {} })
+  if (!state.myTrails[trail.id] || !state.myTrails[trail.id].stations) {
+    Vue.set(state.myTrails, trail.id, { ...trail, stations: {} })
   } else {
-    const clues = state.myTrails[trail.id].clues
-    Vue.set(state.myTrails, trail.id, { ...trail, clues })
+    const stations = state.myTrails[trail.id].stations
+    Vue.set(state.myTrails, trail.id, { ...trail, stations })
   }
 }
 
@@ -17,16 +17,16 @@ export function deleteTrails (state) {
   Vue.set(state, 'myTrails', {})
 }
 
-export function setClue (state, { trailId, clueId, clue }) {
+export function setStation (state, { trailId, stationId, station }) {
   if (!state.myTrails[trailId]) {
     Vue.set(state.myTrails, trailId, {})
   }
-  if (!state.myTrails[trailId].clues) {
-    Vue.set(state.myTrails[trailId], 'clues', {})
+  if (!state.myTrails[trailId].stations) {
+    Vue.set(state.myTrails[trailId], 'stations', {})
   }
-  Vue.set(state.myTrails[trailId].clues, clueId, clue)
+  Vue.set(state.myTrails[trailId].stations, stationId, station)
 }
 
-export function deleteClues (state, { trailId }) {
-  Vue.delete(state.myTrails[trailId], 'clues')
+export function deleteStations (state, { trailId }) {
+  Vue.delete(state.myTrails[trailId], 'stations')
 }

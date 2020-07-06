@@ -3,9 +3,9 @@
     <editor-fast-access
       class="EditorFastAccess_test"
       :selected-trail="selectedTrail"
-      :selected-clue="selectedClue"
+      :selected-station="selectedStation"
       @editTrail="editTrail"
-      @editClue="editClue"
+      @editStation="editStation"
       @unselect="unselect"
     />
     <trails-list
@@ -14,15 +14,15 @@
       @editTrail="editTrail"
     />
     <trail-editor
-      v-else-if="!selectedClue"
+      v-else-if="!selectedStation"
       class="TrailEditor_test"
       :trail-id="selectedTrail"
-      @editClue="editClue"
+      @editStation="editStation"
     />
-    <clue-editor
+    <station-editor
       v-else
-      class="ClueEditor_test"
-      :clue-id="selectedClue"
+      class="StationEditor_test"
+      :station-id="selectedStation"
       :trail-id="selectedTrail"
     />
   </div>
@@ -34,7 +34,7 @@ import { mapActions, mapGetters } from 'vuex'
 import EditorFastAccess from './EditorFastAccess'
 import TrailsList from './TrailsList/TrailsList'
 import TrailEditor from './TrailEditor/TrailEditor'
-import ClueEditor from './ClueEditor/ClueEditor'
+import StationEditor from './StationEditor/StationEditor'
 
 export default {
   name: 'Editor',
@@ -42,21 +42,21 @@ export default {
     EditorFastAccess,
     TrailsList,
     TrailEditor,
-    ClueEditor
+    StationEditor
   },
   computed: {
     ...mapGetters({
       getTrail: 'editor/getTrail',
-      getClue: 'editor/getClue'
+      getStation: 'editor/getStation'
     }),
     trailExists () {
       const trailId = this.$route.params.trailId
       return !!this.getTrail({ trailId })
     },
-    clueExists () {
+    stationExists () {
       const trailId = this.$route.params.trailId
-      const clueId = this.$route.params.clueId
-      if (this.trailExists) return !!this.getClue({ trailId, clueId })
+      const stationId = this.$route.params.stationId
+      if (this.trailExists) return !!this.getStation({ trailId, stationId })
       else return false
     },
     selectedTrail () {
@@ -64,34 +64,34 @@ export default {
       if (this.trailExists) return trailId
       else return undefined
     },
-    selectedClue () {
-      const clueId = this.$route.params.clueId
-      if (this.clueExists) return clueId
+    selectedStation () {
+      const stationId = this.$route.params.stationId
+      if (this.stationExists) return stationId
       else return undefined
     }
   },
   watch: {
     $route (to, from) {
-      if (from.params.trailId) this.unbindClues({ trailId: from.params.trailId })
-      if (to.params.trailId) this.bindClues({ trailId: to.params.trailId })
+      if (from.params.trailId) this.unbindStations({ trailId: from.params.trailId })
+      if (to.params.trailId) this.bindStations({ trailId: to.params.trailId })
     }
   },
   mounted () {
     this.bindMyTrails()
     const trailId = this.$route.params.trailId
-    if (trailId) this.bindClues({ trailId })
+    if (trailId) this.bindStations({ trailId })
   },
   beforeDestroy () {
     this.unbindMyTrails()
     const trailId = this.$route.params.trailId
-    if (trailId) this.unbindClues({ trailId })
+    if (trailId) this.unbindStations({ trailId })
   },
   methods: {
     ...mapActions({
       bindMyTrails: 'editor/bindMyTrails',
       unbindMyTrails: 'editor/unbindMyTrails',
-      bindClues: 'editor/bindClues',
-      unbindClues: 'editor/unbindClues'
+      bindStations: 'editor/bindStations',
+      unbindStations: 'editor/unbindStations'
     }),
     editTrail (trailId) {
       this.$router.push({
@@ -101,13 +101,13 @@ export default {
         }
       })
     },
-    editClue (clueId) {
+    editStation (stationId) {
       const trailId = this.$route.params.trailId
       this.$router.push({
-        name: 'clueEditor',
+        name: 'stationEditor',
         params: {
           trailId,
-          clueId
+          stationId
         }
       })
     },

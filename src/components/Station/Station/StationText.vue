@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'ClueText',
+  name: 'StationText',
   props: {
     rawHtml: {
       type: String,
