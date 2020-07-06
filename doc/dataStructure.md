@@ -81,3 +81,32 @@ ____
 ```
 
 > `rowId` is used as key for list rendering
+
+_______
+
+## user
+
+```
+{
+  openTrails: [
+    <trailId>,
+    <trailId>,
+    <...>
+  ],
+  accessibleStations: {
+    <trailId> : {
+      <stationId>: {
+        name: <stationName>
+      },
+      
+      ...
+
+      data: {
+        name: <trailName>
+      }
+    }
+  },
+  lastTrail: '',
+  lastStation: ''
+}
+```
