@@ -2,13 +2,13 @@
   <div>
     <div>Stations :</div>
     <node-card
-      v-for="(node, nodeId) in trail.nodes"
-      :key="nodeId"
+      v-for="node in graph"
+      :key="node.nodeId"
       class="NodeCard_test"
       :node="node"
-      @editStation="editStation(nodeId)"
-      @editNode="editNode(nodeId)"
-      @remove="removeNode(nodeId)"
+      @editStation="editStation(node.nodeId)"
+      @editNode="editNode(node.nodeId)"
+      @remove="removeNode(node.nodeId)"
     />
     <q-btn
       class="CreateStation_test"
@@ -39,6 +39,23 @@ export default {
     }),
     trail () {
       return this.getTrail({ trailId: this.trailId })
+    },
+    graph () {
+      if (this.trail.endNodes.length === 0) return []
+      else {
+        let nodeId = this.trail.endNodes[0]
+        let node
+        const list = []
+        do {
+          node = this.trail.nodes[nodeId]
+          list.unshift({
+            ...node,
+            nodeId
+          })
+          nodeId = node.dependencies.length > 0 ? node.dependencies[0] : null
+        } while (node.dependencies.length > 0)
+        return list
+      }
     }
   },
   methods: {

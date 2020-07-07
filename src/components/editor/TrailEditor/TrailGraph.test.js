@@ -6,16 +6,30 @@ const trailId = 'testTrailId'
 
 const trail = {
   nodes: {
-    testnodeId1: {
+    testNodeId1: {
       name: 'testStationName1',
-      type: types.nodes.STATION
+      type: types.nodes.STATION,
+      dependencies: []
     },
     testNodeId2: {
       name: 'testStationName2',
-      type: types.nodes.STATION
+      type: types.nodes.STATION,
+      dependencies: ['testNodeId3']
+    },
+    testNodeId3: {
+      name: 'testStationName3',
+      type: types.nodes.STATION,
+      dependencies: ['testNodeId1']
     }
-  }
+  },
+  endNodes: ['testNodeId2']
 }
+
+const expectedNodeIdsInOrder = [
+  'testNodeId1',
+  'testNodeId3',
+  'testNodeId2'
+]
 
 const newStationId = 'newStationId'
 const store = {
@@ -53,6 +67,14 @@ describe('TrailGraph', () => {
 
     it('displays a "NodeCard" component for each node in trail', () => {
       expect(nodeCards.length).toBe(Object.keys(trail.nodes).length)
+    })
+
+    test('"NodeCards" are displayed as a list, according to dependencies', () => {
+      const nodeIdsInOrder = []
+      for (let i = 0; i < nodeCards.length; i++) {
+        nodeIdsInOrder.push(nodeCards.at(i).props().node.nodeId)
+      }
+      expect(nodeIdsInOrder).toEqual(expectedNodeIdsInOrder)
     })
 
     describe('when one "NodeCard" component emits "editStation"', () => {
