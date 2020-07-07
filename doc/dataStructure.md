@@ -46,6 +46,8 @@ nodes: {
 
 > If a station needs to depend from several nodes, it must depend from a `'and'` or `'or'` node.
 
+> If a node is a station, its id must match the station id
+
 ### endNodes
 
 List of all ending stations. As the graph is build on dependencies, this list is used as starting points to generate the graph.

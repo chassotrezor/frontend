@@ -9,13 +9,14 @@
     />
     <br>
     <div>Stations :</div>
-    <station-card
-      v-for="station in trail.nodes"
-      :key="station.id"
-      class="StationCard_test"
-      :station="station"
-      :trail-id="trailId"
-      @edit="editStation"
+    <node-card
+      v-for="(node, nodeId) in trail.nodes"
+      :key="nodeId"
+      class="NodeCard_test"
+      :node="node"
+      @editStation="editStation(nodeId)"
+      @editNode="editNode(nodeId)"
+      @remove="removeNode(nodeId)"
     />
     <q-btn
       class="CreateStation_test"
@@ -33,13 +34,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import StationCard from './StationCard'
+import NodeCard from './NodeCard'
 import QrCodesGenerator from './QrCodesGenerator'
 
 export default {
   name: 'TrailEditor',
   components: {
-    StationCard,
+    NodeCard,
     QrCodesGenerator
   },
   props: {
@@ -59,9 +60,6 @@ export default {
     }),
     trail () {
       return this.getTrail({ trailId: this.trailId })
-    },
-    stationIds () {
-      return Object.values(this.trail.nodes).map(station => station.id)
     }
   },
   mounted () {
@@ -70,7 +68,8 @@ export default {
   methods: {
     ...mapActions({
       updateTrail: 'editor/updateTrail',
-      createStation: 'editor/createStation'
+      createStation: 'editor/createStation',
+      deleteNodeInTrail: 'editor/deleteNodeInTrail'
     }),
     async createAndEditStation () {
       const trailId = this.trailId
@@ -79,6 +78,12 @@ export default {
     },
     editStation (stationId) {
       this.$emit('editStation', stationId)
+    },
+    editNode (nodeId) {
+      console.log('EDIT NODE')
+    },
+    removeNode (nodeId) {
+      this.deleteNodeInTrail({ trailId: this.trailId, nodeId })
     }
   }
 }

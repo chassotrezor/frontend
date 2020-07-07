@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
+import types from 'src/types'
 
 let myTrailsListener
 
@@ -86,7 +87,10 @@ export function createStation (__, { trailId }) {
       const actualNodes = (await trailRef.get()).data().nodes
       const nodes = {
         ...actualNodes,
-        [stationId]: defaultNode
+        [stationId]: {
+          ...defaultNode,
+          type: types.nodes.STATION
+        }
       }
       await trailRef.update({ nodes })
       await stationRef.set(defaultStation(stationId))
@@ -95,7 +99,7 @@ export function createStation (__, { trailId }) {
   })
 }
 
-const propIsInDefaultStation = key => {
+const isNodeProp = key => {
   return Object.keys(defaultNode).some(nodeKey => key === nodeKey)
 }
 
@@ -103,9 +107,9 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(stationId)
-  const newPropsForNodes = Object.entries(newProps).reduce((schemeProps, newProp) => {
-    if (propIsInDefaultStation(newProp[0])) schemeProps[newProp[0]] = newProp[1]
-    return schemeProps
+  const newPropsForNodes = Object.entries(newProps).reduce((nodeProps, newProp) => {
+    if (isNodeProp(newProp[0])) nodeProps[newProp[0]] = newProp[1]
+    return nodeProps
   }, {})
   return db.runTransaction(async t => {
     const oldNodes = (await trailRef.get()).data().nodes
@@ -121,14 +125,17 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
   })
 }
 
-export function deleteStationInTrail (__, { trailId, stationId }) {
+export function deleteNodeInTrail (__, { trailId, nodeId }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
-  const stationRef = trailRef.collection('stations').doc(stationId)
   return db.runTransaction(async t => {
     const nodes = (await trailRef.get()).data().nodes
-    delete nodes[stationId]
+    if (nodes[nodeId].type === types.nodes.STATION) {
+      const stationRef = trailRef.collection('stations').doc(nodeId)
+      await stationRef.delete()
+    }
+    // TODO: remove dependancies pointing to deleted station
+    delete nodes[nodeId]
     await trailRef.update({ nodes })
-    await stationRef.delete()
   })
 }

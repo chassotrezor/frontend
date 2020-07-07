@@ -1,17 +1,18 @@
 import { mountQuasar } from '@test'
 import TrailEditor from './TrailEditor'
+import types from 'src/types'
 
 const trailId = 'testTrailId'
 
 const trail = {
   nodes: {
-    testStationId1: {
-      id: 'testStationId1',
-      name: 'testStationName1'
+    testnodeId1: {
+      name: 'testStationName1',
+      type: types.nodes.STATION
     },
-    testStationId2: {
-      id: 'testStationId2',
-      name: 'testStationName2'
+    testNodeId2: {
+      name: 'testStationName2',
+      type: types.nodes.STATION
     }
   },
   name: 'testTrailName'
@@ -40,7 +41,8 @@ const store = {
         updateTrail: jest.fn(),
         createStation: jest.fn().mockResolvedValue(newStationId),
         bindStations: jest.fn(),
-        unbindStations: jest.fn()
+        unbindStations: jest.fn(),
+        deleteNodeInTrail: jest.fn()
       },
       mutations: {
         setTrail: (state, trailId) => {
@@ -102,28 +104,52 @@ describe('TrailEditor', () => {
     })
   })
 
-  it('displays a "StationCard" component for each station in trail', () => {
-    const stations = wrapper.findAll('.StationCard_test')
-    expect(stations.length).toBe(Object.keys(trail.nodes).length)
+  describe('NodeCards', () => {
+    let nodeCards
+    beforeAll(() => {
+      nodeCards = wrapper.findAll('.NodeCard_test')
+    })
+
+    it('displays a "NodeCard" component for each node in trail', () => {
+      expect(nodeCards.length).toBe(Object.keys(trail.nodes).length)
+    })
+
+    describe('when one "NodeCard" component emits "editStation"', () => {
+      beforeAll(async () => {
+        const nodeCard = nodeCards.at(0)
+        nodeCard.vm.$emit('editStation')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('emits "editStation" event with value "stationId"', () => {
+        const stationId = Object.keys(trail.nodes)[0]
+        expect(wrapper.emitted('editStation')[0][0]).toBe(stationId)
+      })
+    })
+
+    describe('when one "NodeCard" component emits "remove"', () => {
+      beforeAll(async () => {
+        const nodeCard = nodeCards.at(0)
+        nodeCard.vm.$emit('remove')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('it deletes corresponding node in correspondig trail on server', () => {
+        const nodeId = Object.keys(trail.nodes)[0]
+        expect(store.modules.editor.actions.deleteNodeInTrail).toHaveBeenCalledWith(
+          expect.any(Object),
+          {
+            trailId,
+            nodeId
+          }
+        )
+      })
+    })
   })
 
   it('displays no "StationEditor" component', () => {
     const stationEditor = wrapper.find('.StationEditor_test')
     expect(stationEditor.exists()).toBe(false)
-  })
-
-  describe('when one "StationCard" component emits "edit" with value "stationId"', () => {
-    let stationId
-    beforeAll(done => {
-      const station = wrapper.find('.StationCard_test')
-      stationId = station.props().station.id
-      station.vm.$emit('edit', stationId)
-      wrapper.vm.$nextTick(done)
-    })
-
-    it('emits "editStation" event with value "stationId"', () => {
-      expect(wrapper.emitted('editStation')[0][0]).toBe(stationId)
-    })
   })
 
   it('displays a "create station" button', () => {
