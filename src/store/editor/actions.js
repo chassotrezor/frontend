@@ -90,7 +90,7 @@ export function createStation (__, { trailId }) {
         ...actualTrail.nodes,
         [stationId]: {
           ...defaultNode,
-          dependancies: isFirstStation ? [] : [actualTrail.endNodes[0]],
+          dependencies: isFirstStation ? [] : [actualTrail.endNodes[0]],
           type: types.nodes.STATION
         }
       }
@@ -140,7 +140,7 @@ export function deleteNodeInTrail (__, { trailId, nodeId }) {
       const stationRef = trailRef.collection('stations').doc(nodeId)
       await stationRef.delete()
     }
-    // TODO: remove dependancies pointing to deleted station
+    // TODO: remove dependencies pointing to deleted station
     delete nodes[nodeId]
     await trailRef.update({ nodes })
   })

@@ -26,7 +26,7 @@ ____
 ```
 nodes: {
   <nodeId>: {
-    dependancies: [
+    dependencies: [
       <nodeId>,
       <nodeId>,
       <...>
@@ -37,12 +37,12 @@ nodes: {
 }
 ```
 
-- `dependancies` is the list of all the nodes leading to the current node
+- `dependencies` is the list of all the nodes leading to the current node
 - `type` is the type of the node. It can be:
   - `'station'`: is a station
   - `'hint'`: is a hint given in one or more stations
-  - `'and'`: is a node combining dependancies where all are required
-  - `'or'`: is a node combining dependancies where at least one is required
+  - `'and'`: is a node combining dependencies where all are required
+  - `'or'`: is a node combining dependencies where at least one is required
 
 > If a station needs to depend from several nodes, it must depend from a `'and'` or `'or'` node.
 

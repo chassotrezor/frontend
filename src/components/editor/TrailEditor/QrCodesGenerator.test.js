@@ -9,12 +9,12 @@ const trailId = 'testTrailId'
 const trailName = 'testTrailName'
 const trailNodes = {
   testStationId1: {
-    dependancies: [],
+    dependencies: [],
     name: 'testStationName1',
     type: types.nodes.STATION
   },
   testStationId2: {
-    dependancies: ['testStationId1'],
+    dependencies: ['testStationId1'],
     name: 'testStationName2',
     type: types.nodes.STATION
   }

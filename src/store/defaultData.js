@@ -8,7 +8,7 @@ export const defaultTrail = userId => {
 }
 
 export const defaultNode = {
-  dependancies: [],
+  dependencies: [],
   type: '',
   name: ''
 }
