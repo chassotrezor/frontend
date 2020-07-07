@@ -1,4 +1,5 @@
 import firebase from 'firebase/app'
+import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
 
 let myTrailsListener
 
@@ -24,14 +25,6 @@ export function bindMyTrails ({ commit }) {
 export function unbindMyTrails ({ commit }) {
   myTrailsListener()
   commit('deleteTrails')
-}
-
-const defaultTrail = userId => {
-  return {
-    nodes: {},
-    editor: userId,
-    name: ''
-  }
 }
 
 export function createTrail () {
@@ -83,26 +76,6 @@ export function unbindStations ({ commit }, { trailId }) {
   }
 }
 
-const defaultStationScheme = stationId => {
-  return {
-    id: stationId,
-    name: ''
-  }
-}
-
-const isInDefaultStationScheme = key => {
-  return Object.keys(defaultStationScheme('')).some(schemeKey => key === schemeKey)
-}
-
-const defaultStation = stationId => {
-  return {
-    id: stationId,
-    name: '',
-    isTrailEntry: false,
-    rows: []
-  }
-}
-
 export function createStation (__, { trailId }) {
   return new Promise((resolve) => {
     const db = firebase.firestore()
@@ -113,7 +86,7 @@ export function createStation (__, { trailId }) {
       const actualNodes = (await trailRef.get()).data().nodes
       const nodes = {
         ...actualNodes,
-        [stationId]: defaultStationScheme(stationId)
+        [stationId]: defaultNode
       }
       await trailRef.update({ nodes })
       await stationRef.set(defaultStation(stationId))
@@ -122,12 +95,16 @@ export function createStation (__, { trailId }) {
   })
 }
 
+const propIsInDefaultStation = key => {
+  return Object.keys(defaultNode).some(nodeKey => key === nodeKey)
+}
+
 export function updateStationInTrail (__, { trailId, stationId, newProps }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(stationId)
   const newPropsForNodes = Object.entries(newProps).reduce((schemeProps, newProp) => {
-    if (isInDefaultStationScheme(newProp[0])) schemeProps[newProp[0]] = newProp[1]
+    if (propIsInDefaultStation(newProp[0])) schemeProps[newProp[0]] = newProp[1]
     return schemeProps
   }, {})
   return db.runTransaction(async t => {
