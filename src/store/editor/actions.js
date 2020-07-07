@@ -85,12 +85,12 @@ export function createStation (__, { trailId }) {
     const stationId = stationRef.id
     db.runTransaction(async t => {
       const actualTrail = (await trailRef.get()).data()
-      const isFirstStation = actualTrail.endNodes.length > 0
+      const isFirstStation = actualTrail.endNodes.length === 0
       const nodes = {
         ...actualTrail.nodes,
         [stationId]: {
           ...defaultNode,
-          dependancies: isFirstStation ? [actualTrail.endNodes[0]] : [],
+          dependancies: isFirstStation ? [] : [actualTrail.endNodes[0]],
           type: types.nodes.STATION
         }
       }

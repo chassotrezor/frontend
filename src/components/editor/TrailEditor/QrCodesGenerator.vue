@@ -31,6 +31,7 @@
 import QRCode from 'qrcode-svg'
 import html2pdf from 'html2pdf.js'
 import { generateString } from 'components/codeHelpers.js'
+import types from 'src/types'
 
 export default {
   name: 'QrCodesGenerator',
@@ -51,15 +52,18 @@ export default {
   computed: {
     stations () {
       const vm = this
-      return Object.values(this.trailNodes).map(station => {
-        const stationId = station.id
-        const url = generateString(vm.trailId, stationId)
-        const name = station.name
-        const qrCode = new QRCode({
-          content: url
-        }).svg()
-        return { stationId, name, url, qrCode }
-      })
+      return Object.entries(this.trailNodes).reduce((stations, node) => {
+        if (node[1].type === types.nodes.STATION) {
+          const stationId = node[0]
+          const url = generateString(vm.trailId, stationId)
+          const name = node[1].name
+          const qrCode = new QRCode({
+            content: url
+          }).svg()
+          stations.push({ stationId, name, url, qrCode })
+        }
+        return stations
+      }, [])
     }
   },
   methods: {

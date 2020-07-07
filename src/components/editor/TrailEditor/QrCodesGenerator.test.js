@@ -1,5 +1,6 @@
 import { mountQuasar } from '@test'
 import QrCodesGenerator from './QrCodesGenerator'
+import types from 'src/types'
 
 jest.mock('html2pdf.js', () => jest.fn())
 import html2pdf from 'html2pdf.js'
@@ -8,12 +9,14 @@ const trailId = 'testTrailId'
 const trailName = 'testTrailName'
 const trailNodes = {
   testStationId1: {
-    id: 'testStationId1',
-    name: 'testStationName1'
+    dependancies: [],
+    name: 'testStationName1',
+    type: types.nodes.STATION
   },
   testStationId2: {
-    id: 'testStationId2',
-    name: 'testStationName2'
+    dependancies: ['testStationId1'],
+    name: 'testStationName2',
+    type: types.nodes.STATION
   }
 }
 
