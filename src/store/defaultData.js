@@ -2,7 +2,8 @@ export const defaultTrail = userId => {
   return {
     nodes: {},
     editor: userId,
-    name: ''
+    name: '',
+    endNodes: []
   }
 }
 
