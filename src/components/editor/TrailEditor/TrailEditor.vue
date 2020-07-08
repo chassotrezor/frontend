@@ -5,13 +5,14 @@
       class="UpdateBtn_test"
       icon="send"
       color="primary"
-      @click="updateTrail({ trailId, newProps: { name } })"
+      @click="updateTrail({ trailId, newProps: { name, nodes, endNodes } })"
     />
     <br>
     <trail-graph
       class="TrailGraph_test"
       :trail-id="trailId"
       @editStation="editStation($event)"
+      @update="updateNodes($event)"
     />
     <qr-codes-generator
       :trail-id="trailId"
@@ -40,7 +41,9 @@ export default {
   },
   data () {
     return {
-      name: ''
+      name: '',
+      nodes: {},
+      endNodes: []
     }
   },
   computed: {
@@ -53,6 +56,8 @@ export default {
   },
   mounted () {
     this.name = this.trail.name
+    this.nodes = this.trail.nodes
+    this.endNodes = this.trail.endNodes
   },
   methods: {
     ...mapActions({
@@ -60,6 +65,10 @@ export default {
     }),
     editStation (stationId) {
       this.$emit('editStation', stationId)
+    },
+    updateNodes ({ nodes, endNodes }) {
+      this.nodes = nodes
+      this.endNodes = endNodes
     }
   }
 }

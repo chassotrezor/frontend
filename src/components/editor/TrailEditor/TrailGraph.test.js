@@ -6,6 +6,11 @@ const trailId = 'testTrailId'
 
 const trail = {
   nodes: {
+    testNodeId3: {
+      name: 'testStationName3',
+      type: types.nodes.STATION,
+      dependencies: ['testNodeId2']
+    },
     testNodeId1: {
       name: 'testStationName1',
       type: types.nodes.STATION,
@@ -14,21 +19,16 @@ const trail = {
     testNodeId2: {
       name: 'testStationName2',
       type: types.nodes.STATION,
-      dependencies: ['testNodeId3']
-    },
-    testNodeId3: {
-      name: 'testStationName3',
-      type: types.nodes.STATION,
       dependencies: ['testNodeId1']
     }
   },
-  endNodes: ['testNodeId2']
+  endNodes: ['testNodeId3']
 }
 
 const expectedNodeIdsInOrder = [
   'testNodeId1',
-  'testNodeId3',
-  'testNodeId2'
+  'testNodeId2',
+  'testNodeId3'
 ]
 
 const newStationId = 'newStationId'
@@ -77,6 +77,18 @@ describe('TrailGraph', () => {
       expect(nodeIdsInOrder).toEqual(expectedNodeIdsInOrder)
     })
 
+    test('only first "NodeCard" has prop "first" set to true', () => {
+      expect(nodeCards.at(0).vm.first).toBe(true)
+      expect(nodeCards.at(1).vm.first).toBe(false)
+      expect(nodeCards.at(2).vm.first).toBe(false)
+    })
+
+    test('only last "NodeCard" has prop "last" set to true', () => {
+      expect(nodeCards.at(0).vm.last).toBe(false)
+      expect(nodeCards.at(1).vm.last).toBe(false)
+      expect(nodeCards.at(2).vm.last).toBe(true)
+    })
+
     describe('when one "NodeCard" component emits "editStation"', () => {
       beforeAll(async () => {
         const nodeCard = nodeCards.at(0)
@@ -85,7 +97,7 @@ describe('TrailGraph', () => {
       })
 
       it('emits "editStation" event with value "stationId"', () => {
-        const stationId = Object.keys(trail.nodes)[0]
+        const stationId = expectedNodeIdsInOrder[0]
         expect(wrapper.emitted('editStation')[0][0]).toBe(stationId)
       })
     })
@@ -98,7 +110,7 @@ describe('TrailGraph', () => {
       })
 
       it('it deletes corresponding node in correspondig trail on server', () => {
-        const nodeId = Object.keys(trail.nodes)[0]
+        const nodeId = expectedNodeIdsInOrder[0]
         expect(store.modules.editor.actions.deleteNodeInTrail).toHaveBeenCalledWith(
           expect.any(Object),
           {
@@ -106,6 +118,72 @@ describe('TrailGraph', () => {
             nodeId
           }
         )
+      })
+    })
+
+    describe('when one "NodeCard" component emits "up"', () => {
+      beforeAll(async () => {
+        const nodeCard = nodeCards.at(2)
+        nodeCard.vm.$emit('up')
+        await wrapper.vm.$nextTick()
+        nodeCards = wrapper.findAll('.NodeCard_test')
+      })
+
+      it('swaps this "NodeCard" with the previous one', () => {
+        expect(nodeCards.at(1).vm.node.name).toBe(trail.nodes.testNodeId3.name)
+        expect(nodeCards.at(2).vm.node.name).toBe(trail.nodes.testNodeId2.name)
+      })
+
+      it('corrects "endNodes" if the last "NodeCard" is affected', () => {
+        expect(wrapper.vm.endNodes[0]).toEqual(expectedNodeIdsInOrder[1])
+      })
+
+      it('emits "update" with value { nodes, endNodes }', () => {
+        expect(wrapper.emitted('update')[0][0]).toEqual({
+          nodes: {
+            testNodeId3: {
+              name: 'testStationName3',
+              type: types.nodes.STATION,
+              dependencies: ['testNodeId1']
+            },
+            testNodeId1: {
+              name: 'testStationName1',
+              type: types.nodes.STATION,
+              dependencies: []
+            },
+            testNodeId2: {
+              name: 'testStationName2',
+              type: types.nodes.STATION,
+              dependencies: ['testNodeId3']
+            }
+          },
+          endNodes: ['testNodeId2']
+        })
+      })
+    })
+
+    describe('when one "NodeCard" component emits "down"', () => {
+      beforeAll(async () => {
+        const nodeCard = nodeCards.at(1)
+        nodeCard.vm.$emit('down')
+        await wrapper.vm.$nextTick()
+        nodeCards = wrapper.findAll('.NodeCard_test')
+      })
+
+      it('swaps this "NodeCard" with the previous one', () => {
+        expect(nodeCards.at(1).vm.node.name).toBe(trail.nodes.testNodeId2.name)
+        expect(nodeCards.at(2).vm.node.name).toBe(trail.nodes.testNodeId3.name)
+      })
+
+      it('corrects "endNodes" if the last "NodeCard" is affected', () => {
+        expect(wrapper.vm.endNodes[0]).toEqual(expectedNodeIdsInOrder[2])
+      })
+
+      it('emits "update" with value { nodes, endNodes }', () => {
+        expect(wrapper.emitted('update')[1][0]).toEqual({
+          nodes: trail.nodes,
+          endNodes: trail.endNodes
+        })
       })
     })
   })

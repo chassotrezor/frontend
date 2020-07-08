@@ -14,6 +14,22 @@
         {{ node.name }}
       </div>
       <q-btn
+        class="UpBtn_test"
+        round
+        icon="keyboard_arrow_up"
+        color="primary"
+        :disable="first"
+        @click="$emit('up')"
+      />
+      <q-btn
+        class="DownBtn_test"
+        round
+        icon="keyboard_arrow_down"
+        color="primary"
+        :disable="last"
+        @click="$emit('down')"
+      />
+      <q-btn
         class="DeleteBtn_test"
         round
         color="negative"
@@ -45,6 +61,14 @@ export default {
     node: {
       type: Object,
       required: true
+    },
+    first: {
+      type: Boolean,
+      default: () => false
+    },
+    last: {
+      type: Boolean,
+      default: () => false
     }
   },
   data () {
