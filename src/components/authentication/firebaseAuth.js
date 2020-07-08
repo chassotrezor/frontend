@@ -5,7 +5,7 @@ export const getRedirectResult = () => firebase.auth().getRedirectResult()
 export const isSignInWithFirebaseEmailLink = () => firebase.auth().isSignInWithEmailLink(location.href)
 
 export const sendSignInLinkToEmail = email => {
-  const url = process.env.NODE_ENV === 'development' ? 'http://localhost:8081/sign/' : 'https://chassotrezor.web.app/sign/'
+  const url = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/sign/' : 'https://chassotrezor.web.app/sign/'
   const actionCodeSettings = {
     url,
     handleCodeInApp: true
