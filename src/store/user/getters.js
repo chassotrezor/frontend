@@ -1,5 +1,5 @@
 export function openTrails (state) {
-  return state.openTrails
+  return Object.keys(state.accessibleStations)
 }
 
 export function accessibleStations (state) {

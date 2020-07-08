@@ -7,3 +7,9 @@ export function getStation (state) {
     }
   }
 }
+
+export function getTrail (state) {
+  return ({ trailId }) => {
+    return state.trails[trailId]
+  }
+}

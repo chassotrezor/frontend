@@ -33,15 +33,17 @@ const $route = {
 
 const store = {
   modules: {
-    trail: {
+    user: {
       namespaced: true,
       actions: {
         saveStationAccess: jest.fn()
-      },
+      }
+    },
+    trail: {
+      namespaced: true,
       getters: {
         getStation: () => jest.fn(() => station)
-      },
-      state: () => {}
+      }
     }
   }
 }
@@ -54,7 +56,7 @@ const wrapper = mountQuasar(Station, {
 
 describe('Station', () => {
   it('saves access for this station for this user on the server', () => {
-    expect(store.modules.trail.actions.saveStationAccess).toHaveBeenCalled()
+    expect(store.modules.user.actions.saveStationAccess).toHaveBeenCalled()
   })
 
   it('displays as many "StationImage" components as rows with type "image" in station', () => {

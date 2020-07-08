@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      saveStationAccess: 'trail/saveStationAccess'
+      saveStationAccess: 'user/saveStationAccess'
     })
   }
 }

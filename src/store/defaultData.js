@@ -17,7 +17,6 @@ export const defaultStation = stationId => {
   return {
     id: stationId,
     name: '',
-    isTrailEntry: false,
     rows: []
   }
 }

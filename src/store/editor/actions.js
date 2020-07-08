@@ -95,11 +95,9 @@ export function createStation (__, { trailId }) {
         }
       }
       const endNodes = [stationId]
-      await trailRef.update({ nodes, endNodes })
-      await stationRef.set({
-        ...defaultStation(stationId),
-        isTrailEntry: isFirstStation
-      })
+      const trailEntries = isFirstStation ? actualTrail.trailEntries : [stationId]
+      await trailRef.update({ nodes, endNodes, trailEntries })
+      await stationRef.set(defaultStation(stationId))
       resolve(stationId)
     })
   })

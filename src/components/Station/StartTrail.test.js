@@ -2,39 +2,17 @@ import { mountQuasar } from '@test'
 import StartTrail from './StartTrail'
 
 describe('StartTrail', () => {
-  const trailId = 'testTrailId'
-  const store = {
-    modules: {
-      trail: {
-        namespaced: true,
-        actions: {
-          start: jest.fn()
-        },
-        state: () => {}
-      }
-    }
-  }
-  const wrapper = mountQuasar(StartTrail, {
-    store,
-    mocks: {
-      $route: {
-        params: {
-          trailId
-        }
-      }
-    }
-  })
+  const wrapper = mountQuasar(StartTrail)
 
   describe('when clicking on "start trail" button', () => {
-    beforeAll(done => {
+    beforeAll(async () => {
       const button = wrapper.findComponent({ name: 'QBtn' })
       button.vm.$emit('click')
-      wrapper.vm.$nextTick(done)
+      await wrapper.vm.$nextTick()
     })
 
-    it('fires "start" method with "trailId" parameter', () => {
-      const start = store.modules.trail.actions.start
-      expect(start).toHaveBeenCalledWith(expect.any(Object), { trailId })
+    it('emits "start"', () => {
+      expect(wrapper.emitted('start')).toBeTruthy()
     })
   })
 })

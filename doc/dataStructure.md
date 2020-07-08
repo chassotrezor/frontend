@@ -60,6 +60,18 @@ endnodes = [
 ]
 ```
 
+### trailEntries
+
+List of all stations from which trail can be started
+
+```
+trailEntries = [
+  <nodeId>,
+  <nodeId>,
+  <...>
+]
+```
+
 ____
 
 ## station
@@ -67,7 +79,6 @@ ____
 ```
 {
   name: String,
-  isTrailEntry: Boolean,
   rows: Array
 }
 ```

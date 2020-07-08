@@ -11,22 +11,46 @@ const $route = {
   }
 }
 
+const $router = {
+  back: jest.fn()
+}
+
+const $q = {
+  notify: jest.fn()
+}
+
+const testTrail = {
+  trailEntries: ['testStationId']
+}
+
+const closedTestTrail = {
+  trailEntries: []
+}
+
+const testStation = {
+  name: 'testStationName'
+}
+
 const store = {
   modules: {
     trail: {
       namespaced: true,
       actions: {
+        downloadTrail: jest.fn(),
         downloadStation: jest.fn()
       },
       getters: {
-        getStation: state => () => state.station
+        getStation: state => () => state.station,
+        getTrail: state => () => state.trail
       },
       mutations: {
-        setStation: (state, station) => { state.station = station }
+        setStation: (state, station) => { state.station = station },
+        setTrail: (state, trail) => { state.trail = trail }
       },
       state: () => {
         return {
-          station: undefined
+          station: undefined,
+          trail: undefined
         }
       }
     },
@@ -36,7 +60,10 @@ const store = {
         openTrails: state => state.openTrails
       },
       mutations: {
-        setopenTrails: (state, openTrails) => { state.openTrails = openTrails }
+        setOpenTrails: (state, openTrails) => { state.openTrails = openTrails }
+      },
+      actions: {
+        updateTrailAccess: jest.fn()
       },
       state: () => {
         return {
@@ -47,30 +74,32 @@ const store = {
   }
 }
 
-const wrapper = mountQuasar(StationLayout, {
-  store,
-  mocks: {
-    $route
-  }
-})
-
 describe('StationLayout', () => {
-  it('displays a "SpinnerWithMessage" component', () => {
-    const spinner = wrapper.find('.SpinnerWithMessage_test')
-    expect(spinner.exists()).toBe(true)
-  })
+  let wrapper
 
-  describe('when "playerIsChasing" is true', () => {
-    beforeAll(done => {
-      wrapper.vm.$store.commit('user/setopenTrails', [trailId])
-      wrapper.vm.$nextTick(done)
+  describe('when "station" exists', () => {
+    beforeAll(async () => {
+      wrapper = mountQuasar(StationLayout, {
+        store,
+        mocks: {
+          $route,
+          $router
+        }
+      })
     })
 
-    describe('when station data is downloaded', () => {
-      beforeAll(done => {
+    it('displays a "SpinnerWithMessage" component', () => {
+      const spinner = wrapper.find('.SpinnerWithMessage_test')
+      expect(spinner.exists()).toBe(true)
+    })
+
+    describe('when "station" and "trail" datas are downloaded', () => {
+      beforeAll(async () => {
+        wrapper.vm.$store.commit('trail/setTrail', testTrail)
+        wrapper.vm.$store.commit('trail/setStation', testStation)
         store.modules.trail.actions.downloadStation.mockResolvedValue()
-        wrapper.vm.$store.commit('trail/setStation', { isTrailEntry: true })
-        wrapper.vm.$nextTick(done)
+        store.modules.trail.actions.downloadTrail.mockResolvedValue()
+        await wrapper.vm.$nextTick()
       })
 
       it('does not display a "SpinnerWithMessage" component', () => {
@@ -78,20 +107,20 @@ describe('StationLayout', () => {
         expect(spinner.exists()).toBe(false)
       })
 
-      it('displays "Station" component', () => {
-        const station = wrapper.find('.Station_test')
-        expect(station.exists()).toBe(true)
-      })
+      describe('when "trail" is listed in player history', () => {
+        beforeAll(async () => {
+          wrapper.vm.$store.commit('user/setOpenTrails', [trailId])
+          await wrapper.vm.$nextTick()
+        })
 
-      it('does not display trailInfo component', () => {
-        const trailInfo = wrapper.find('.TrailInfo_test')
-        expect(trailInfo.exists()).toBe(false)
-      })
+        it('displays "Station" component', () => {
+          const station = wrapper.find('.Station_test')
+          expect(station.exists()).toBe(true)
+        })
 
-      describe('when "station.isTrailEntry" is true', () => {
-        beforeAll(done => {
-          wrapper.vm.$store.commit('trail/setStation', { isTrailEntry: true })
-          wrapper.vm.$nextTick(done)
+        it('does not display trailInfo component', () => {
+          const trailInfo = wrapper.find('.TrailInfo_test')
+          expect(trailInfo.exists()).toBe(false)
         })
 
         it('does not display a "StartTrail" component', () => {
@@ -99,34 +128,104 @@ describe('StationLayout', () => {
           expect(startTrail.exists()).toBe(false)
         })
       })
+
+      describe('when "trail" is not listed in player history', () => {
+        beforeAll(async () => {
+          wrapper.vm.$store.commit('user/setOpenTrails', [])
+          await wrapper.vm.$nextTick()
+        })
+
+        it('does not display a "Station" component', () => {
+          const station = wrapper.find('.Station_test')
+          expect(station.exists()).toBe(false)
+        })
+
+        it('displays a "trailInfo" component', () => {
+          const trailInfo = wrapper.find('.TrailInfo_test')
+          expect(trailInfo.exists()).toBe(true)
+        })
+
+        describe('when "station" is not a "trailEntry" in trail', () => {
+          beforeAll(async () => {
+            wrapper.vm.$store.commit('trail/setTrail', closedTestTrail)
+            await wrapper.vm.$nextTick()
+          })
+
+          it('does not display a "StartTrail" component', () => {
+            const startTrail = wrapper.find('.StartTrail_test')
+            expect(startTrail.exists()).toBe(false)
+          })
+        })
+
+        describe('when "station" is a "trailEntry" in trail', () => {
+          beforeAll(async () => {
+            wrapper.vm.$store.commit('trail/setTrail', testTrail)
+            await wrapper.vm.$nextTick()
+          })
+
+          it('displays a "StartTrail" component', () => {
+            const startTrail = wrapper.find('.StartTrail_test')
+            expect(startTrail.exists()).toBe(true)
+          })
+
+          describe('when "startTrail" emits "start"', () => {
+            beforeAll(async () => {
+              const startTrail = wrapper.find('.StartTrail_test')
+              startTrail.vm.$emit('start')
+              await wrapper.vm.$nextTick()
+            })
+
+            it('displays "Station" component', () => {
+              const station = wrapper.find('.Station_test')
+              expect(station.exists()).toBe(true)
+            })
+
+            it('does not display trailInfo component', () => {
+              const trailInfo = wrapper.find('.TrailInfo_test')
+              expect(trailInfo.exists()).toBe(false)
+            })
+
+            it('does not display a "StartTrail" component', () => {
+              const startTrail = wrapper.find('.StartTrail_test')
+              expect(startTrail.exists()).toBe(false)
+            })
+          })
+        })
+      })
     })
   })
 
-  describe('when "playerIsChasing" is false', () => {
-    beforeAll(done => {
-      wrapper.vm.$store.commit('user/setopenTrails', [])
-      wrapper.vm.$nextTick(done)
+  describe('when station does not exist', () => {
+    beforeAll(async () => {
+      wrapper = mountQuasar(StationLayout, {
+        store,
+        mocks: {
+          $route,
+          $router,
+          $q
+        }
+      })
+      store.modules.trail.actions.downloadTrail.mockResolvedValue()
+      store.modules.trail.actions.downloadStation.mockRejectedValue(new Error('station does not exist'))
+      await wrapper.vm.$nextTick()
     })
 
-    it('does not display station component', () => {
-      const station = wrapper.find('.Station_test')
-      expect(station.exists()).toBe(false)
+    it('notifies the user', () => {
+      expect($q.notify).toHaveBeenCalled()
     })
 
-    it('displays trailInfo slot', () => {
-      const trailInfo = wrapper.find('.TrailInfo_test')
-      expect(trailInfo.exists()).toBe(true)
+    it('updates trail access', () => {
+      expect(store.modules.user.actions.updateTrailAccess).toHaveBeenCalled()
     })
 
-    describe('when "isTrailEntry" prop is true', () => {
-      beforeAll(done => {
-        wrapper.vm.$store.commit('trail/setStation', { isTrailEntry: true })
-        wrapper.vm.$nextTick(done)
+    describe('when trail access is updated', () => {
+      beforeAll(async () => {
+        store.modules.user.actions.updateTrailAccess.mockResolvedValue()
+        await wrapper.vm.$nextTick()
       })
 
-      it('displays a "StartTrail" component', () => {
-        const startTrail = wrapper.find('.StartTrail_test')
-        expect(startTrail.exists()).toBe(true)
+      it('routes back the user', () => {
+        expect($router.back).toHaveBeenCalled()
       })
     })
   })

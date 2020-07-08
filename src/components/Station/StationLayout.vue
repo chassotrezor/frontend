@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="station">
+    <div v-if="station && trail">
       <station
-        v-if="playerIsChasing"
+        v-if="stationIsAccessible"
         class="Station_test"
       />
       <div v-else>
@@ -10,8 +10,9 @@
           class="TrailInfo_test"
         />
         <start-trail
-          v-if="station.isTrailEntry"
+          v-if="isTrailEntry"
           class="StartTrail_test"
+          @start="() => start = true"
         />
       </div>
     </div>
@@ -38,30 +39,65 @@ export default {
     SpinnerWithMessage,
     StartTrail
   },
+  data () {
+    return {
+      start: false
+    }
+  },
   computed: {
     ...mapGetters({
       getStation: 'trail/getStation',
+      getTrail: 'trail/getTrail',
       openTrails: 'user/openTrails'
     }),
-    station () {
-      const trailId = this.$route.params.trailId
-      const stationId = this.$route.params.stationId
-      return this.getStation({ trailId, stationId })
+    trailId () {
+      return this.$route.params.trailId
     },
-    playerIsChasing () {
-      const trailId = this.$route.params.trailId
-      if (this.openTrails) return this.openTrails.some(id => id === trailId)
+    stationId () {
+      return this.$route.params.stationId
+    },
+    trail () {
+      return this.getTrail({ trailId: this.trailId })
+    },
+    station () {
+      return this.getStation({ trailId: this.trailId, stationId: this.stationId })
+    },
+    trailIsOpen () {
+      if (this.openTrails) return this.openTrails.some(id => id === this.trailId)
       else return false
+    },
+    isTrailEntry () {
+      const vm = this
+      return this.trail.trailEntries.some(entryId => vm.stationId === entryId)
+    },
+    stationIsAccessible () {
+      return this.trailIsOpen || this.start
     }
   },
-  mounted () {
+  async mounted () {
     const trailId = this.$route.params.trailId
     const stationId = this.$route.params.stationId
-    this.downloadStation({ trailId, stationId })
+    try {
+      await this.downloadTrail({ trailId })
+      await this.downloadStation({ trailId, stationId })
+    } catch (error) {
+      if (error.message === 'station does not exist' || error.message === 'trail does not exist') {
+        this.$q.notify({
+          type: 'warning',
+          message: 'La page n\'existe plus',
+          position: 'bottom-right',
+          timeout: 2000
+        })
+        await this.updateTrailAccess({ trailId })
+        this.$router.back()
+      }
+    }
   },
   methods: {
     ...mapActions({
-      downloadStation: 'trail/downloadStation'
+      downloadTrail: 'trail/downloadTrail',
+      downloadStation: 'trail/downloadStation',
+      updateTrailAccess: 'user/updateTrailAccess'
     })
   }
 }
