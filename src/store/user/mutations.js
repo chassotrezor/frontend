@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 export function setUser (state, user) {
+  console.log(user)
   Object.entries(user).forEach(entry => {
     Vue.set(state, entry[0], entry[1])
   })

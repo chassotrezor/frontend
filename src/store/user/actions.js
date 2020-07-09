@@ -136,30 +136,55 @@ export async function saveStationAccess (__, { trailId, stationId }) {
   else saveStationAccessLocally({ trailId, stationId })
 }
 
+async function getAccessibleStations ({ currentUser, transaction }) {
+  if (currentUser) {
+    const userRef = firebase.firestore().collection('users').doc(currentUser.uid)
+    const doc = await transaction.get(userRef)
+    return doc.data().accessibleStations
+  } else {
+    const user = localStorage.getItem('user') || JSON.stringify(defaultUser)
+    return JSON.parse(user).accessibleStations
+  }
+}
+
+async function updateAccessibleStations ({ accessibleStations, currentUser, transaction }) {
+  if (currentUser) {
+    const userRef = firebase.firestore().collection('users').doc(currentUser.uid)
+    return transaction.update(userRef, { accessibleStations })
+  } else {
+    const oldUserString = localStorage.getItem('user') || JSON.stringify(defaultUser)
+    const oldUser = JSON.parse(oldUserString)
+    const user = {
+      ...oldUser,
+      accessibleStations
+    }
+    return localStorage.setItem('user', JSON.stringify(user))
+  }
+}
+
 export async function updateTrailAccess (__, { trailId }) {
   const db = firebase.firestore()
-  const userId = firebase.auth().currentUser.uid
-  const userRef = db.collection('users').doc(userId)
   const trailRef = db.collection('trails').doc(trailId)
+  const currentUser = firebase.auth().currentUser
   try {
-    await db.runTransaction(async (t) => {
-      const doc = await t.get(userRef)
-      const accessibleStations = doc.data().accessibleStations
-      const trail = await t.get(trailRef)
+    await db.runTransaction(async transaction => {
+      const accessibleStations = await getAccessibleStations({ currentUser, transaction })
+      console.log(currentUser, accessibleStations)
+      const trail = await transaction.get(trailRef)
       const trailDoesNotExist = !trail.data()
       if (trailDoesNotExist) delete accessibleStations[trailId]
       else {
         let noStationExist = true
         await Promise.all(Object.keys(accessibleStations[trailId].stations).map(async stationId => {
           const stationRef = trailRef.collection('stations').doc(stationId)
-          const station = await t.get(stationRef)
+          const station = await transaction.get(stationRef)
           const stationDoesNotExist = !station.data()
           noStationExist = noStationExist && stationDoesNotExist
           if (stationDoesNotExist) delete accessibleStations[trailId].stations[stationId]
         }))
         if (noStationExist) delete accessibleStations[trailId]
       }
-      t.update(userRef, { accessibleStations })
+      await updateAccessibleStations({ accessibleStations, currentUser, transaction })
     })
   } catch (err) {
     console.log('Transaction failure:', err)
