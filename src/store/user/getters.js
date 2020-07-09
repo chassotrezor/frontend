@@ -1,5 +1,6 @@
 export function openTrails (state) {
-  return Object.keys(state.accessibleStations)
+  if (state.accessibleStations) return Object.keys(state.accessibleStations)
+  else return []
 }
 
 export function accessibleStations (state) {
