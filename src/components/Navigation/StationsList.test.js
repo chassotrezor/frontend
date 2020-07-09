@@ -39,12 +39,12 @@ const store = {
       },
       mutations: {
         setAccessibleStations: (state, value) => { state.accessibleStations = value },
-        setLasttrail: (state, value) => { state.lastTrail = value }
+        setLastTrail: (state, value) => { state.lastTrail = value }
       },
       state: () => {
         return {
           accessibleStations: defaultAccessibleStations,
-          lastTrail: defaultLastTrail
+          lastTrail: undefined
         }
       }
     }
@@ -57,14 +57,15 @@ const $router = {
 
 describe('StationsList', () => {
   let wrapper
-  beforeAll(done => {
+  beforeAll(async () => {
     wrapper = mountQuasar(StationsList, {
       store,
       mocks: {
         $router
       }
     })
-    wrapper.vm.$nextTick(done)
+    wrapper.vm.$store.commit('user/setLastTrail', defaultLastTrail)
+    await wrapper.vm.$nextTick()
   })
 
   it('sets value of "selectedTrail" to { value: lastTrailId, label: lastTrailName }', () => {
