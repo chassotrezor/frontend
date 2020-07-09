@@ -1,6 +1,8 @@
 import { mountQuasar } from '@test'
 import Editor from './Editor'
 
+jest.mock('html2pdf.js', () => jest.fn())
+
 const testTrailId = 'testTrailId'
 const testStationId = 'testStationId'
 
@@ -41,23 +43,6 @@ const store = {
         getTrail: () => () => testTrailId,
         getStation: () => () => testStationId
       }
-      //   getTrail: state => () => state.trailId,
-      //   getStation: state => () => state.stationId
-      // },
-      // mutations: {
-      //   setTrail: (state, trailId) => {
-      //     state.trailId = trailId
-      //   },
-      //   setStation: (state, stationId) => {
-      //     state.stationId = stationId
-      //   }
-      // },
-      // state: () => {
-      //   return {
-      //     trailId: undefined,
-      //     stationId: undefined
-      //   }
-      // }
     }
   }
 }
@@ -242,83 +227,10 @@ describe('Editor', () => {
         store,
         mocks: {
           $route,
-          $router,
-          selectedTrail: false,
-          selectedStation: false
+          $router
         }
       })
       await wrapper.vm.$nextTick()
-    })
-
-    describe('when "EditorFastAccess" emits "unselect" with "trailId" param', () => {
-      beforeAll(async () => {
-        const fastAccess = wrapper.find('.EditorFastAccess_test')
-        fastAccess.vm.$emit('unselect', testTrailId)
-        await wrapper.vm.$nextTick()
-      })
-
-      it('navigates to "/editor"', () => {
-        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
-          name: 'editor',
-          params: {}
-        })
-      })
-
-      afterAll(async () => {
-        wrapper.vm.$set($route, 'params', {})
-        $router.push.mockClear()
-      })
-    })
-
-    describe('when "EditorFastAccess" emits "editTrail" with "trailId" param', () => {
-      beforeAll(async () => {
-        const fastAccess = wrapper.find('.EditorFastAccess_test')
-        fastAccess.vm.$emit('editTrail', testTrailId)
-        await wrapper.vm.$nextTick()
-      })
-
-      it('navigates to "/editor/trailId"', () => {
-        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
-          name: 'trailEditor',
-          params: {
-            trailId: testTrailId
-          }
-        })
-      })
-
-      afterAll(async () => {
-        wrapper.vm.$set($route, 'params', {})
-        $router.push.mockClear()
-        await wrapper.vm.$nextTick()
-      })
-    })
-
-    describe('when "EditorFastAccess" emits "editStation" with "stationId" param', () => {
-      beforeAll(async () => {
-        wrapper.vm.$set($route, 'params', {
-          trailId: testTrailId
-        })
-        await wrapper.vm.$nextTick()
-        const fastAccess = wrapper.find('.EditorFastAccess_test')
-        fastAccess.vm.$emit('editStation', testStationId)
-        await wrapper.vm.$nextTick()
-      })
-
-      it('navigates to "/editor/trailId/trailId"', () => {
-        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
-          name: 'stationEditor',
-          params: {
-            trailId: testTrailId,
-            stationId: testStationId
-          }
-        })
-      })
-
-      afterAll(async () => {
-        wrapper.vm.$set($route, 'params', {})
-        $router.push.mockClear()
-        await wrapper.vm.$nextTick()
-      })
     })
 
     describe('when "TrailsList" emits "editTrail" with "trailId" param', () => {
@@ -361,6 +273,51 @@ describe('Editor', () => {
           params: {
             trailId: testTrailId,
             stationId: testStationId
+          }
+        })
+      })
+
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
+        $router.push.mockClear()
+        await wrapper.vm.$nextTick()
+      })
+    })
+
+    describe('when "EditorFastAccess" emits "unselect"', () => {
+      beforeAll(async () => {
+        const fastAccess = wrapper.find('.EditorFastAccess_test')
+        fastAccess.vm.$emit('unselect')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('navigates to "/editor"', () => {
+        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
+          name: 'editor',
+          params: {}
+        })
+      })
+
+      afterAll(async () => {
+        wrapper.vm.$set($route, 'params', {})
+        $router.push.mockClear()
+        await wrapper.vm.$nextTick()
+      })
+    })
+
+    describe('when a trail is selected and "EditorFastAccess" emits "editTrail"', () => {
+      beforeAll(async () => {
+        wrapper.vm.$set($route.params, 'trailId', testTrailId)
+        const fastAccess = wrapper.find('.EditorFastAccess_test')
+        fastAccess.vm.$emit('editTrail')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('navigates to "/editor/trailId"', () => {
+        expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
+          name: 'trailEditor',
+          params: {
+            trailId: testTrailId
           }
         })
       })

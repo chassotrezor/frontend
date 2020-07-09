@@ -9,14 +9,15 @@ const store = {
     editor: {
       namespaced: true,
       getters: {
-        myTrails: () => {
-          return {}
-        },
         getTrail: () => () => {
           return {
             name: 'testTrailName',
-            id: 'testTrailId',
-            nodes: {}
+            id: testTrailId,
+            nodes: {
+              [testStationId]: {
+                name: 'testStationName'
+              }
+            }
           }
         }
       }
@@ -40,17 +41,6 @@ describe('EditorFastAccess', () => {
     expect(wrapper.emitted().unselect).toBeTruthy()
   })
 
-  it('displays a "QSelect" for trail', () => {
-    const qSelect = wrapper.find('.QSelectTrail_test')
-    expect(qSelect.exists()).toBe(true)
-  })
-
-  it('emits "editTrail" value when "QSelect" for trail emits "input"', () => {
-    const qSelect = wrapper.find('.QSelectTrail_test')
-    qSelect.vm.$emit('input', { value: testTrailId })
-    expect(wrapper.emitted().editTrail[0][0]).toBe(testTrailId)
-  })
-
   describe('when "selectedTrail" is undefined', () => {
     beforeAll(async () => {
       wrapper.setProps({
@@ -60,29 +50,66 @@ describe('EditorFastAccess', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('displays no "QSelect" for station', () => {
-      const qSelect = wrapper.find('.QSelectStation_test')
-      expect(qSelect.exists()).toBe(false)
+    it('displays no "TrailName_test" QBtn', () => {
+      const trailName = wrapper.find('.TrailName_test')
+      expect(trailName.exists()).toBe(false)
+    })
+
+    it('displays no "StationName_test" QBtn', () => {
+      const stationName = wrapper.find('.StationName_test')
+      expect(stationName.exists()).toBe(false)
     })
   })
 
-  describe('when "selectedTrail" is defined', () => {
+  describe('when "selectedTrail" is defined and "selectedStation" is undefined', () => {
     beforeAll(async () => {
       wrapper.setProps({
-        selectedTrail: testTrailId
+        selectedTrail: testTrailId,
+        selectedStation: undefined
       })
       await wrapper.vm.$nextTick()
     })
 
-    it('displays a "QSelect" for station', () => {
-      const qSelect = wrapper.find('.QSelectStation_test')
-      expect(qSelect.exists()).toBe(true)
+    it('displays a "TrailName_test" QBtn', () => {
+      const trailName = wrapper.find('.TrailName_test')
+      expect(trailName.exists()).toBe(true)
     })
 
-    it('emits "editStation" value when "QSelect" for station emits "input"', () => {
-      const qSelect = wrapper.find('.QSelectStation_test')
-      qSelect.vm.$emit('input', { value: testStationId })
-      expect(wrapper.emitted().editStation[0][0]).toBe(testStationId)
+    describe('when "TrailName_test" QBtn emits "click"', () => {
+      beforeAll(async () => {
+        const trailName = wrapper.find('.TrailName_test')
+        trailName.vm.$emit('click')
+        await wrapper.vm.$nextTick()
+      })
+
+      it('emits "editTrail"', () => {
+        expect(wrapper.emitted().editTrail).toBeTruthy()
+      })
+    })
+
+    it('displays no "StationName_test" QBtn', () => {
+      const stationName = wrapper.find('.StationName_test')
+      expect(stationName.exists()).toBe(false)
+    })
+  })
+
+  describe('when "selectedTrail" and "selectedStation" are defined', () => {
+    beforeAll(async () => {
+      wrapper.setProps({
+        selectedTrail: testTrailId,
+        selectedStation: testStationId
+      })
+      await wrapper.vm.$nextTick()
+    })
+
+    it('displays a "TrailName_test" QBtn', () => {
+      const trailName = wrapper.find('.TrailName_test')
+      expect(trailName.exists()).toBe(true)
+    })
+
+    it('displays a "StationName_test" QBtn', () => {
+      const stationName = wrapper.find('.StationName_test')
+      expect(stationName.exists()).toBe(true)
     })
   })
 })

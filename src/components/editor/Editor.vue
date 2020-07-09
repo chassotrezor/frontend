@@ -4,8 +4,7 @@
       class="EditorFastAccess_test"
       :selected-trail="selectedTrail"
       :selected-station="selectedStation"
-      @editTrail="editTrail"
-      @editStation="editStation"
+      @editTrail="() => editTrail(selectedTrail)"
       @unselect="unselect"
     />
     <trails-list

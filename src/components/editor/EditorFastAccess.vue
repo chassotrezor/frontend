@@ -5,22 +5,21 @@
     <q-btn
       class="UnselectBtn_test"
       icon="edit"
+      flat
       @click="$emit('unselect')"
     />
-    <div> > </div>
-    <q-select
-      class="QSelectTrail_test"
-      :value="trail"
-      :options="trailsOptions"
-      @input="$emit('editTrail', $event.value)"
-    />
-    <div> > </div>
-    <q-select
+    <q-btn
       v-if="selectedTrail"
-      class="QSelectStation_test"
-      :value="station"
-      :options="stationsOptions"
-      @input="$emit('editStation', $event.value)"
+      class="TrailName_test"
+      :label="`> ${trailName}`"
+      flat
+      @click="$emit('editTrail')"
+    />
+    <q-btn
+      v-if="selectedTrail && selectedStation"
+      class="StationName_test"
+      :label="`> ${stationName}`"
+      flat
     />
   </div>
 </template>
@@ -42,35 +41,16 @@ export default {
   },
   computed: {
     ...mapGetters({
-      myTrails: 'editor/myTrails',
       getTrail: 'editor/getTrail'
     }),
-    trailsOptions () {
-      return Object.values(this.myTrails).map(trail => {
-        return {
-          value: trail.id,
-          label: trail.name
-        }
-      })
-    },
-    stationsOptions () {
-      if (this.selectedTrail) {
-        const nodes = this.getTrail({ trailId: this.selectedTrail }).nodes
-        return Object.values(nodes).map(station => {
-          return {
-            value: station.id,
-            label: station.name
-          }
-        })
-      } else {
-        return []
-      }
-    },
     trail () {
-      return this.trailsOptions.find(option => option.value === this.selectedTrail)
+      return this.getTrail({ trailId: this.selectedTrail })
     },
-    station () {
-      return this.stationsOptions.find(option => option.value === this.selectedStation)
+    trailName () {
+      return this.trail.name
+    },
+    stationName () {
+      return this.trail.nodes[this.selectedStation].name
     }
   }
 }
