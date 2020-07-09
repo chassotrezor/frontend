@@ -37,16 +37,22 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      nodes: {},
-      endNodes: []
-    }
-  },
   computed: {
     ...mapGetters({
       getTrail: 'editor/getTrail'
     }),
+    trail () {
+      return this.getTrail({ trailId: this.trailId })
+    },
+    nodes () {
+      return this.trail.nodes
+    },
+    endNodes () {
+      return this.trail.endNodes
+    },
+    trailEntries () {
+      return this.trail.trailEntries
+    },
     graph () {
       if (
         !this.endNodes ||
@@ -68,21 +74,11 @@ export default {
       }
     }
   },
-  mounted () {
-    const trail = this.getTrail({ trailId: this.trailId })
-    this.endNodes = [...trail.endNodes]
-    const vm = this
-    Object.entries(trail.nodes).forEach(node => {
-      vm.$set(vm.nodes, node[0], {})
-      vm.$set(vm.nodes[node[0]], 'dependencies', [...node[1].dependencies])
-      vm.$set(vm.nodes[node[0]], 'type', node[1].type)
-      vm.$set(vm.nodes[node[0]], 'name', node[1].name)
-    })
-  },
   methods: {
     ...mapActions({
       createStation: 'editor/createStation',
-      deleteNodeInTrail: 'editor/deleteNodeInTrail'
+      deleteNodeInTrail: 'editor/deleteNodeInTrail',
+      updateTrail: 'editor/updateTrail'
     }),
     async createAndEditStation () {
       const trailId = this.trailId
@@ -104,21 +100,31 @@ export default {
         const nodeId2 = this.graph[index].nodeId
         const dependencies1 = [...this.nodes[nodeId1].dependencies]
         const dependencies2 = [...this.nodes[nodeId2].dependencies]
+        let trailEntries = [...this.trailEntries]
+        const nodes = JSON.parse(JSON.stringify(this.nodes))
+        let endNodes = [...this.endNodes]
         let dependencies3
+        if (index === 1) {
+          trailEntries = [nodeId2]
+        }
         if (index + 1 === this.graph.length) {
           dependencies3 = [...this.endNodes]
-          this.endNodes = dependencies2
+          endNodes = dependencies2
         } else {
           const nodeId3 = this.graph[index + 1].nodeId
           dependencies3 = [...this.nodes[nodeId3].dependencies]
-          this.nodes[nodeId3].dependencies = dependencies2
+          nodes[nodeId3].dependencies = dependencies2
         }
-        this.nodes[nodeId1].dependencies = dependencies3
-        this.nodes[nodeId2].dependencies = dependencies1
+        nodes[nodeId1].dependencies = dependencies3
+        nodes[nodeId2].dependencies = dependencies1
 
-        this.$emit('update', {
-          nodes: this.nodes,
-          endNodes: this.endNodes
+        this.updateTrail({
+          trailId: this.trailId,
+          newProps: {
+            trailEntries,
+            nodes,
+            endNodes
+          }
         })
       }
     }

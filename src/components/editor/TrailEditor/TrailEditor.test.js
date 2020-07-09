@@ -22,16 +22,6 @@ const trail = {
   name: 'testTrailName',
   endNodes: ['testNodeId2']
 }
-const testNodeId3 = {
-  type: types.nodes.STATION,
-  name: 'testNodeName3',
-  dependencies: ['testNodeId2']
-}
-const expectedNodes = {
-  ...trail.nodes,
-  testNodeId3
-}
-const expectedEndNodes = ['testNodeId3']
 const expectedName = 'newName'
 
 const store = {
@@ -69,21 +59,6 @@ describe('TrailEditor', () => {
     let trailGraph
     beforeAll(() => { trailGraph = wrapper.find('.TrailGraph_test') })
 
-    describe('when "TrailGraph" emits "update" with value { nodes, endNodes }', () => {
-      beforeAll(async () => {
-        trailGraph.vm.$emit('update', {
-          nodes: expectedNodes,
-          endNodes: expectedEndNodes
-        })
-        await wrapper.vm.$nextTick()
-      })
-
-      it('sets its "nodes" and "endNodes" data to thes values', () => {
-        expect(wrapper.vm.nodes).toEqual(expectedNodes)
-        expect(wrapper.vm.endNodes).toEqual(expectedEndNodes)
-      })
-    })
-
     describe('When TrailGraph emits "editStation" with value stationId', () => {
       const stationId = 'stationId'
       beforeAll(async () => {
@@ -105,14 +80,12 @@ describe('TrailEditor', () => {
       wrapper.vm.$nextTick(done)
     })
 
-    it('updates the name, nodes and endNodes of this trail on server', () => {
+    it('updates the name of this trail on server', () => {
       expect(store.modules.editor.actions.updateTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
           trailId,
           newProps: {
-            nodes: expectedNodes,
-            endNodes: expectedEndNodes,
             name: expectedName
           }
         }

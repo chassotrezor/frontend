@@ -133,13 +133,22 @@ export function deleteNodeInTrail (__, { trailId, nodeId }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   return db.runTransaction(async t => {
-    const nodes = (await trailRef.get()).data().nodes
-    if (nodes[nodeId].type === types.nodes.STATION) {
+    const trail = (await trailRef.get()).data()
+    if (trail.nodes[nodeId].type === types.nodes.STATION) {
       const stationRef = trailRef.collection('stations').doc(nodeId)
       await stationRef.delete()
     }
-    // TODO: remove dependencies pointing to deleted station
-    delete nodes[nodeId]
-    await trailRef.update({ nodes })
+    const isTrailEntry = trail.trailEntries[0] === nodeId
+    const isEndNode = trail.endNodes[0] === nodeId
+    const nodeDependencies = trail.nodes[nodeId].dependencies
+    Object.entries(trail.nodes).forEach(node => {
+      if (node[1].dependencies[0] === nodeId) {
+        node[1].dependencies = nodeDependencies
+        if (isTrailEntry) trail.trailEntries = node[0]
+      }
+    })
+    if (isEndNode) trail.endNodes = nodeDependencies
+    delete trail.nodes[nodeId]
+    await trailRef.update({ ...trail })
   })
 }
