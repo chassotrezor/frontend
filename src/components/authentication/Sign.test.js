@@ -32,11 +32,16 @@ const store = {
   }
 }
 
+const $router = {
+  push: jest.fn()
+}
+
 function init () {
   return mountQuasar(Sign, {
     store,
     mocks: {
-      $q
+      $q,
+      $router
     }
   })
 }
@@ -247,6 +252,10 @@ describe('Sign', () => {
       it('displays a "SuccessWithMessage" component', () => {
         const success = wrapper.find('.successWithMessage_test')
         expect(success.exists()).toBe(true)
+      })
+
+      it('routes user to home', () => {
+        expect($router.push).toHaveBeenCalledWith({ name: 'home' })
       })
     })
 

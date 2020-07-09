@@ -32,54 +32,11 @@ export default function (/* { store, ssrContext } */) {
     return user ? types.connection.CONNECTED : types.connection.DISCONNECTED
   }
 
-  const getReplacingRoute = (connectionState) => {
-    if (connectionState === types.connection.CONNECTED) {
-      return { name: 'home' }
-
-      // return {
-      //   name: 'station',
-      //   params: {
-      //     trailId: 'testTrailID',
-      //     stationId: 'testStationID'
-      //   }
-      // }
-
-      // return {
-      //   name: 'stationEditor',
-      //   params: {
-      //     trailId: 'testTrailID',
-      //     stationId: 'testStationID'
-      //   }
-      // }
-
-      // return {
-      //   name: 'trailEditor',
-      //   params: {
-      //     trailId: 'testTrailID'
-      //   }
-      // }
-
-      // return {
-      //   name: 'editor'
-      // }
-    } else {
-      return { name: 'sign' }
-    }
-  }
-
   Router.beforeEach((to, from, next) => {
     const connectionState = getConnectionState(firebase.auth().currentUser)
     const validRoute = to.meta.access && to.meta.access.some(access => access === connectionState)
     if (validRoute) next()
     else next(false)
-  })
-
-  firebase.auth().onAuthStateChanged(user => {
-    const connectionState = getConnectionState(user)
-    const targetRoute = getReplacingRoute(connectionState)
-    if (targetRoute.name !== Router.currentRoute.name) {
-      Router.push(targetRoute)
-    }
   })
 
   return Router

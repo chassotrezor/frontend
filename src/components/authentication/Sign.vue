@@ -122,21 +122,15 @@ export default {
           vm.signInWithEmailLink(email)
         })
     },
-    handleRedirectResult () {
-      const vm = this
-      getRedirectResult()
-        .then(result => {
-          if (result.user) {
-            vm.display('success', vm.$t('auth.connected'))
-            vm.initUser({ userId: result.user.uid })
-          } else {
-            vm.display('chooseMethod')
-          }
-        })
-        .catch(error => {
-          // TODO: handle errors
-          console.error(error)
-        })
+    async handleRedirectResult () {
+      const result = await getRedirectResult()
+      if (result.user) {
+        this.display('success', this.$t('auth.connected'))
+        this.initUser({ userId: result.user.uid })
+        this.$router.push({ name: 'home' })
+      } else {
+        this.display('chooseMethod')
+      }
     },
     signInWithGoogle () {
       signInWithGoogle()
