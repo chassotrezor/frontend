@@ -64,15 +64,17 @@ export function unbindUser ({ commit }) {
 async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
   const db = firebase.firestore()
   const userRef = db.collection('users').doc(userId)
+  const trailRef = db.collection('trails').doc(trailId)
   try {
     await db.runTransaction(async (t) => {
-      const doc = await t.get(userRef)
-      const accessibleStations = doc.data().accessibleStations
+      const user = await t.get(userRef)
+      const trail = await t.get(trailRef)
+      const accessibleStations = user.data().accessibleStations
       const currentTrailIsNotAccessible = !accessibleStations[trailId]
       if (currentTrailIsNotAccessible) {
         accessibleStations[trailId] = {
           data: {
-            name: 'trail name' // TODO: handle trail data
+            name: trail.data().name
           },
           stations: {}
         }
@@ -83,7 +85,7 @@ async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
 
       if (currentStationIsNotAccessible) {
         accessibleStations[trailId].stations[stationId] = {
-          name: 'station name' // TODO: handle station data
+          name: trail.data().nodes[stationId].name
         }
       }
 
@@ -99,14 +101,17 @@ async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
   }
 }
 
-function saveStationAccessLocally ({ trailId, stationId }) {
+async function saveStationAccessLocally ({ trailId, stationId }) {
+  const db = firebase.firestore()
+  const trailRef = db.collection('trails').doc(trailId)
+  const trail = await trailRef.get()
   const oldUser = localStorage.getItem('user') || JSON.stringify(defaultUser)
   const accessibleStations = JSON.parse(oldUser).accessibleStations
   const currentTrailIsNotAccessible = !accessibleStations[trailId]
   if (currentTrailIsNotAccessible) {
     accessibleStations[trailId] = {
       data: {
-        name: 'trail name' // TODO: handle trail data
+        name: trail.data().name
       },
       stations: {}
     }
@@ -117,7 +122,7 @@ function saveStationAccessLocally ({ trailId, stationId }) {
 
   if (currentStationIsNotAccessible) {
     accessibleStations[trailId].stations[stationId] = {
-      name: 'station name' // TODO: handle station data
+      name: trail.data().nodes[stationId].name
     }
   }
 
