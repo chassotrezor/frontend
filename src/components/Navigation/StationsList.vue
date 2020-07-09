@@ -11,16 +11,16 @@
       />
       <q-list>
         <q-item
-          v-for="station in stations"
-          :key="station"
+          v-for="stationId in stations"
+          :key="stationId"
           class="QItem_test"
-          :class="`${station}_test`"
+          :class="`${stationId}_test`"
           clickable
-          @click="() => push(station)"
+          @click="() => push(stationId)"
         >
           <q-item-section>
             <q-item-label>
-              {{ station }}
+              {{ accessibleStations[selectedTrail.value].stations[stationId].name }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -75,9 +75,10 @@ export default {
       return Object.keys(this.trails).length > 0
     }
   },
-  mounted () {
-    const vm = this
-    vm.selectedTrail = vm.trails.find(option => option.value === vm.lastTrail)
+  watch: {
+    lastTrail (trailId) {
+      this.selectedTrail = this.trails.find(option => option.value === trailId)
+    }
   },
   methods: {
     push (station) {
