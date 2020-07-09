@@ -69,7 +69,7 @@ const routes = [
         name: 'station',
         component: () => import('pages/Station.vue'),
         meta: {
-          access: connected,
+          access: anyTime,
           display: {
             rule: never
           }
@@ -80,9 +80,9 @@ const routes = [
         name: 'stationsList',
         component: () => import('pages/StationsList.vue'),
         meta: {
-          access: connected,
+          access: anyTime,
           display: {
-            rule: connected,
+            rule: anyTime,
             group: types.displayGroups.NAVIGATION,
             priority: 100,
             icon: 'info'
@@ -94,9 +94,9 @@ const routes = [
         name: 'scanner',
         component: () => import('pages/Scanner.vue'),
         meta: {
-          access: connected,
+          access: anyTime,
           display: {
-            rule: connected,
+            rule: anyTime,
             group: types.displayGroups.NAVIGATION,
             priority: 1000,
             icon: 'perm_device_information'
@@ -137,10 +137,7 @@ const routes = [
           meta: {
             access: connected,
             display: {
-              rule: connected,
-              group: types.displayGroups.NAVIGATION,
-              priority: 1,
-              icon: 'edit'
+              rule: never
             }
           },
           children: [{
@@ -150,10 +147,7 @@ const routes = [
             meta: {
               access: connected,
               display: {
-                rule: connected,
-                group: types.displayGroups.NAVIGATION,
-                priority: 1,
-                icon: 'edit'
+                rule: never
               }
             }
           }]

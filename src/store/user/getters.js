@@ -13,3 +13,7 @@ export function lastTrail (state) {
 export function lastStation (state) {
   return state.lastStation
 }
+
+export function user (state) {
+  return state
+}

@@ -20,3 +20,9 @@ export const defaultStation = stationId => {
     rows: []
   }
 }
+
+export const defaultUser = {
+  accessibleStations: {},
+  lastTrail: '',
+  lastStation: ''
+}

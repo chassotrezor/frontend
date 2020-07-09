@@ -1,11 +1,6 @@
 import firebase from 'firebase/app'
-
-const defaultUser = {
-  openTrails: [],
-  accessibleStations: {},
-  lastTrail: '',
-  lastStation: ''
-}
+import { defaultUser } from 'src/store/defaultData'
+import { merge } from 'lodash'
 
 function getUserRef (userId) {
   return firebase.firestore().collection('users').doc(userId)
@@ -16,87 +11,129 @@ export function initUser (__, { userId }) {
   const userRef = db.collection('users').doc(userId)
 
   return db.runTransaction(async t => {
-    const doc = await t.get(userRef)
-    if (!doc.exists) {
-      t.set(userRef, defaultUser)
+    const serverUserDoc = await t.get(userRef)
+    const localUserString = localStorage.getItem('user')
+    if (!serverUserDoc.exists && !localUserString) t.set(userRef, defaultUser)
+    if (!serverUserDoc.exists && localUserString) t.set(userRef, JSON.parse(localUserString))
+    if (serverUserDoc.exists && localUserString) {
+      const serverUser = serverUserDoc.data()
+      const localUser = JSON.parse(localUserString)
+      const mergedUser = merge(serverUser, localUser)
+      t.set(userRef, mergedUser)
     }
+    localStorage.removeItem('user')
   })
 }
 
 let unbind = () => {}
-export function bindUser ({ commit }) {
+
+function bindUserOnServer ({ commit, userId }) {
+  const userRef = getUserRef(userId)
+  unbind = userRef.onSnapshot(docSnapshot => {
+    if (docSnapshot.exists) {
+      commit('setUser', docSnapshot.data())
+    }
+  })
+}
+
+// TODO: find if it is possible to replace repeated calls with a listener
+function bindUserLocally ({ commit, getters }) {
+  const intervalId = setInterval(() => {
+    const user = localStorage.getItem('user') || JSON.stringify(defaultUser)
+    const stateUser = JSON.stringify(getters.user)
+    if (user !== stateUser) commit('setUser', JSON.parse(user))
+  }, 1000)
+  unbind = () => clearInterval(intervalId)
+}
+
+export function bindUser ({ commit, getters }) {
   const currentUser = firebase.auth().currentUser
   if (currentUser) {
     const userId = currentUser.uid
-    const userRef = getUserRef(userId)
-    unbind = userRef.onSnapshot(docSnapshot => {
-      if (docSnapshot.exists) {
-        commit('setUser', docSnapshot.data())
-      }
-    })
+    bindUserOnServer({ commit, userId })
+  } else {
+    bindUserLocally({ commit, getters })
   }
 }
 export function unbindUser ({ commit }) {
   unbind()
   unbind = () => {}
-  commit('delUser', {})
+  commit('delUser')
 }
 
-export async function saveStationAccess (__, { trailId, stationId }) {
+async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
   const db = firebase.firestore()
-  const userId = firebase.auth().currentUser.uid
   const userRef = db.collection('users').doc(userId)
   try {
     await db.runTransaction(async (t) => {
       const doc = await t.get(userRef)
-      const currentAccessibleStations = doc.data().accessibleStations
+      const accessibleStations = doc.data().accessibleStations
+      const currentTrailIsNotAccessible = !accessibleStations[trailId]
+      if (currentTrailIsNotAccessible) {
+        accessibleStations[trailId] = {
+          data: {
+            name: 'trail name' // TODO: handle trail data
+          },
+          stations: {}
+        }
+      }
+
+      const currentStationIsNotAccessible =
+        Object.keys(accessibleStations[trailId].stations).every(id => id !== stationId)
+
+      if (currentStationIsNotAccessible) {
+        accessibleStations[trailId].stations[stationId] = {
+          name: 'station name' // TODO: handle station data
+        }
+      }
+
       const update = {
+        accessibleStations,
         lastTrail: trailId,
         lastStation: stationId
-      }
-      // TODO: improve checks and case handling
-      if (!currentAccessibleStations[trailId]) {
-        const accessibleStations = {
-          ...currentAccessibleStations,
-          [trailId]: {
-            data: {
-              name: 'trail name' // TODO: handle trail data
-            },
-            stations: {
-              [stationId]: {
-                name: 'station name' // TODO: handle station data
-              }
-            }
-          }
-        }
-        update.accessibleStations = accessibleStations
-      } else {
-        const currentStationIsNotAccessible =
-          Object.keys(currentAccessibleStations[trailId].stations).every(id => id !== stationId)
-
-        if (currentStationIsNotAccessible) {
-          const accessibleStations = {
-            ...currentAccessibleStations,
-            [trailId]: {
-              data: {
-                name: 'trail name' // TODO: handle trail data
-              },
-              stations: {
-                ...currentAccessibleStations[trailId].stations,
-                [stationId]: {
-                  name: 'station name' // TODO: handle station data
-                }
-              }
-            }
-          }
-          update.accessibleStations = accessibleStations
-        }
       }
       t.update(userRef, update)
     })
   } catch (err) {
     console.log('Transaction failure:', err)
   }
+}
+
+function saveStationAccessLocally ({ trailId, stationId }) {
+  const oldUser = localStorage.getItem('user') || JSON.stringify(defaultUser)
+  const accessibleStations = JSON.parse(oldUser).accessibleStations
+  const currentTrailIsNotAccessible = !accessibleStations[trailId]
+  if (currentTrailIsNotAccessible) {
+    accessibleStations[trailId] = {
+      data: {
+        name: 'trail name' // TODO: handle trail data
+      },
+      stations: {}
+    }
+  }
+
+  const currentStationIsNotAccessible =
+    Object.keys(accessibleStations[trailId].stations).every(id => id !== stationId)
+
+  if (currentStationIsNotAccessible) {
+    accessibleStations[trailId].stations[stationId] = {
+      name: 'station name' // TODO: handle station data
+    }
+  }
+
+  const user = JSON.stringify({
+    accessibleStations,
+    lastTrail: trailId,
+    lastStation: stationId
+  })
+
+  localStorage.setItem('user', user)
+}
+
+export async function saveStationAccess (__, { trailId, stationId }) {
+  const currentUser = firebase.auth().currentUser
+  if (currentUser) await saveStationAccessOnServer({ trailId, stationId, userId: currentUser.uid })
+  else saveStationAccessLocally({ trailId, stationId })
 }
 
 export async function updateTrailAccess (__, { trailId }) {
