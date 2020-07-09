@@ -80,6 +80,9 @@ export default {
       this.selectedTrail = this.trails.find(option => option.value === trailId)
     }
   },
+  mounted () {
+    this.selectedTrail = this.trails.find(option => option.value === this.lastTrail)
+  },
   methods: {
     push (station) {
       const route = {
