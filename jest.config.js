@@ -14,7 +14,9 @@ module.exports = {
   coverageDirectory: '<rootDir>/test/jest/coverage',
   collectCoverageFrom: [
     '<rootDir>/src/components/**/*.vue',
-    '<rootDir>/src/components/**/*.js'
+    '<rootDir>/src/components/**/*.js',
+    '<rootDir>/src/mixins/**/*.vue',
+    '<rootDir>/src/mixins/**/*.js'
   ],
   coverageThreshold: {
     global: {
@@ -25,7 +27,8 @@ module.exports = {
     }
   },
   testMatch: [
-    '<rootDir>/src/components/**/*.test.js'
+    '<rootDir>/src/components/**/*.test.js',
+    '<rootDir>/src/mixins/**/*.test.js'
   ],
   moduleFileExtensions: [
     'vue',

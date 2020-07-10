@@ -88,3 +88,13 @@ export const mountQuasar = (component, options = {}) => {
     propsData: options.propsData
   })
 }
+
+export const mountMixin = (mixin, options) => {
+  const component = {
+    name: 'WixinWrapper',
+    mixins: [mixin],
+    template: '<div />'
+  }
+
+  return mountQuasar(component, options)
+}
