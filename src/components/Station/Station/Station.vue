@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getStation: 'trail/getStation'
+      getStation: 'trails/getStation'
     }),
     station () {
       const trailId = this.$route.params.trailId

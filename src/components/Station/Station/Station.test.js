@@ -39,7 +39,7 @@ const store = {
         saveStationAccess: jest.fn()
       }
     },
-    trail: {
+    trails: {
       namespaced: true,
       getters: {
         getStation: () => jest.fn(() => station)

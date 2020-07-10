@@ -33,7 +33,7 @@ const testStation = {
 
 const store = {
   modules: {
-    trail: {
+    trails: {
       namespaced: true,
       actions: {
         downloadTrail: jest.fn(),
@@ -95,10 +95,10 @@ describe('StationLayout', () => {
 
     describe('when "station" and "trail" datas are downloaded', () => {
       beforeAll(async () => {
-        wrapper.vm.$store.commit('trail/setTrail', testTrail)
-        wrapper.vm.$store.commit('trail/setStation', testStation)
-        store.modules.trail.actions.downloadStation.mockResolvedValue()
-        store.modules.trail.actions.downloadTrail.mockResolvedValue()
+        wrapper.vm.$store.commit('trails/setTrail', testTrail)
+        wrapper.vm.$store.commit('trails/setStation', testStation)
+        store.modules.trails.actions.downloadStation.mockResolvedValue()
+        store.modules.trails.actions.downloadTrail.mockResolvedValue()
         await wrapper.vm.$nextTick()
       })
 
@@ -147,7 +147,7 @@ describe('StationLayout', () => {
 
         describe('when "station" is not a "trailEntry" in trail', () => {
           beforeAll(async () => {
-            wrapper.vm.$store.commit('trail/setTrail', closedTestTrail)
+            wrapper.vm.$store.commit('trails/setTrail', closedTestTrail)
             await wrapper.vm.$nextTick()
           })
 
@@ -159,7 +159,7 @@ describe('StationLayout', () => {
 
         describe('when "station" is a "trailEntry" in trail', () => {
           beforeAll(async () => {
-            wrapper.vm.$store.commit('trail/setTrail', testTrail)
+            wrapper.vm.$store.commit('trails/setTrail', testTrail)
             await wrapper.vm.$nextTick()
           })
 
@@ -205,8 +205,8 @@ describe('StationLayout', () => {
           $q
         }
       })
-      store.modules.trail.actions.downloadTrail.mockResolvedValue()
-      store.modules.trail.actions.downloadStation.mockRejectedValue(new Error('station does not exist'))
+      store.modules.trails.actions.downloadTrail.mockResolvedValue()
+      store.modules.trails.actions.downloadStation.mockRejectedValue(new Error('station does not exist'))
       await wrapper.vm.$nextTick()
     })
 

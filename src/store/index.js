@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import trail from './trail'
+import trails from './trails'
 import editor from './editor'
 import user from './user'
 
@@ -19,7 +19,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      trail,
+      trails,
       editor,
       user
     },

@@ -46,8 +46,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getStation: 'trail/getStation',
-      getTrail: 'trail/getTrail',
+      getStation: 'trails/getStation',
+      getTrail: 'trails/getTrail',
       openTrails: 'user/openTrails'
     }),
     trailId () {
@@ -95,8 +95,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      downloadTrail: 'trail/downloadTrail',
-      downloadStation: 'trail/downloadStation',
+      downloadTrail: 'trails/downloadTrail',
+      downloadStation: 'trails/downloadStation',
       updateTrailAccess: 'user/updateTrailAccess'
     })
   }
