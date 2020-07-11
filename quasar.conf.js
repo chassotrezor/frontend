@@ -24,6 +24,7 @@ module.exports = function (/* ctx */) {
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
       'firebase',
+      'geoFireX',
       'i18n',
       'vue2-leaflet',
       'vue-sanitize',
