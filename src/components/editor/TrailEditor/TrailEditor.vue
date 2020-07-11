@@ -5,8 +5,10 @@
       class="UpdateBtn_test"
       icon="send"
       color="primary"
-      @click="updateTrail({ trailId, newProps: { name } })"
+      @click="update"
     />
+    <q-input v-model="lat" />
+    <q-input v-model="lng" />
     <br>
     <trail-graph
       class="TrailGraph_test"
@@ -40,7 +42,9 @@ export default {
   },
   data () {
     return {
-      name: ''
+      name: '',
+      lat: 46.8,
+      lng: 7.2
     }
   },
   computed: {
@@ -53,11 +57,22 @@ export default {
   },
   mounted () {
     this.name = this.trail.name
+    this.lat = this.trail.position ? this.trail.position.geopoint.Rc : 0
+    this.lng = this.trail.position ? this.trail.position.geopoint.Ac : 0
   },
   methods: {
     ...mapActions({
       updateTrail: 'editor/updateTrail'
     }),
+    update () {
+      this.updateTrail({
+        trailId: this.trailId,
+        newProps: {
+          name: this.name,
+          position: this.$geo.point(parseFloat(this.lat), parseFloat(this.lng))
+        }
+      })
+    },
     editStation (stationId) {
       this.$emit('editStation', stationId)
     }

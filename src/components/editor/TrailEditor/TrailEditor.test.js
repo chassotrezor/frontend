@@ -4,6 +4,11 @@ import types from 'src/types'
 
 jest.mock('html2pdf.js', () => {})
 
+const expectedGeoPoint = 'expectedGeoPoint'
+const $geo = {
+  point: () => expectedGeoPoint
+}
+
 const trailId = 'testTrailId'
 
 const trail = {
@@ -45,6 +50,9 @@ describe('TrailEditor', () => {
       store,
       propsData: {
         trailId
+      },
+      mocks: {
+        $geo
       }
     })
     wrapper.vm.$nextTick(done)
@@ -86,7 +94,8 @@ describe('TrailEditor', () => {
         {
           trailId,
           newProps: {
-            name: expectedName
+            name: expectedName,
+            position: expectedGeoPoint
           }
         }
       )
