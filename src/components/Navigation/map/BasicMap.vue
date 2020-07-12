@@ -18,6 +18,7 @@
     />
     <l-marker
       v-if="showPosition"
+      class="Avatar_test"
       :lat-lng="[position.latitude, position.longitude]"
       :z-index-offset="1000"
     >
@@ -30,8 +31,11 @@
         :shadow-url="positionMarker.shadowUrl"
       />
     </l-marker>
-    <l-control position="bottomleft">
+    <l-control
+      position="bottomleft"
+    >
       <q-btn
+        class="ToggleWatchPosition_test"
         :value="showPosition"
         round
         flat
@@ -117,8 +121,8 @@ export default {
         position => {
           const newCenter = latLng(position.coords.latitude, position.coords.longitude)
           const map = this.$refs.map.mapObject
-          if (map.getZoom() < 9) map.setView(newCenter, 9)
-          else map.panTo(newCenter)
+          const zoom = Math.max(map.getZoom(), 9)
+          map.setView(newCenter, zoom)
         },
         this.geolocationError
       )
