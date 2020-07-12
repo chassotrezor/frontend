@@ -111,8 +111,8 @@ export default {
     this.stopWatch()
   },
   methods: {
-    geolocationError (error) {
-      console.error(error)
+    geolocationError (errorToHandle) {
+      // handle error
       this.showPosition = false
       this.stopWatch()
     },

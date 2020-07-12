@@ -16,7 +16,7 @@ const expectedCenter = latLng(position.coords.latitude, position.coords.longitud
 const expectedZoom = 9
 const watchId = 1234567890
 
-const geolocationMocks = {
+const geolocationMocksSuccess = {
   getCurrentPosition: jest.fn((positionFct, errorFct) => { positionFct(position) }),
   watchPosition: jest.fn((positionFct, errorFct) => {
     positionFct(position)
@@ -24,7 +24,13 @@ const geolocationMocks = {
   }),
   clearWatch: jest.fn()
 }
-global.navigator.geolocation = geolocationMocks
+
+const positionError = new Error('position error')
+const geolocationMocksFailure = {
+  getCurrentPosition: jest.fn((positionFct, errorFct) => { errorFct(positionError) }),
+  watchPosition: jest.fn((positionFct, errorFct) => { errorFct(positionError) }),
+  clearWatch: jest.fn()
+}
 
 const setView = jest.fn()
 const getZoom = () => 0
@@ -47,8 +53,9 @@ describe('BasicMap', () => {
     expect(toggle.exists()).toBe(true)
   })
 
-  describe('after "toggle watch position btn" turns on', () => {
+  describe('after "toggle watch position btn" turns on and succeeds', () => {
     beforeAll(async () => {
+      global.navigator.geolocation = geolocationMocksSuccess
       wrapper.vm.showPosition = false
       toggle.vm.$emit('click')
       await wrapper.vm.$nextTick()
@@ -70,22 +77,65 @@ describe('BasicMap', () => {
       const avatar = wrapper.find('.Avatar_test')
       expect(avatar.exists()).toBe(true)
     })
+
+    afterAll(jest.clearAllMocks)
   })
 
   describe('after "toggle watch position btn" turns off', () => {
     beforeAll(async () => {
+      global.navigator.geolocation = geolocationMocksSuccess
       wrapper.vm.showPosition = true
       toggle.vm.$emit('click')
       await wrapper.vm.$nextTick()
     })
 
     it('stops watching position', () => {
-      expect(geolocationMocks.clearWatch).toHaveBeenCalledWith(watchId)
+      expect(geolocationMocksSuccess.clearWatch).toHaveBeenCalledWith(watchId)
     })
 
     it('shows no avatar on map', () => {
       const avatar = wrapper.find('.Avatar_test')
       expect(avatar.exists()).toBe(false)
     })
+
+    afterAll(jest.clearAllMocks)
+  })
+
+  describe('after "toggle watch position btn" turns on and fails', () => {
+    beforeAll(async () => {
+      global.navigator.geolocation = geolocationMocksFailure
+      wrapper.vm.showPosition = false
+      toggle.vm.$emit('click')
+      await wrapper.vm.$nextTick()
+    })
+
+    it('stops watching position', () => {
+      expect(geolocationMocksFailure.clearWatch).toHaveBeenCalledWith(watchId)
+    })
+
+    it('shows no avatar on map', () => {
+      const avatar = wrapper.find('.Avatar_test')
+      expect(avatar.exists()).toBe(false)
+    })
+
+    it('sets "showPosition" to false', () => {
+      expect(wrapper.vm.showPosition).toBe(false)
+    })
+
+    afterAll(jest.clearAllMocks)
+  })
+
+  describe('when destroyed', () => {
+    beforeAll(async () => {
+      global.navigator.geolocation = geolocationMocksSuccess
+      wrapper.destroy()
+      await wrapper.vm.$nextTick()
+    })
+
+    it('stops watching position', () => {
+      expect(geolocationMocksSuccess.clearWatch).toHaveBeenCalled()
+    })
+
+    afterAll(jest.clearAllMocks)
   })
 })
