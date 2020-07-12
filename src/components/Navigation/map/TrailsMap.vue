@@ -1,15 +1,19 @@
 <template>
-  <basic-map
-    full-page-height
-    @ready="init"
-    @update:bounds="updateBounds"
-  >
-    <trail-marker
-      v-for="trail in trails"
-      :key="trail.trailId"
-      :trail="trail"
-    />
-  </basic-map>
+  <div>
+    <basic-map
+      class="BasicMap_test"
+      full-page-height
+      @ready="initMap"
+      @update:bounds="updateBounds"
+    >
+      <trail-marker
+        v-for="trail in trails"
+        :key="trail.trailId"
+        class="TrailMarker_test"
+        :trail="trail"
+      />
+    </basic-map>
+  </div>
 </template>
 
 <script>
@@ -68,8 +72,8 @@ export default {
         this.queryTrails({ center, radius })
       }
     },
-    init (event) {
-      this.updateBounds(event.getBounds())
+    initMap (mapObject) {
+      this.updateBounds(mapObject.getBounds())
     }
   }
 }
