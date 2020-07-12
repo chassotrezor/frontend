@@ -4,28 +4,17 @@
     @ready="init"
     @update:bounds="updateBounds"
   >
-    <l-marker
+    <trail-marker
       v-for="trail in trails"
       :key="trail.trailId"
-      :lat-lng="trail.position"
-    >
-      <l-icon
-        :icon-size="trailMarker.size"
-        :icon-anchor="trailMarker.anchor"
-        :icon-url="trailMarker.url"
-      />
-      <l-tooltip :options="{ parmanent: true }">
-        <div>
-          {{ trail.name }}
-        </div>
-      </l-tooltip>
-    </l-marker>
+      :trail="trail"
+    />
   </basic-map>
 </template>
 
 <script>
-import { LMarker, LTooltip, LIcon } from 'vue2-leaflet'
 import BasicMap from './BasicMap'
+import TrailMarker from './TrailMarker'
 import trailMarker from 'assets/trailPlace.png'
 import { isOutOfBoundsBounds, getRadius } from './mapHelpers'
 
@@ -33,9 +22,7 @@ export default {
   name: 'TrailsMap',
   components: {
     BasicMap,
-    LMarker,
-    LTooltip,
-    LIcon
+    TrailMarker
   },
   data () {
     return {

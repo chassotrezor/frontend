@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import TrailsMap from 'components/Navigation/TrailsMap'
+import TrailsMap from 'components/Navigation/map/TrailsMap'
 
 export default {
   name: 'PageMap',
