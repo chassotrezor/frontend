@@ -1,5 +1,6 @@
 <template>
   <l-marker
+    class="LMarker_test"
     :lat-lng="trail.position"
   >
     <l-icon
