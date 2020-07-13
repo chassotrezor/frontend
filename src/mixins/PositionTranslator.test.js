@@ -1,4 +1,4 @@
-import positionTranslator from './positionTranslator'
+import PositionTranslator from './PositionTranslator'
 import { mountMixin } from '@test'
 import { firestore } from 'firebase'
 import { latLng } from 'leaflet'
@@ -22,7 +22,7 @@ const navigatorPosition = {
 describe('positionTranslator', () => {
   let wrapper
   beforeAll(async () => {
-    wrapper = mountMixin(positionTranslator)
+    wrapper = mountMixin(PositionTranslator)
     await wrapper.vm.$nextTick()
   })
 

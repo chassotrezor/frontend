@@ -19,7 +19,7 @@ function fromLatLng (latlng) {
 }
 
 function fromNavigatorPosition (navigatorPosition) {
-  const positionArray = Object.values(navigatorPosition.coords.latitude, navigatorPosition.coords.longitude)
+  const positionArray = [navigatorPosition.coords.latitude, navigatorPosition.coords.longitude]
   return to(positionArray)
 }
 
