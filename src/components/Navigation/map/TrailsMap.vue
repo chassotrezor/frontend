@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="full-width row justify-center">
     <basic-map
       class="BasicMap_test"
-      full-page-height
+      width="100%"
+      height="100%"
       @ready="initMap"
       @update:bounds="updateBounds"
     >
@@ -17,6 +18,7 @@
 </template>
 
 <script>
+import PositionTranslator from 'src/mixins/PositionTranslator'
 import BasicMap from './BasicMap'
 import TrailMarker from './TrailMarker'
 import trailMarker from 'assets/trailPlace.png'
@@ -28,6 +30,7 @@ export default {
     BasicMap,
     TrailMarker
   },
+  mixins: [PositionTranslator],
   data () {
     return {
       trails: [],
@@ -48,7 +51,7 @@ export default {
       query.subscribe(trails => {
         this.trails = trails.map(trail => {
           return {
-            position: Object.values(trail.position.geopoint),
+            latLng: this.fromGeopoint(trail.position.geopoint).toLatLng(),
             name: trail.name,
             // TODO: get trailId from backend
             trailId: trail.name + Math.random().toString(36).substring(2)
