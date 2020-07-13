@@ -74,9 +74,13 @@ export default {
   },
   mixins: [FillPageHeight],
   props: {
-    fullPageHeight: {
-      type: Boolean,
-      default: () => false
+    width: {
+      type: String,
+      default: () => '100%'
+    },
+    height: {
+      type: String,
+      default: () => '300px'
     }
   },
   data () {
@@ -103,8 +107,17 @@ export default {
   },
   computed: {
     style () {
-      if (this.fullPageHeight) return `height: ${this.pageHeight}px`
-      else return ''
+      let style = `width: ${this.width}; `
+
+      if (this.height.match('[0-9]+%')) {
+        const heightPercentage = this.height.split('%')[0]
+        const height = Math.ceil(this.pageHeight * heightPercentage / 100)
+        style = style + `height: ${height}px`
+      } else {
+        style = style + `height: ${this.height}`
+      }
+
+      return style
     }
   },
   beforeDestroy () {

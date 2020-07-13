@@ -1,6 +1,27 @@
 import { mountMixin } from '@test'
 import FillPageHeight from './FillPageHeight'
 
+/*
+TODO: rework tests using the following (and extract it to mock this mixin in dependent components)
+
+const testInnerHeight = 120
+const testFooterHeaderHeight = 10
+
+global.window.innerHeight = testInnerHeight
+
+global.document.getElementsByClassName = className => {
+  if (className === 'q-header' || className === 'q-footer') {
+    return {
+      item: i => {
+        return { scrollHeight: testFooterHeaderHeight }
+      }
+    }
+  } else return global.document.getElementsByClassName
+}
+
+global.window.addEventListener = ...
+*/
+
 const layoutHeaderHeight = () => 10
 const layoutFooterHeight = () => 10
 const windowInnerHeight = () => 100

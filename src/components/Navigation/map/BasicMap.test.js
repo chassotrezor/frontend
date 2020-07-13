@@ -2,10 +2,6 @@ import { mountQuasar } from '@test'
 import BasicMap from './BasicMap'
 import { latLng } from 'leaflet'
 
-// global.navigator.geolocation.getCurrentPosition = jest.fn()
-// const watchPosition = jest.spyOn(navigator.geolocation, 'watchPosition')
-// const clearWatch = jest.spyOn(navigator.geolocation, 'clearWatch')
-
 const position = {
   coords: {
     latitude: 30,
@@ -34,6 +30,19 @@ const geolocationMocksFailure = {
 
 const setView = jest.fn()
 const getZoom = () => 0
+
+const testInnerHeight = 120
+const testFooterHeaderHeight = 10
+global.window.innerHeight = testInnerHeight
+global.document.getElementsByClassName = className => {
+  if (className === 'q-header' || className === 'q-footer') {
+    return {
+      item: i => {
+        return { scrollHeight: testFooterHeaderHeight }
+      }
+    }
+  } else return global.document.getElementsByClassName
+}
 
 describe('BasicMap', () => {
   let wrapper
@@ -123,6 +132,17 @@ describe('BasicMap', () => {
     })
 
     afterAll(jest.clearAllMocks)
+  })
+
+  describe('when height prop is given in percent', () => {
+    beforeAll(async () => {
+      wrapper.setProps({ height: '80%' })
+      await wrapper.vm.$nextTick()
+    })
+
+    it('sets height to that percentage of page height', () => {
+      expect(wrapper.html()).toContain('height: 80px')
+    })
   })
 
   describe('when destroyed', () => {
