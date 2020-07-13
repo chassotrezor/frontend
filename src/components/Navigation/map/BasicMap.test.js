@@ -2,20 +2,21 @@ import { mountQuasar } from '@test'
 import BasicMap from './BasicMap'
 import { latLng } from 'leaflet'
 
-const position = {
+const navigatorPosition = {
   coords: {
     latitude: 30,
-    longitude: 40
+    longitude: 40,
+    accuracy: 10
   }
 }
-const expectedCenter = latLng(position.coords.latitude, position.coords.longitude)
+const expectedCenter = latLng(navigatorPosition.coords.latitude, navigatorPosition.coords.longitude)
 const expectedZoom = 9
 const watchId = 1234567890
 
 const geolocationMocksSuccess = {
-  getCurrentPosition: jest.fn((positionFct, errorFct) => { positionFct(position) }),
+  getCurrentPosition: jest.fn((positionFct, errorFct) => { positionFct(navigatorPosition) }),
   watchPosition: jest.fn((positionFct, errorFct) => {
-    positionFct(position)
+    positionFct(navigatorPosition)
     return watchId
   }),
   clearWatch: jest.fn()
@@ -75,7 +76,8 @@ describe('BasicMap', () => {
     })
 
     it('starts updating avatar position when changed', () => {
-      expect(wrapper.vm.position).toEqual(position.coords)
+      expect(wrapper.vm.position.latLng).toEqual(expectedCenter)
+      expect(wrapper.vm.position.accuracy).toEqual(navigatorPosition.accuracy)
     })
 
     it('saves watcher id', () => {

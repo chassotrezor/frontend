@@ -12,14 +12,14 @@
     <l-tile-layer :url="url" />
     <l-circle
       v-if="showPosition"
-      :lat-lng="[position.latitude, position.longitude]"
+      :lat-lng="position.latLng"
       :radius="position.accuracy"
       color="black"
     />
     <l-marker
       v-if="showPosition"
       class="Avatar_test"
-      :lat-lng="[position.latitude, position.longitude]"
+      :lat-lng="position.latLng"
       :z-index-offset="1000"
     >
       <l-icon
@@ -59,6 +59,7 @@ import {
   LControl
 } from 'vue2-leaflet'
 import FillPageHeight from 'src/mixins/FillPageHeight'
+import PositionTranslator from 'src/mixins/PositionTranslator'
 import positionMarker from 'assets/hat.png'
 import shadow from 'assets/shadow.png'
 
@@ -72,7 +73,7 @@ export default {
     LCircle,
     LControl
   },
-  mixins: [FillPageHeight],
+  mixins: [FillPageHeight, PositionTranslator],
   props: {
     width: {
       type: String,
@@ -97,8 +98,7 @@ export default {
         shadowAnchor: [39, 9]
       },
       position: {
-        latitude: 0,
-        longitude: 0,
+        latLng: latLng(0, 0),
         accuracy: 1
       },
       positionWatcher: null,
@@ -131,8 +131,8 @@ export default {
     },
     startWatch () {
       navigator.geolocation.getCurrentPosition(
-        position => {
-          const newCenter = latLng(position.coords.latitude, position.coords.longitude)
+        navigatorPosition => {
+          const newCenter = this.fromNavigatorPosition(navigatorPosition).toLatLng()
           const map = this.$refs.map.mapObject
           const zoom = Math.max(map.getZoom(), 9)
           map.setView(newCenter, zoom)
@@ -140,8 +140,9 @@ export default {
         this.geolocationError
       )
       this.positionWatcher = navigator.geolocation.watchPosition(
-        position => {
-          this.position = position.coords
+        navigatorPosition => {
+          this.position.latLng = this.fromNavigatorPosition(navigatorPosition).toLatLng()
+          this.position.accuracy = navigatorPosition.accuracy
         },
         this.geolocationError
       )
