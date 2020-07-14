@@ -94,9 +94,6 @@ export default {
     return {
       types: types
     }
-  },
-  mounted () {
-    console.log(this.first, this.last, this.node)
   }
 }
 </script>

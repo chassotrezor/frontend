@@ -1,9 +1,9 @@
 <template>
-  <div class="column items-center">
+  <div class="column items-center full-width">
     <div>Stations :</div>
     <basic-map
       height="500px"
-      width="80%"
+      width="800px"
     >
       <node-marker
         v-for="(node, nodeId) in graph.nodes"
@@ -20,25 +20,46 @@
         @move:before="moveBefore(nodeId)"
         @move:after="moveAfter(nodeId)"
       />
+      <l-polyline
+        :lat-lngs="positionsInOrder"
+        color="black"
+        :dash-array="[5, 10]"
+      />
     </basic-map>
   </div>
 </template>
 
 <script>
+import { LPolyline } from 'vue2-leaflet'
 import BasicMap from 'components/Navigation/map/BasicMap'
 import NodeMarker from './NodeMarker'
+import PositionTranslator from 'src/mixins/PositionTranslator'
 import { generateNodeBefore, generateNodeAfter } from './graphHelpers'
 
 export default {
   name: 'TrailGraph',
   components: {
     BasicMap,
-    NodeMarker
+    NodeMarker,
+    LPolyline
   },
+  mixins: [PositionTranslator],
   props: {
     graph: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    positionsInOrder () {
+      let currentNode = this.graph.nodes[this.graph.endNodes[0]]
+      const positions = [this.fromGeopoint(currentNode.position).toArray()]
+      while (currentNode.dependencies.length > 0) {
+        currentNode = this.graph.nodes[currentNode.dependencies[0]]
+        const position = this.fromGeopoint(currentNode.position).toArray()
+        positions.unshift(position)
+      }
+      return positions
     }
   },
   methods: {

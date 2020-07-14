@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <q-input v-model="name" />
     <q-btn
       class="UpdateBtn_test"
