@@ -1,40 +1,49 @@
 <template>
   <div>
     <div v-if="node.type === types.nodes.STATION">
-      <q-btn
-        icon="edit"
-        text-color="black"
-        padding="xs"
-        color="grey-2"
-        @click="$emit('editStation')"
-      />
+      <div class="row justify-between no-wrap">
+        <q-btn
+          class="col-6"
+          icon="edit"
+          text-color="black"
+          padding="xs"
+          color="grey-2"
+          @click="$emit('editStation')"
+        />
+        <q-btn
+          class="DeleteBtn_test col-4"
+          icon="delete_forever"
+          color="negative"
+          padding="xs"
+          @click="$emit('remove')"
+        />
+      </div>
       <q-input
         :value="node.name"
         @input="$emit('inputName', $event)"
       />
-      <q-btn
-        class="UpBtn_test"
-        round
-        icon="keyboard_arrow_up"
-        color="primary"
-        :disable="first"
-        @click="$emit('move:before')"
-      />
-      <q-btn
-        class="DownBtn_test"
-        round
-        icon="keyboard_arrow_down"
-        color="primary"
-        :disable="last"
-        @click="$emit('move:after')"
-      />
-      <q-btn
-        class="DeleteBtn_test"
-        round
-        color="negative"
-        icon="close"
-        @click="$emit('remove')"
-      />
+      <div class="row no-wrap">
+        <q-btn
+          class="UpBtn_test"
+          flat
+          padding="sm"
+          icon="navigate_before"
+          :disable="first"
+          @click="$emit('move:before')"
+        />
+        <q-icon
+          name="sync_alt"
+          size="xl"
+        />
+        <q-btn
+          class="DownBtn_test"
+          flat
+          padding="sm"
+          icon="navigate_next"
+          :disable="last"
+          @click="$emit('move:after')"
+        />
+      </div>
       <div class="row no-wrap">
         <q-btn
           class="AddBefore_test"
@@ -44,7 +53,7 @@
           @click="$emit('newStation:before')"
         />
         <q-icon
-          name="add_location"
+          name="add_circle"
           size="xl"
         />
         <q-btn

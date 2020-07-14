@@ -13,7 +13,10 @@
       :shadow-anchor="shadowAnchor"
       :shadow-url="shadowUrl"
     />
-    <l-popup :options="{ parmanent: true }">
+    <l-popup
+      ref="popup"
+      :options="popupOptions"
+    >
       <node-card
         :node="node"
         :first="first"
@@ -72,7 +75,11 @@ export default {
       anchor: [15, 44],
       shadowUrl: shadow,
       shadowSize: [5, 3],
-      shadowAnchor: [2, 1]
+      shadowAnchor: [2, 1],
+      popupOptions: {
+        offset: [0, -44],
+        closeButton: false
+      }
     }
   },
   computed: {
@@ -81,6 +88,9 @@ export default {
       if (this.last) return endNode
       return station
     }
+  },
+  mounted () {
+    setTimeout(this.refs.popup.update, 1000)
   },
   methods: {
     updatePosition (latLng) {

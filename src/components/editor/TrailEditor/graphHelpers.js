@@ -132,3 +132,59 @@ export function generateNodeAfter (nodeId, graph) {
   if (nextNodeId) return generateNodeBetween(nodeId, nextNodeId, graph)
   else return generateNodeAfterLast(nodeId, graph)
 }
+
+export function moveBefore (nodeId, graph) {
+  const previousNodeId = getPreviousNodeId(nodeId, graph)
+  if (!previousNodeId) return graph
+
+  const previousIsFirst = graph.nodes[previousNodeId].dependencies.length === 0
+  const nextNodeId = getNextNodeId(nodeId, graph)
+  const isLast = !nextNodeId
+
+  let newGraph
+  if (isLast) {
+    newGraph = {
+      ...graph,
+      nodes: {
+        ...graph.nodes,
+        [previousNodeId]: {
+          ...graph.nodes[previousNodeId],
+          dependencies: [...graph.endNodes]
+        },
+        [nodeId]: {
+          ...graph.nodes[nodeId],
+          dependencies: [...graph.nodes[previousNodeId].dependencies]
+        }
+      },
+      trailEntries: previousIsFirst ? [nodeId] : [...graph.trailEntries],
+      endNodes: [...graph.nodes[nodeId].dependencies]
+    }
+  } else {
+    newGraph = {
+      ...graph,
+      nodes: {
+        ...graph.nodes,
+        [previousNodeId]: {
+          ...graph.nodes[previousNodeId],
+          dependencies: [...graph.nodes[nextNodeId].dependencies]
+        },
+        [nodeId]: {
+          ...graph.nodes[nodeId],
+          dependencies: [...graph.nodes[previousNodeId].dependencies]
+        },
+        [nextNodeId]: {
+          ...graph.nodes[nextNodeId],
+          dependencies: [...graph.nodes[nodeId].dependencies]
+        }
+      },
+      trailEntries: previousIsFirst ? [nodeId] : [...graph.trailEntries]
+    }
+  }
+  return newGraph
+}
+
+export function moveAfter (nodeId, graph) {
+  const nextNodeId = getNextNodeId(nodeId, graph)
+  if (!nextNodeId) return graph
+  else return moveBefore(nextNodeId, graph)
+}

@@ -34,7 +34,7 @@ import { LPolyline } from 'vue2-leaflet'
 import BasicMap from 'components/Navigation/map/BasicMap'
 import NodeMarker from './NodeMarker'
 import PositionTranslator from 'src/mixins/PositionTranslator'
-import { generateNodeBefore, generateNodeAfter } from './graphHelpers'
+import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter } from './graphHelpers'
 
 export default {
   name: 'TrailGraph',
@@ -77,6 +77,14 @@ export default {
     createStationBefore (nodeId) {
       const newGraphAndNewStationId = generateNodeBefore(nodeId, this.graph)
       this.$emit('createStation', newGraphAndNewStationId)
+    },
+    moveBefore (nodeId) {
+      const newGraph = moveBefore(nodeId, this.graph)
+      this.$emit('updateGraph', newGraph)
+    },
+    moveAfter (nodeId) {
+      const newGraph = moveAfter(nodeId, this.graph)
+      this.$emit('updateGraph', newGraph)
     },
     editStation (stationId) {
       this.$emit('editStation', stationId)

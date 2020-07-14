@@ -87,8 +87,8 @@ export default {
   data () {
     return {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      zoom: 2,
-      center: latLng(0, 0),
+      zoom: 18,
+      center: latLng(46.788107, 7.122072),
       positionMarker: {
         url: positionMarker,
         size: [61, 39],
