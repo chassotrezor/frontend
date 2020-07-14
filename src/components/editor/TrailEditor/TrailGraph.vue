@@ -53,6 +53,7 @@ export default {
   computed: {
     positionsInOrder () {
       let currentNode = this.graph.nodes[this.graph.endNodes[0]]
+      if (!currentNode) return []
       const positions = [this.fromGeopoint(currentNode.position).toArray()]
       while (currentNode.dependencies.length > 0) {
         currentNode = this.graph.nodes[currentNode.dependencies[0]]
