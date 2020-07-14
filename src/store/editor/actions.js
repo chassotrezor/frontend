@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
 import types from 'src/types'
+import { generateId } from 'components/editor/TrailEditor/graphHelpers'
 
 let myTrailsListener
 
@@ -28,19 +29,22 @@ export function unbindMyTrails ({ commit }) {
   commit('deleteTrails')
 }
 
-export function createTrail () {
-  return new Promise((resolve) => {
-    const userId = firebase.auth().currentUser.uid
-    const trailRef = firebase.firestore().collection('trails').doc()
-    trailRef.set(defaultTrail(userId))
-      .then(() => resolve(trailRef.id))
-      .catch(error => console.log(error))
+export async function createTrail () {
+  const userId = firebase.auth().currentUser.uid
+  const db = firebase.firestore()
+  const trailRef = db.collection('trails').doc()
+  const stationId = generateId()
+  const stationRef = trailRef.collection('stations').doc(stationId)
+  await db.runTransaction(async t => {
+    t.set(trailRef, defaultTrail(userId, stationRef.id))
+    t.set(stationRef, defaultStation(stationRef.id))
   })
+  return trailRef.id
 }
 
 export function updateTrail (__, { trailId, newProps }) {
   const trailRef = firebase.firestore().collection('trails').doc(trailId)
-  trailRef.update(newProps)
+  return trailRef.update(newProps)
 }
 
 /*
@@ -77,34 +81,17 @@ export function unbindStations ({ commit }, { trailId }) {
   }
 }
 
-export function createStation (__, { trailId }) {
-  return new Promise((resolve) => {
-    const db = firebase.firestore()
-    const trailRef = db.collection('trails').doc(trailId)
-    const stationRef = trailRef.collection('stations').doc()
-    const stationId = stationRef.id
-    db.runTransaction(async t => {
-      const actualTrail = (await trailRef.get()).data()
-      const isFirstStation = actualTrail.endNodes.length === 0
-      const nodes = {
-        ...actualTrail.nodes,
-        [stationId]: {
-          ...defaultNode,
-          dependencies: isFirstStation ? [] : [actualTrail.endNodes[0]],
-          type: types.nodes.STATION
-        }
-      }
-      const endNodes = [stationId]
-      const trailEntries = isFirstStation ? [stationId] : actualTrail.trailEntries
-      await trailRef.update({ nodes, endNodes, trailEntries })
-      await stationRef.set(defaultStation(stationId))
-      resolve(stationId)
-    })
+export function createStation (__, { trailId, stationId }) {
+  const db = firebase.firestore()
+  const trailRef = db.collection('trails').doc(trailId)
+  const stationRef = trailRef.collection('stations').doc(stationId)
+  return db.runTransaction(async t => {
+    t.set(stationRef, defaultStation(stationId))
   })
 }
 
 const isNodeProp = key => {
-  return Object.keys(defaultNode).some(nodeKey => key === nodeKey)
+  return Object.keys(defaultNode([0, 0])).some(nodeKey => key === nodeKey)
 }
 
 export function updateStationInTrail (__, { trailId, stationId, newProps }) {
@@ -116,7 +103,7 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
     return nodeProps
   }, {})
   return db.runTransaction(async t => {
-    const oldNodes = (await trailRef.get()).data().nodes
+    const oldNodes = (await t.get(trailRef)).data().nodes
     const nodes = {
       ...oldNodes,
       [stationId]: {
@@ -124,8 +111,8 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
         ...newPropsForNodes
       }
     }
-    await trailRef.update({ nodes })
-    await stationRef.update(newProps)
+    t.update(trailRef, { nodes })
+    t.update(stationRef, newProps)
   })
 }
 
@@ -133,10 +120,10 @@ export function deleteNodeInTrail (__, { trailId, nodeId }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   return db.runTransaction(async t => {
-    const trail = (await trailRef.get()).data()
+    const trail = (await t.get(trailRef)).data()
     if (trail.nodes[nodeId].type === types.nodes.STATION) {
       const stationRef = trailRef.collection('stations').doc(nodeId)
-      await stationRef.delete()
+      await t.delete(stationRef)
     }
     const isTrailEntry = trail.trailEntries[0] === nodeId
     const isEndNode = trail.endNodes[0] === nodeId
@@ -149,6 +136,6 @@ export function deleteNodeInTrail (__, { trailId, nodeId }) {
     })
     if (isEndNode) trail.endNodes = nodeDependencies
     delete trail.nodes[nodeId]
-    await trailRef.update({ ...trail })
+    t.update(trailRef, { ...trail })
   })
 }

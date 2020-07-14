@@ -1,25 +1,24 @@
 <template>
   <div>
     <div v-if="node.type === types.nodes.STATION">
-      <div
-        class="
-          ClickToEdit_test
-          cursor-pointer
-          bg-grey-4
-          q-pa-sm
-          q-mb-sm
-        "
+      <q-btn
+        icon="edit"
+        text-color="black"
+        padding="xs"
+        color="grey-2"
         @click="$emit('editStation')"
-      >
-        {{ node.name }}
-      </div>
+      />
+      <q-input
+        :value="node.name"
+        @input="$emit('inputName', $event)"
+      />
       <q-btn
         class="UpBtn_test"
         round
         icon="keyboard_arrow_up"
         color="primary"
         :disable="first"
-        @click="$emit('up')"
+        @click="$emit('move:before')"
       />
       <q-btn
         class="DownBtn_test"
@@ -27,7 +26,7 @@
         icon="keyboard_arrow_down"
         color="primary"
         :disable="last"
-        @click="$emit('down')"
+        @click="$emit('move:after')"
       />
       <q-btn
         class="DeleteBtn_test"
@@ -36,6 +35,26 @@
         icon="close"
         @click="$emit('remove')"
       />
+      <div class="row no-wrap">
+        <q-btn
+          class="AddBefore_test"
+          flat
+          padding="sm"
+          icon="navigate_before"
+          @click="$emit('newStation:before')"
+        />
+        <q-icon
+          name="add_location"
+          size="xl"
+        />
+        <q-btn
+          class="AddAfter_test"
+          flat
+          icon="navigate_next"
+          padding="sm"
+          @click="$emit('newStation:after')"
+        />
+      </div>
     </div>
 
     <div v-else-if="node.type === types.nodes.HINT">
@@ -75,6 +94,9 @@ export default {
     return {
       types: types
     }
+  },
+  mounted () {
+    console.log(this.first, this.last, this.node)
   }
 }
 </script>

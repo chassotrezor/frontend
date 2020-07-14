@@ -5,15 +5,15 @@
       class="UpdateBtn_test"
       icon="send"
       color="primary"
-      @click="update"
+      @click="updateTrailWithPosition"
     />
-    <q-input v-model="lat" />
-    <q-input v-model="lng" />
     <br>
     <trail-graph
       class="TrailGraph_test"
-      :trail-id="trailId"
+      :graph="graph"
+      @updateGraph="updateGraph"
       @editStation="editStation($event)"
+      @createStation="updateTrailAndCreateStation"
     />
     <qr-codes-generator
       :trail-id="trailId"
@@ -43,8 +43,11 @@ export default {
   data () {
     return {
       name: '',
-      lat: 46.8,
-      lng: 7.2
+      graph: {
+        trailEntries: [],
+        endNodes: [],
+        nodes: {}
+      }
     }
   },
   computed: {
@@ -52,29 +55,55 @@ export default {
       getTrail: 'editor/getTrail'
     }),
     trail () {
-      return this.getTrail({ trailId: this.trailId })
+      const trail = this.getTrail({ trailId: this.trailId })
+      return trail
     }
   },
   mounted () {
+    const vm = this
     this.name = this.trail.name
-    this.lat = this.trail.position ? this.trail.position.geopoint.Rc : 0
-    this.lng = this.trail.position ? this.trail.position.geopoint.Ac : 0
+    this.graph.trailEntries = [...this.trail.trailEntries]
+    this.graph.endNodes = [...this.trail.endNodes]
+    Object.entries(this.trail.nodes).forEach(node => {
+      vm.$set(vm.graph.nodes, node[0], { ...node[1] })
+    })
   },
   methods: {
     ...mapActions({
-      updateTrail: 'editor/updateTrail'
+      updateTrail: 'editor/updateTrail',
+      createStation: 'editor/createStation'
     }),
-    update () {
-      this.updateTrail({
+    updateGraph (graph) {
+      this.graph.trailEntries = [...graph.trailEntries]
+      this.graph.endNodes = [...graph.endNodes]
+      this.graph.nodes = { ...graph.nodes }
+    },
+    // TODO: when geofirex will be accessible in vuex, replace this with a single transaction
+    async updateTrailAndCreateStation ({ newGraph, newStationId }) {
+      this.updateGraph(newGraph)
+      await this.updateTrailWithPosition()
+      return this.createStation({
         trailId: this.trailId,
-        newProps: {
-          name: this.name,
-          position: this.$geo.point(parseFloat(this.lat), parseFloat(this.lng))
-        }
+        stationId: newStationId
       })
     },
     editStation (stationId) {
       this.$emit('editStation', stationId)
+    },
+    updateTrailWithPosition () {
+      const startStationId = this.graph.trailEntries[0]
+      const trailGeopoint = this.graph.nodes[startStationId].position
+      const position = this.$geo.point(...Object.values(trailGeopoint))
+      return this.updateTrail({
+        trailId: this.trailId,
+        newProps: {
+          name: this.name,
+          position,
+          endNodes: this.graph.endNodes,
+          trailEntries: this.graph.trailEntries,
+          nodes: this.graph.nodes
+        }
+      })
     }
   }
 }

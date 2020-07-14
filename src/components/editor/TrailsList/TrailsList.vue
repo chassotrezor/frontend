@@ -37,12 +37,9 @@ export default {
     edit (trailId) {
       this.$emit('editTrail', trailId)
     },
-    createAndEditTrail () {
-      const vm = this
-      vm.createTrail()
-        .then(trailId => {
-          vm.edit(trailId)
-        })
+    async createAndEditTrail () {
+      const trailId = await this.createTrail()
+      this.edit(trailId)
     }
   }
 }

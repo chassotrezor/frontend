@@ -3,8 +3,9 @@ import { latLng } from 'leaflet'
 
 function to (positionArray) {
   return {
-    toLatLng: () => latLng(...Object.values(positionArray)),
-    toGeopoint: () => new firestore.GeoPoint(...positionArray)
+    toLatLng: () => latLng(...positionArray),
+    toGeopoint: () => new firestore.GeoPoint(...positionArray),
+    toArray: () => positionArray
   }
 }
 
@@ -23,10 +24,15 @@ function fromNavigatorPosition (navigatorPosition) {
   return to(positionArray)
 }
 
+function fromArray (array) {
+  return to(array)
+}
+
 export default {
   methods: {
     fromGeopoint,
     fromLatLng,
-    fromNavigatorPosition
+    fromNavigatorPosition,
+    fromArray
   }
 }
