@@ -188,3 +188,32 @@ export function moveAfter (nodeId, graph) {
   if (!nextNodeId) return graph
   else return moveBefore(nextNodeId, graph)
 }
+
+export function remove (nodeId, graph) {
+  const previousNodeId = getPreviousNodeId(nodeId, graph)
+  const isFirst = !previousNodeId
+
+  const nextNodeId = getNextNodeId(nodeId, graph)
+  const isLast = !nextNodeId
+
+  if (isFirst && isLast) return graph
+
+  const newGraph = {
+    ...graph,
+    nodes: {
+      ...graph.nodes
+    }
+  }
+  delete newGraph.nodes[nodeId]
+
+  if (isFirst) {
+    newGraph.trailEntries = [nextNodeId]
+    newGraph.nodes[nextNodeId].dependencies = []
+  } else if (isLast) {
+    newGraph.endNodes = [previousNodeId]
+  } else {
+    newGraph.nodes[nextNodeId].dependencies = [previousNodeId]
+  }
+
+  return newGraph
+}

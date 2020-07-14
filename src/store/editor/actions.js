@@ -1,6 +1,5 @@
 import firebase from 'firebase/app'
 import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
-import types from 'src/types'
 import { generateId } from 'components/editor/TrailEditor/graphHelpers'
 
 let myTrailsListener
@@ -116,26 +115,38 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
   })
 }
 
-export function deleteNodeInTrail (__, { trailId, nodeId }) {
+export function removeStationInTrail (__, { trailId, removedStationId, updatedGraph }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
+  const stationRef = trailRef.collection('stations').doc(removedStationId)
   return db.runTransaction(async t => {
-    const trail = (await t.get(trailRef)).data()
-    if (trail.nodes[nodeId].type === types.nodes.STATION) {
-      const stationRef = trailRef.collection('stations').doc(nodeId)
-      await t.delete(stationRef)
-    }
-    const isTrailEntry = trail.trailEntries[0] === nodeId
-    const isEndNode = trail.endNodes[0] === nodeId
-    const nodeDependencies = trail.nodes[nodeId].dependencies
-    Object.entries(trail.nodes).forEach(node => {
-      if (node[1].dependencies[0] === nodeId) {
-        node[1].dependencies = nodeDependencies
-        if (isTrailEntry) trail.trailEntries = node[0]
-      }
-    })
-    if (isEndNode) trail.endNodes = nodeDependencies
-    delete trail.nodes[nodeId]
-    t.update(trailRef, { ...trail })
+    t.update(trailRef, updatedGraph)
+    t.delete(stationRef)
   })
 }
+
+// old function (may be useful)
+
+// export function removeStationInTrail (__, { trailId, nodeId }) {
+//   const db = firebase.firestore()
+//   const trailRef = db.collection('trails').doc(trailId)
+//   return db.runTransaction(async t => {
+//     const trail = (await t.get(trailRef)).data()
+//     if (trail.nodes[nodeId].type === types.nodes.STATION) {
+//       const stationRef = trailRef.collection('stations').doc(nodeId)
+//       t.delete(stationRef)
+//     }
+//     const isTrailEntry = trail.trailEntries[0] === nodeId
+//     const isEndNode = trail.endNodes[0] === nodeId
+//     const nodeDependencies = trail.nodes[nodeId].dependencies
+//     Object.entries(trail.nodes).forEach(node => {
+//       if (node[1].dependencies[0] === nodeId) {
+//         node[1].dependencies = nodeDependencies
+//         if (isTrailEntry) trail.trailEntries = node[0]
+//       }
+//     })
+//     if (isEndNode) trail.endNodes = nodeDependencies
+//     delete trail.nodes[nodeId]
+//     t.update(trailRef, { ...trail })
+//   })
+// }

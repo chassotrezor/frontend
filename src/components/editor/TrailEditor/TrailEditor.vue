@@ -14,6 +14,7 @@
       @updateGraph="updateGraph"
       @editStation="editStation($event)"
       @createStation="updateTrailAndCreateStation"
+      @removeStation="removeStation($event)"
     />
     <qr-codes-generator
       :trail-id="trailId"
@@ -71,7 +72,8 @@ export default {
   methods: {
     ...mapActions({
       updateTrail: 'editor/updateTrail',
-      createStation: 'editor/createStation'
+      createStation: 'editor/createStation',
+      removeStationInTrail: 'editor/removeStationInTrail'
     }),
     updateGraph (graph) {
       this.graph.trailEntries = [...graph.trailEntries]
@@ -104,6 +106,9 @@ export default {
           nodes: this.graph.nodes
         }
       })
+    },
+    removeStation ({ removedStationId, updatedGraph }) {
+      return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
     }
   }
 }

@@ -3,6 +3,7 @@
     class="LMarker_test"
     :lat-lng="fromGeopoint(node.position).toLatLng()"
     draggable
+    :visible="visible"
     @update:lat-lng="updatePosition"
   >
     <l-icon
@@ -14,7 +15,6 @@
       :shadow-url="shadowUrl"
     />
     <l-popup
-      ref="popup"
       :options="popupOptions"
     >
       <node-card
@@ -27,7 +27,7 @@
         @newStation:after="$emit('newStation:after')"
         @move:before="$emit('move:before')"
         @move:after="$emit('move:after')"
-        @remove="$emit('remove')"
+        @removeStation="removeStation"
       />
     </l-popup>
     <l-tooltip>
@@ -76,6 +76,7 @@ export default {
       shadowUrl: shadow,
       shadowSize: [5, 3],
       shadowAnchor: [2, 1],
+      visible: true,
       popupOptions: {
         offset: [0, -44],
         closeButton: false
@@ -89,9 +90,6 @@ export default {
       return station
     }
   },
-  mounted () {
-    setTimeout(this.refs.popup.update, 1000)
-  },
   methods: {
     updatePosition (latLng) {
       const newNode = {
@@ -99,6 +97,10 @@ export default {
         position: this.fromLatLng(latLng).toGeopoint()
       }
       this.$emit('updateNode', newNode)
+    },
+    removeStation () {
+      this.$emit('removeStation')
+      this.visible = false
     }
   }
 }

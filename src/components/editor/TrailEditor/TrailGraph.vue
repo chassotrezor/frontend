@@ -14,7 +14,7 @@
         @updateNode="updateNode({ nodeId, newNode: $event })"
         @updateName="graph.nodes[nodeId].name = $event"
         @editStation="editStation(nodeId)"
-        @remove="removeNode(node.nodeId)"
+        @removeStation="removeStation(nodeId)"
         @newStation:after="createStationAfter(nodeId)"
         @newStation:before="createStationBefore(nodeId)"
         @move:before="moveBefore(nodeId)"
@@ -34,7 +34,7 @@ import { LPolyline } from 'vue2-leaflet'
 import BasicMap from 'components/Navigation/map/BasicMap'
 import NodeMarker from './NodeMarker'
 import PositionTranslator from 'src/mixins/PositionTranslator'
-import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter } from './graphHelpers'
+import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove } from './graphHelpers'
 
 export default {
   name: 'TrailGraph',
@@ -102,8 +102,9 @@ export default {
         trailEntries: this.graph.trailEntries
       })
     },
-    removeNode (nodeId) {
-      this.deleteNodeInTrail({ trailId: this.trailId, nodeId })
+    removeStation (nodeId) {
+      const updatedGraph = remove(nodeId, this.graph)
+      this.$emit('removeStation', { removedStationId: nodeId, updatedGraph })
     }
   }
 }

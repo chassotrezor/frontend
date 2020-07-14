@@ -15,7 +15,7 @@
           icon="delete_forever"
           color="negative"
           padding="xs"
-          @click="$emit('remove')"
+          @click="$emit('removeStation')"
         />
       </div>
       <q-input
