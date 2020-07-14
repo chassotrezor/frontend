@@ -108,6 +108,7 @@ export default {
       })
     },
     removeStation ({ removedStationId, updatedGraph }) {
+      this.updateGraph(updatedGraph)
       return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
     }
   }
