@@ -3,7 +3,7 @@
     <div v-if="node.type === types.nodes.STATION">
       <div class="row justify-between no-wrap">
         <q-btn
-          class="col-6"
+          class="EditBtn_test col-6"
           icon="edit"
           text-color="black"
           padding="xs"
@@ -11,7 +11,7 @@
           @click="$emit('editStation')"
         />
         <q-btn
-          class="DeleteBtn_test col-4"
+          class="Remove_test col-4"
           icon="delete_forever"
           color="negative"
           padding="xs"
@@ -19,12 +19,13 @@
         />
       </div>
       <q-input
+        class="NameInput_test"
         :value="node.name"
         @input="$emit('inputName', $event)"
       />
       <div class="row no-wrap">
         <q-btn
-          class="UpBtn_test"
+          class="MoveBefore_test"
           flat
           padding="sm"
           icon="navigate_before"
@@ -36,7 +37,7 @@
           size="xl"
         />
         <q-btn
-          class="DownBtn_test"
+          class="MoveAfter_test"
           flat
           padding="sm"
           icon="navigate_next"
