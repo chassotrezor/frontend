@@ -12,14 +12,17 @@ const $geo = {
 const trailId = 'testTrailId'
 
 const trail = {
+  trailEntries: ['testnodeId1'],
   nodes: {
     testnodeId1: {
       name: 'testStationName1',
+      position: { Ac: 1, Rc: 1 },
       type: types.nodes.STATION,
       dependencies: []
     },
     testNodeId2: {
       name: 'testStationName2',
+      position: { Ac: 2, Rc: 2 },
       type: types.nodes.STATION,
       dependencies: ['testnodeId1']
     }
@@ -27,7 +30,6 @@ const trail = {
   name: 'testTrailName',
   endNodes: ['testNodeId2']
 }
-const expectedName = 'newName'
 
 const store = {
   modules: {
@@ -37,7 +39,9 @@ const store = {
         getTrail: () => () => trail
       },
       actions: {
-        updateTrail: jest.fn()
+        updateTrail: jest.fn(),
+        createStation: jest.fn(),
+        removeStationInTrail: jest.fn()
       }
     }
   }
@@ -45,7 +49,7 @@ const store = {
 
 describe('TrailEditor', () => {
   let wrapper
-  beforeAll(done => {
+  beforeAll(async () => {
     wrapper = mountQuasar(TrailEditor, {
       store,
       propsData: {
@@ -55,7 +59,7 @@ describe('TrailEditor', () => {
         $geo
       }
     })
-    wrapper.vm.$nextTick(done)
+    await wrapper.vm.$nextTick()
   })
 
   it('displays an "update" button', () => {
@@ -63,42 +67,100 @@ describe('TrailEditor', () => {
     expect(btn.exists()).toBe(true)
   })
 
-  describe('TrailGraph', () => {
-    let trailGraph
-    beforeAll(() => { trailGraph = wrapper.find('.TrailGraph_test') })
-
-    describe('When TrailGraph emits "editStation" with value stationId', () => {
-      const stationId = 'stationId'
-      beforeAll(async () => {
-        trailGraph.vm.$emit('editStation', stationId)
-        await wrapper.vm.$nextTick()
-      })
-
-      it('emits "editStation" with value stationId', () => {
-        expect(wrapper.emitted('editStation')[0][0]).toBe(stationId)
-      })
-    })
-  })
-
   describe('when "update" button emits "click"', () => {
-    beforeAll(done => {
+    const expectedName = 'newName'
+
+    beforeAll(async () => {
       wrapper.vm.name = expectedName
       const btn = wrapper.find('.UpdateBtn_test')
       btn.vm.$emit('click')
-      wrapper.vm.$nextTick(done)
+      await wrapper.vm.$nextTick()
     })
 
-    it('updates the name of this trail on server', () => {
+    it('updates the properties of this trail on server', () => {
       expect(store.modules.editor.actions.updateTrail).toHaveBeenCalledWith(
         expect.any(Object),
         {
           trailId,
           newProps: {
             name: expectedName,
-            position: expectedGeoPoint
+            position: expectedGeoPoint,
+            endNodes: trail.endNodes,
+            trailEntries: trail.trailEntries,
+            nodes: trail.nodes
           }
         }
       )
     })
+
+    afterAll(jest.clearAllMocks)
+  })
+
+  describe('TrailGraph', () => {
+    let trailGraph
+    beforeAll(() => { trailGraph = wrapper.find('.TrailGraph_test') })
+
+    describe('When TrailGraph emits "editStation" with "stationId"', () => {
+      it('emits "editStation" with value stationId', async () => {
+        const stationId = 'stationId'
+        trailGraph.vm.$emit('editStation', stationId)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.emitted('editStation')[0][0]).toBe(stationId)
+      })
+    })
+
+    describe('When TrailGraph emits "createStation" with { newGraph, newStationId }', () => {
+      const newStationId = 'stationId'
+      beforeAll(async () => {
+        const newGraph = trail
+        trailGraph.vm.$emit('createStation', { newGraph, newStationId })
+        await wrapper.vm.$nextTick()
+      })
+
+      it('updates trail on server', async () => {
+        expect(store.modules.editor.actions.updateTrail).toHaveBeenCalled()
+      })
+
+      it('creates a new station on server with "newStationId"', async () => {
+        store.modules.editor.actions.updateTrail.mockResolvedValue()
+        await wrapper.vm.$nextTick()
+        expect(store.modules.editor.actions.createStation).toHaveBeenCalledWith(
+          expect.any(Object),
+          {
+            trailId,
+            stationId: newStationId
+          }
+        )
+      })
+
+      afterAll(jest.clearAllMocks)
+    })
+
+    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId }', () => {
+      const removedStationId = 'stationId'
+      const updatedGraph = trail
+      beforeAll(async () => {
+        trailGraph.vm.$emit('removeStation', { updatedGraph, removedStationId })
+        await wrapper.vm.$nextTick()
+      })
+
+      it('updates trail on server', async () => {
+        expect(store.modules.editor.actions.removeStationInTrail).toHaveBeenCalledWith(
+          expect.any(Object),
+          {
+            trailId,
+            removedStationId,
+            updatedGraph
+          }
+        )
+      })
+
+      afterAll(jest.clearAllMocks)
+    })
+  })
+
+  it('displays a "QrCodesGenerator', () => {
+    const qr = wrapper.find('.QrCodesGenerator_test')
+    expect(qr.exists()).toBe(true)
   })
 })

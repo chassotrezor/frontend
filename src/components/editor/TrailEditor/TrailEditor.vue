@@ -17,6 +17,7 @@
       @removeStation="removeStation($event)"
     />
     <qr-codes-generator
+      class="QrCodesGenerator_test"
       :trail-id="trailId"
       :trail-name="trail.name"
       :trail-nodes="trail.nodes"
