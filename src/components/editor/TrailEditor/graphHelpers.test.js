@@ -58,12 +58,6 @@ const nodeIdsInOrder = [
   'testNodeId4'
 ]
 
-const expectedPositionsInOrder = nodeIdsInOrder.map(nodeId => {
-  return Object.values(graph.nodes[nodeId].position)
-})
-
-const nbNodes = nodeIdsInOrder.length
-
 describe('graphHelpers', () => {
   test('generateId returns a random String', () => {
     expect(generateId()).not.toBe(generateId())
