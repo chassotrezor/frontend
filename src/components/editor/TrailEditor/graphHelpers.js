@@ -75,9 +75,9 @@ function generateNodeBeforeFirst (firstNodeId, graph) {
   const newPosition = getPosition1ArcSecEastFrom(firstNodeId, graph)
   const newNode = defaultNode(newPosition)
   const newGraph = deepCopy(graph)
-  graph.trailEntries = [newNodeId]
-  graph.nodes[firstNodeId].dependencies = [newNodeId]
-  graph.nodes[newNodeId] = newNode
+  newGraph.trailEntries = [newNodeId]
+  newGraph.nodes[firstNodeId].dependencies = [newNodeId]
+  newGraph.nodes[newNodeId] = newNode
 
   return {
     newGraph,
@@ -98,8 +98,8 @@ function generateNodeAfterLast (lastNodeId, graph) {
   const newNode = defaultNode(newPosition)
   newNode.dependencies = [lastNodeId]
   const newGraph = deepCopy(graph)
-  graph.endNodes = [newNodeId]
-  graph.nodes[newNodeId] = newNode
+  newGraph.endNodes = [newNodeId]
+  newGraph.nodes[newNodeId] = newNode
 
   return {
     newGraph,

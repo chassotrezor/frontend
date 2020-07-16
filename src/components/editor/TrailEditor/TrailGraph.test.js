@@ -2,6 +2,7 @@ import { mountQuasar } from '@test'
 import TrailGraph from './TrailGraph'
 import types from 'src/types'
 import { remove, moveBefore, moveAfter, generateNodeBefore, generateNodeAfter } from './graphHelpers'
+import PositionTranslator from 'src/mixins/PositionTranslator'
 
 jest.mock('firebase/app', () => {
   return {
@@ -59,48 +60,60 @@ const expectedPositionsInOrder = expectedNodeIdsInOrder.map(nodeId => {
 
 const nbNodes = expectedNodeIdsInOrder.length
 
-const newStationId = 'newStationId'
+const mount = () => {
+  const wrapper = mountQuasar(TrailGraph, {
+    propsData: {
+      graph
+    }
+  })
+  const nodeMarkers = wrapper.findAll('.NodeMarker_test')
+  return { wrapper, nodeMarkers }
+}
 
 describe('TrailGraph', () => {
-  let wrapper
-  beforeAll(done => {
-    wrapper = mountQuasar(TrailGraph, {
-      propsData: {
-        graph
-      }
-    })
-    wrapper.vm.$nextTick(done)
-  })
-
   describe('NodeMarkers', () => {
-    let nodeMarkers
-    beforeAll(() => {
-      nodeMarkers = wrapper.findAll('.NodeMarker_test')
-    })
-
     it('displays a "NodeMarker" component for each node in trail', () => {
+      const { nodeMarkers } = mount()
       expect(nodeMarkers.length).toBe(Object.keys(graph.nodes).length)
     })
 
     test('"NodeMarkers" are joined with a "LPolyline" following implicit trail order', () => {
+      const { wrapper } = mount()
       const polyline = wrapper.find('.LPolyline_test')
       expect(polyline.props().latLngs).toEqual(expectedPositionsInOrder)
     })
 
     test('only first "NodeMarker" has prop "first" set to true', () => {
+      const { nodeMarkers } = mount()
       for (let i = 0; i < nbNodes; i++) {
         expect(nodeMarkers.at(i).vm.first).toBe(i === 0)
       }
     })
 
     test('only last "NodeMarker" has prop "last" set to true', () => {
+      const { nodeMarkers } = mount()
       for (let i = 0; i < nbNodes; i++) {
         expect(nodeMarkers.at(i).vm.last).toBe(i === nbNodes - 1)
       }
     })
 
+    describe('when one "NodeMarker" component emits "update:lat-lng" with "newLatLng"', () => {
+      const { wrapper, nodeMarkers } = mount()
+      it('emits "updateGraph" with correct "newGraph"', async () => {
+        const newLatLng = { lat: 10, lng: 10 }
+        const nodeCard = nodeMarkers.at(0)
+        nodeCard.vm.$emit('update:lat-lng', newLatLng)
+        await wrapper.vm.$nextTick()
+        const stationId = expectedNodeIdsInOrder[0]
+        const expectedNewGraph = JSON.parse(JSON.stringify(graph))
+        expectedNewGraph.nodes[stationId].position = PositionTranslator.methods.fromLatLng(newLatLng).toGeopoint()
+        expect(wrapper.emitted('updateGraph')[0][0]).toEqual(expectedNewGraph)
+      })
+    })
+
     describe('when one "NodeMarker" component emits "updateName" with "newName"', () => {
-      it('emits "editStation" event with "{ stationId, newName }"', async () => {
+      const { wrapper, nodeMarkers } = mount()
+      it('emits "updateName" event with "{ stationId, newName }"', async () => {
         const newName = 'newName'
         const nodeCard = nodeMarkers.at(0)
         nodeCard.vm.$emit('updateName', newName)
@@ -111,6 +124,7 @@ describe('TrailGraph', () => {
     })
 
     describe('when one "NodeMarker" component emits "editStation"', () => {
+      const { wrapper, nodeMarkers } = mount()
       it('emits "editStation" event with value "stationId"', async () => {
         const nodeCard = nodeMarkers.at(0)
         nodeCard.vm.$emit('editStation')
@@ -121,6 +135,7 @@ describe('TrailGraph', () => {
     })
 
     describe('when one "NodeMarker" component emits "removeStation"', () => {
+      const { wrapper, nodeMarkers } = mount()
       it('emits "removeStation" with "{ removedStationId, updatedGraph }"', async () => {
         for (let i = 0; i < nbNodes; i++) {
           const nodeCard = nodeMarkers.at(i)
@@ -134,6 +149,7 @@ describe('TrailGraph', () => {
     })
 
     describe('when one "NodeMarker" component emits "move:before"', () => {
+      const { wrapper, nodeMarkers } = mount()
       it('emits "updateGraph" with correct "newGraph"', async () => {
         for (let i = 0; i < nbNodes; i++) {
           const nodeCard = nodeMarkers.at(i)
@@ -147,6 +163,7 @@ describe('TrailGraph', () => {
     })
 
     describe('when one "NodeMarker" component emits "move:after"', () => {
+      const { wrapper, nodeMarkers } = mount()
       it('emits "updateGraph" with correct "newGraph"', async () => {
         for (let i = 0; i < nbNodes; i++) {
           const nodeCard = nodeMarkers.at(i)
@@ -160,27 +177,29 @@ describe('TrailGraph', () => {
     })
 
     describe('when one "NodeMarker" component emits "newStation:before"', () => {
-      it('emits "updateGraph" with correct "newGraph"', async () => {
+      const { wrapper, nodeMarkers } = mount()
+      it('emits "createStation" with "{ newGraph, newStationId }"', async () => {
         for (let i = 0; i < nbNodes; i++) {
           const nodeCard = nodeMarkers.at(i)
           nodeCard.vm.$emit('newStation:before')
           await wrapper.vm.$nextTick()
-          const nodeId = expectedNodeIdsInOrder[i]
-          const newGraph = generateNodeBefore(nodeId, graph)
-          expect(wrapper.emitted('updateGraph')[i][0]).toEqual(newGraph)
+          const emittedNodes = wrapper.emitted('createStation')[i][0].newGraph.nodes
+          const length = Object.keys(emittedNodes).length
+          expect(length).toEqual(nbNodes + 1)
         }
       })
     })
 
     describe('when one "NodeMarker" component emits "newStation:after"', () => {
-      it('emits "updateGraph" with correct "newGraph"', async () => {
+      const { wrapper, nodeMarkers } = mount()
+      it('emits "createStation" with "{ newGraph, newStationId }"', async () => {
         for (let i = 0; i < nbNodes; i++) {
           const nodeCard = nodeMarkers.at(i)
           nodeCard.vm.$emit('newStation:after')
           await wrapper.vm.$nextTick()
-          const nodeId = expectedNodeIdsInOrder[i]
-          const newGraph = generateNodeAfter(nodeId, graph)
-          expect(wrapper.emitted('updateGraph')[i][0]).toEqual(newGraph)
+          const emittedNodes = wrapper.emitted('createStation')[i][0].newGraph.nodes
+          const length = Object.keys(emittedNodes).length
+          expect(length).toEqual(nbNodes + 1)
         }
       })
     })

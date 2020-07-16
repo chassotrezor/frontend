@@ -11,6 +11,7 @@
         :node="node"
         :first="isTrailEntry(nodeId)"
         :last="isEndNode(nodeId)"
+        @update:lat-lng="updatePosition(nodeId, $event)"
         @updateName="updateName(nodeId, $event)"
         @editStation="editStation(nodeId)"
         @removeStation="removeStation(nodeId)"
@@ -23,7 +24,7 @@
         class="LPolyline_test"
         :lat-lngs="positionsInOrder"
         color="black"
-        :dash-array="[5, 10]"
+        dash-array="5,10"
       />
     </basic-map>
   </div>
@@ -91,6 +92,12 @@ export default {
     },
     updateName (stationId, newName) {
       this.$emit('updateName', { stationId, newName })
+    },
+    updatePosition (stationId, latLng) {
+      const newGraph = JSON.parse(JSON.stringify(this.graph))
+      const newPosition = this.fromLatLng(latLng).toGeopoint()
+      newGraph.nodes[stationId].position = newPosition
+      this.$emit('updateGraph', newGraph)
     },
     removeStation (nodeId) {
       const updatedGraph = remove(nodeId, this.graph)

@@ -4,7 +4,7 @@
     :lat-lng="fromGeopoint(node.position).toLatLng()"
     draggable
     :visible="visible"
-    @update:lat-lng="updatePosition"
+    @update:lat-lng="$emit('update:lat-lng', $event)"
   >
     <l-icon
       :icon-size="size"
@@ -92,13 +92,6 @@ export default {
     }
   },
   methods: {
-    updatePosition (latLng) {
-      const newNode = {
-        ...this.node,
-        position: this.fromLatLng(latLng).toGeopoint()
-      }
-      this.$emit('updateNode', newNode)
-    },
     removeStation () {
       this.$emit('removeStation', () => {
         this.visible = false
