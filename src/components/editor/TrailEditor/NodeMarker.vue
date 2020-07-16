@@ -18,6 +18,7 @@
       :options="popupOptions"
     >
       <node-card
+        class="NodeCard_test"
         :node="node"
         :first="first"
         :last="last"
@@ -99,8 +100,9 @@ export default {
       this.$emit('updateNode', newNode)
     },
     removeStation () {
-      this.$emit('removeStation')
-      this.visible = false
+      this.$emit('removeStation', () => {
+        this.visible = false
+      })
     }
   }
 }
