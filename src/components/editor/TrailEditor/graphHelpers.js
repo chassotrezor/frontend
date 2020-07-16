@@ -1,6 +1,10 @@
 import { defaultNode } from 'src/store/defaultData'
 import PositionTranslator from 'src/mixins/PositionTranslator'
 
+function deepCopy (object) {
+  return JSON.parse(JSON.stringify(object))
+}
+
 export function generateId () {
   return Math.random().toString(36).substring(2)
 }
@@ -56,17 +60,10 @@ function insertNodeBefore (beforeNodeId, newNode, graph) {
   const before = graph.nodes[beforeNodeId]
   const newNodeId = generateIdIn(graph.nodes)
   newNode.dependencies = [...before.dependencies]
-  const newGraph = {
-    ...graph,
-    nodes: {
-      ...graph.nodes,
-      [newNodeId]: newNode,
-      [beforeNodeId]: {
-        ...before,
-        dependencies: [newNodeId]
-      }
-    }
-  }
+  const newGraph = deepCopy(graph)
+  newGraph.nodes[newNodeId] = newNode
+  newGraph.nodes[beforeNodeId].dependencies = [newNodeId]
+
   return {
     newGraph,
     newStationId: newNodeId
@@ -77,18 +74,11 @@ function generateNodeBeforeFirst (firstNodeId, graph) {
   const newNodeId = generateIdIn(graph.nodes)
   const newPosition = getPosition1ArcSecEastFrom(firstNodeId, graph)
   const newNode = defaultNode(newPosition)
-  const newGraph = {
-    ...graph,
-    trailEntries: [newNodeId],
-    nodes: {
-      ...graph.nodes,
-      [firstNodeId]: {
-        ...graph.nodes[firstNodeId],
-        dependencies: [newNodeId]
-      },
-      [newNodeId]: newNode
-    }
-  }
+  const newGraph = deepCopy(graph)
+  graph.trailEntries = [newNodeId]
+  graph.nodes[firstNodeId].dependencies = [newNodeId]
+  graph.nodes[newNodeId] = newNode
+
   return {
     newGraph,
     newStationId: newNodeId
@@ -107,14 +97,10 @@ function generateNodeAfterLast (lastNodeId, graph) {
   const newPosition = getPosition1ArcSecEastFrom(lastNodeId, graph)
   const newNode = defaultNode(newPosition)
   newNode.dependencies = [lastNodeId]
-  const newGraph = {
-    ...graph,
-    endNodes: [newNodeId],
-    nodes: {
-      ...graph.nodes,
-      [newNodeId]: newNode
-    }
-  }
+  const newGraph = deepCopy(graph)
+  graph.endNodes = [newNodeId]
+  graph.nodes[newNodeId] = newNode
+
   return {
     newGraph,
     newStationId: newNodeId
@@ -141,44 +127,16 @@ export function moveBefore (nodeId, graph) {
   const nextNodeId = getNextNodeId(nodeId, graph)
   const isLast = !nextNodeId
 
-  let newGraph
+  const newGraph = deepCopy(graph)
+  newGraph.nodes[nodeId].dependencies = [...graph.nodes[previousNodeId].dependencies]
   if (isLast) {
-    newGraph = {
-      ...graph,
-      nodes: {
-        ...graph.nodes,
-        [previousNodeId]: {
-          ...graph.nodes[previousNodeId],
-          dependencies: [...graph.endNodes]
-        },
-        [nodeId]: {
-          ...graph.nodes[nodeId],
-          dependencies: [...graph.nodes[previousNodeId].dependencies]
-        }
-      },
-      trailEntries: previousIsFirst ? [nodeId] : [...graph.trailEntries],
-      endNodes: [...graph.nodes[nodeId].dependencies]
-    }
+    newGraph.nodes[previousNodeId].dependencies = [...graph.endNodes]
+    newGraph.trailEntries = previousIsFirst ? [nodeId] : [...graph.trailEntries]
+    newGraph.endNodes = [...graph.nodes[nodeId].dependencies]
   } else {
-    newGraph = {
-      ...graph,
-      nodes: {
-        ...graph.nodes,
-        [previousNodeId]: {
-          ...graph.nodes[previousNodeId],
-          dependencies: [...graph.nodes[nextNodeId].dependencies]
-        },
-        [nodeId]: {
-          ...graph.nodes[nodeId],
-          dependencies: [...graph.nodes[previousNodeId].dependencies]
-        },
-        [nextNodeId]: {
-          ...graph.nodes[nextNodeId],
-          dependencies: [...graph.nodes[nodeId].dependencies]
-        }
-      },
-      trailEntries: previousIsFirst ? [nodeId] : [...graph.trailEntries]
-    }
+    newGraph.nodes[previousNodeId].dependencies = [...graph.nodes[nextNodeId].dependencies]
+    newGraph.nodes[nextNodeId].dependencies = [...graph.nodes[nodeId].dependencies]
+    newGraph.trailEntries = previousIsFirst ? [nodeId] : [...graph.trailEntries]
   }
   return newGraph
 }
@@ -198,12 +156,7 @@ export function remove (nodeId, graph) {
 
   if (isFirst && isLast) return graph
 
-  const newGraph = {
-    ...graph,
-    nodes: {
-      ...graph.nodes
-    }
-  }
+  const newGraph = deepCopy(graph)
   delete newGraph.nodes[nodeId]
 
   if (isFirst) {

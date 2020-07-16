@@ -1,6 +1,5 @@
 <template>
   <div class="column items-center full-width">
-    <div>Stations :</div>
     <basic-map
       height="500px"
       width="800px"
@@ -8,19 +7,20 @@
       <node-marker
         v-for="(node, nodeId) in graph.nodes"
         :key="nodeId"
+        class="NodeMarker_test"
         :node="node"
         :first="isTrailEntry(nodeId)"
         :last="isEndNode(nodeId)"
-        @updateNode="updateNode({ nodeId, newNode: $event })"
-        @updateName="graph.nodes[nodeId].name = $event"
+        @updateName="updateName(nodeId, $event)"
         @editStation="editStation(nodeId)"
         @removeStation="removeStation(nodeId)"
-        @newStation:after="createStationAfter(nodeId)"
-        @newStation:before="createStationBefore(nodeId)"
         @move:before="moveBefore(nodeId)"
         @move:after="moveAfter(nodeId)"
+        @newStation:after="createStationAfter(nodeId)"
+        @newStation:before="createStationBefore(nodeId)"
       />
       <l-polyline
+        class="LPolyline_test"
         :lat-lngs="positionsInOrder"
         color="black"
         :dash-array="[5, 10]"
@@ -89,18 +89,8 @@ export default {
     editStation (stationId) {
       this.$emit('editStation', stationId)
     },
-    updateNode ({ nodeId, newNode }) {
-      const newNodes = {
-        ...this.graph.nodes,
-        [nodeId]: {
-          ...newNode
-        }
-      }
-      this.$emit('updateGraph', {
-        nodes: newNodes,
-        endNodes: this.graph.endNodes,
-        trailEntries: this.graph.trailEntries
-      })
+    updateName (stationId, newName) {
+      this.$emit('updateName', { stationId, newName })
     },
     removeStation (nodeId) {
       const updatedGraph = remove(nodeId, this.graph)
