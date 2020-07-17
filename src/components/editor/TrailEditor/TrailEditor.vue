@@ -11,6 +11,7 @@
     <trail-graph
       class="TrailGraph_test"
       :graph="graph"
+      @updateName="updateName"
       @updateGraph="updateGraph"
       @editStation="editStation($event)"
       @createStation="updateTrailAndCreateStation"
@@ -76,6 +77,9 @@ export default {
       createStation: 'editor/createStation',
       removeStationInTrail: 'editor/removeStationInTrail'
     }),
+    updateName ({ stationId, newName }) {
+      this.graph.nodes[stationId].name = newName
+    },
     updateGraph (graph) {
       this.graph.trailEntries = [...graph.trailEntries]
       this.graph.endNodes = [...graph.endNodes]
