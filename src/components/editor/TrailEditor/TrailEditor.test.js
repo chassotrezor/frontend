@@ -12,9 +12,9 @@ const $geo = {
 const trailId = 'testTrailId'
 
 const trail = {
-  trailEntries: ['testnodeId1'],
+  trailEntries: ['testNodeId1'],
   nodes: {
-    testnodeId1: {
+    testNodeId1: {
       name: 'testStationName1',
       position: { Ac: 1, Rc: 1 },
       type: types.nodes.STATION,
@@ -24,7 +24,7 @@ const trail = {
       name: 'testStationName2',
       position: { Ac: 2, Rc: 2 },
       type: types.nodes.STATION,
-      dependencies: ['testnodeId1']
+      dependencies: ['testNodeId1']
     }
   },
   name: 'testTrailName',
@@ -106,6 +106,42 @@ describe('TrailEditor', () => {
         trailGraph.vm.$emit('editStation', stationId)
         await wrapper.vm.$nextTick()
         expect(wrapper.emitted('editStation')[0][0]).toBe(stationId)
+      })
+    })
+
+    describe('When TrailGraph emits "updateName" with "{ stationId, newName }"', () => {
+      it('sets updates the station name', async () => {
+        const stationId = 'testNodeId1'
+        const newName = 'testStationNewName'
+        trailGraph.vm.$emit('updateName', { stationId, newName })
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.graph.nodes[stationId].name).toEqual(newName)
+      })
+    })
+
+    describe('When TrailGraph emits "updateGraph" with "newGraph"', () => {
+      it('sets "graph" to "newGraph"', async () => {
+        const newGraph = {
+          trailEntries: ['testNodeId2'],
+          nodes: {
+            testnodeId1: {
+              name: 'testStationName1',
+              position: { Ac: 1, Rc: 1 },
+              type: types.nodes.STATION,
+              dependencies: ['testNodeId2']
+            },
+            testNodeId2: {
+              name: 'testStationName2',
+              position: { Ac: 2, Rc: 2 },
+              type: types.nodes.STATION,
+              dependencies: []
+            }
+          },
+          endNodes: ['testNodeId1']
+        }
+        trailGraph.vm.$emit('updateGraph', newGraph)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.graph).toEqual(newGraph)
       })
     })
 
