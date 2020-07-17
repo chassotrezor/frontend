@@ -1,43 +1,33 @@
 <template>
-  <div>
-    <div>Title</div>
-    <div
-      v-for="row in station.rows"
-      :key="row.rowId"
-    >
-      <station-image
-        v-if="row.type === 'image'"
-        class="StationImage_test"
-        :src="row.url"
-      />
-      <station-text
-        v-if="row.type === 'text'"
-        class="StationText_test"
-        :raw-html="row.rawHtml"
-      />
-    </div>
-  </div>
+  <station-renderer
+    :trail-name="station.trailName"
+    :station-name="station.stationName"
+    :rows="station.rows"
+  />
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import StationImage from './StationImage'
-import StationText from './StationText'
+import StationRenderer from './StationRenderer'
 
 export default {
   name: 'Station',
   components: {
-    StationImage,
-    StationText
+    StationRenderer
   },
   computed: {
     ...mapGetters({
-      getStation: 'trails/getStation'
+      getStation: 'trails/getStation',
+      getTrail: 'trails/getTrail'
     }),
     station () {
       const trailId = this.$route.params.trailId
       const stationId = this.$route.params.stationId
-      return this.getStation({ trailId, stationId })
+      const trail = this.getTrail({ trailId })
+      const trailName = trail.name
+      const stationName = trail.nodes[stationId].name
+      const rows = this.getStation({ trailId, stationId }).rows
+      return { trailName, stationName, rows }
     }
   },
   mounted () {

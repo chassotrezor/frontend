@@ -1,54 +1,63 @@
 <template>
-  <div>
-    <q-input
-      v-model="name"
-      class="QInputName_test"
+  <div class="row justify-around full-width">
+    <station-preview
+      :trail-name="trailName"
+      :station-name="stationName"
+      :rows="rows"
     />
-    <q-btn
-      class="UpdateBtn_test"
-      icon="send"
-      color="primary"
-      @click="update"
-    />
-    <station-row
-      v-for="(row, index) in rows"
-      :key="row.rowId"
-      class="StationRow_test"
-      :row="row"
-      :first="index === 0"
-      :last="index === rows.length - 1"
-      @up="up(index)"
-      @down="down(index)"
-      @remove="removeRow(index)"
-      @input="set(index, $event)"
-    />
-    <q-btn-group
-      class="AddRow_test"
-    >
-      <q-btn
-        class="AddText_test"
-        icon="edit"
-        :label="$t('editor.station.addRow.text')"
-        @click="addRow('text')"
+    <div>
+      <q-input
+        v-model="stationName"
+        class="QInputName_test"
       />
       <q-btn
-        class="AddImage_test"
-        icon="image"
-        :label="$t('editor.station.addRow.image')"
-        @click="addRow('image')"
+        class="UpdateBtn_test"
+        icon="send"
+        color="primary"
+        @click="update"
       />
-    </q-btn-group>
+      <station-row
+        v-for="(row, index) in rows"
+        :key="row.rowId"
+        class="StationRow_test"
+        :row="row"
+        :first="index === 0"
+        :last="index === rows.length - 1"
+        @up="up(index)"
+        @down="down(index)"
+        @remove="removeRow(index)"
+        @input="set(index, $event)"
+      />
+      <q-btn-group
+        class="AddRow_test"
+      >
+        <q-btn
+          class="AddText_test"
+          icon="edit"
+          :label="$t('editor.station.addRow.text')"
+          @click="addRow('text')"
+        />
+        <q-btn
+          class="AddImage_test"
+          icon="image"
+          :label="$t('editor.station.addRow.image')"
+          @click="addRow('image')"
+        />
+      </q-btn-group>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import StationRow from './StationRow/StationRow'
+import StationPreview from './StationPreview'
 
 export default {
   name: 'StationEditor',
   components: {
-    StationRow
+    StationRow,
+    StationPreview
   },
   props: {
     stationId: {
@@ -62,42 +71,53 @@ export default {
   },
   data () {
     return {
-      name: '',
+      trailName: '',
+      stationName: '',
       rows: []
     }
   },
   computed: {
     ...mapGetters({
-      getStation: 'editor/getStation'
+      getStation: 'editor/getStation',
+      getTrail: 'editor/getTrail'
     }),
     station () {
       return this.getStation({
         trailId: this.trailId,
         stationId: this.stationId
       })
+    },
+    trail () {
+      return this.getTrail({
+        trailId: this.trailId
+      })
     }
   },
   mounted () {
-    const vm = this
-    vm.name = vm.station.name
-    vm.station.rows.forEach((row, rowIndex) => {
-      Object.entries(row).forEach(entry => {
-        if (!vm.rows[rowIndex]) vm.$set(vm.rows, rowIndex, {})
-        vm.$set(vm.rows[rowIndex], entry[0], entry[1])
-      })
-    })
+    this.trailName = this.trail.name
+    this.stationName = this.trail.nodes[this.stationId].name
+    this.rows = JSON.parse(JSON.stringify(this.station.rows))
   },
   methods: {
     ...mapActions({
-      updateStationInTrail: 'editor/updateStationInTrail'
+      updateStationInTrail: 'editor/updateStationInTrail',
+      updateTrail: 'editor/updateTrail'
     }),
     update () {
       this.updateStationInTrail({
         trailId: this.trailId,
         stationId: this.stationId,
         newProps: {
-          name: this.name,
           rows: this.rows
+        }
+      })
+      const nodes = JSON.parse(JSON.stringify(this.trail.nodes))
+      nodes[this.stationId].name = this.stationName
+      this.updateTrail({
+        trailId: this.trailId,
+        newProps: {
+          name: this.trailName,
+          nodes
         }
       })
     },

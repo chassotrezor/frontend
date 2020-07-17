@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <editor-fast-access
       class="EditorFastAccess_test"
       :selected-trail="selectedTrail"
