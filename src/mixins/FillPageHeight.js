@@ -7,12 +7,12 @@ export default {
   computed: {
     layoutHeaderHeight () {
       const header = document.getElementsByClassName('q-header').item(0)
-      const height = header === null ? 0 : header.scrollHeight
+      const height = header === null ? 0 : header.clientHeight
       return height
     },
     layoutFooterHeight () {
       const footer = document.getElementsByClassName('q-footer').item(0)
-      const height = footer === null ? 0 : footer.scrollHeight
+      const height = footer === null ? 0 : footer.clientHeight
       return height
     },
     windowInnerHeight () {
