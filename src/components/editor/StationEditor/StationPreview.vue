@@ -34,6 +34,7 @@
           :style="pageStyle"
         >
           <station-renderer
+            class="StationRenderer_test"
             :trail-name="trailName"
             :station-name="stationName"
             :rows="rows"

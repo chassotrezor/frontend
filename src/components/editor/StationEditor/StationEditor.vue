@@ -1,6 +1,7 @@
 <template>
   <div class="row justify-around full-width">
     <station-preview
+      class="StationPreview_test"
       :trail-name="trailName"
       :station-name="stationName"
       :rows="rows"

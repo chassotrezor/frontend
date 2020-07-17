@@ -4,8 +4,16 @@ import StationEditor from './StationEditor'
 const stationId = 'testStationId'
 const trailId = 'testTrailId'
 
+const testTrail = {
+  name: 'testTrailName',
+  nodes: {
+    [stationId]: {
+      name: 'testStationName'
+    }
+  }
+}
+
 const testStation = {
-  name: 'testStationName',
   rows: [
     {
       rowId: 'id1',
@@ -19,17 +27,18 @@ const testStation = {
     }
   ]
 }
+
 const store = {
   modules: {
     editor: {
       namespaced: true,
       actions: {
-        updateStationInTrail: jest.fn()
+        updateStationInTrail: jest.fn(),
+        updateTrail: jest.fn()
       },
       getters: {
-        getStation: () => () => {
-          return testStation
-        }
+        getStation: () => () => testStation,
+        getTrail: () => () => testTrail
       }
     }
   }
@@ -56,9 +65,14 @@ describe('StationEditor', () => {
     expect(wrapper.vm.rows).toEqual(testStation.rows)
   })
 
+  it('displays a "StationPreview"', () => {
+    const preview = wrapper.find('.StationPreview_test')
+    expect(preview.exists()).toBe(true)
+  })
+
   it('displays a "QInput" for "name"', () => {
     const qInput = wrapper.find('.QInputName_test')
-    expect(qInput.props().value).toBe(testStation.name)
+    expect(qInput.props().value).toBe(testTrail.nodes[stationId].name)
   })
 
   describe('station rows', () => {
