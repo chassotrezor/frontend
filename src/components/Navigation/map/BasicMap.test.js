@@ -39,7 +39,7 @@ global.document.getElementsByClassName = className => {
   if (className === 'q-header' || className === 'q-footer') {
     return {
       item: i => {
-        return { scrollHeight: testFooterHeaderHeight }
+        return { clientHeight: testFooterHeaderHeight }
       }
     }
   } else return global.document.getElementsByClassName
