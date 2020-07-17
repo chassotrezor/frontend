@@ -1,5 +1,6 @@
 <template>
   <station-renderer
+    class="StationRenderer_test"
     :trail-name="station.trailName"
     :station-name="station.stationName"
     :rows="station.rows"

@@ -4,9 +4,16 @@ import Station from './Station'
 const trailId = 'testTrailId'
 const stationId = 'testStationId'
 
+const trail = {
+  name: 'testTrail',
+  nodes: {
+    [stationId]: {
+      name: 'testStation'
+    }
+  }
+}
+
 const station = {
-  title: 'Test Station Title',
-  isTrailEntry: false,
   rows: [
     {
       type: 'text',
@@ -17,11 +24,6 @@ const station = {
       url: 'testSrc'
     }
   ]
-}
-
-function nbRowsOfType (type) {
-  const filteredRows = station.rows.filter(row => row.type === type)
-  return filteredRows.length
 }
 
 const $route = {
@@ -42,7 +44,8 @@ const store = {
     trails: {
       namespaced: true,
       getters: {
-        getStation: () => jest.fn(() => station)
+        getStation: () => () => station,
+        getTrail: () => () => trail
       }
     }
   }
@@ -59,13 +62,8 @@ describe('Station', () => {
     expect(store.modules.user.actions.saveStationAccess).toHaveBeenCalled()
   })
 
-  it('displays as many "StationImage" components as rows with type "image" in station', () => {
-    const stationTexts = wrapper.findAll('.StationImage_test')
-    expect(stationTexts.length).toBe(nbRowsOfType('image'))
-  })
-
-  it('displays as many "StationText" components as rows with type "text" in station', () => {
-    const stationTexts = wrapper.findAll('.StationText_test')
-    expect(stationTexts.length).toBe(nbRowsOfType('text'))
+  it('displays a "StationRenderer"', () => {
+    const renderer = wrapper.find('.StationRenderer_test')
+    expect(renderer.exists()).toBe(true)
   })
 })
