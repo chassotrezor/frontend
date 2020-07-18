@@ -28,15 +28,15 @@ export function unbindMyTrails ({ commit }) {
   commit('deleteTrails')
 }
 
-export async function createTrail () {
+export async function createTrail (__, { position }) {
   const userId = firebase.auth().currentUser.uid
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc()
   const stationId = generateId()
   const stationRef = trailRef.collection('stations').doc(stationId)
   await db.runTransaction(async t => {
-    t.set(trailRef, defaultTrail(userId, stationRef.id))
-    t.set(stationRef, defaultStation(stationRef.id))
+    t.set(trailRef, defaultTrail(userId, stationId, position))
+    t.set(stationRef, defaultStation(stationId))
   })
   return trailRef.id
 }

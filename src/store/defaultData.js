@@ -1,24 +1,20 @@
-import firebase from 'firebase/app'
-
-export const defaultTrail = (userId, firstStationId) => {
+export const defaultTrail = (userId, firstStationId, position) => {
   return {
-    nodes: {
-      [firstStationId]: {
-        dependencies: [],
-        type: 'STATION',
-        name: 'Start',
-        position: new firebase.firestore.GeoPoint(0, 0)
-      }
+    graph: {
+      nodes: {
+        [firstStationId]: {
+          dependencies: [],
+          type: 'STATION',
+          name: 'Start',
+          position: position.geopoint
+        }
+      },
+      endNodes: [firstStationId],
+      trailEntries: [firstStationId]
     },
     editor: userId,
-    name: '',
-    endNodes: [firstStationId],
-    trailEntries: [firstStationId],
-    // TODO: generate position with geofirex
-    position: {
-      geohash: '7zzzzzzzz',
-      geopoint: { Rc: 0, Ac: 0 }
-    }
+    name: 'New Trail',
+    position
   }
 }
 

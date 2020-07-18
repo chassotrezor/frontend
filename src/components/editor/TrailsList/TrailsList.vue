@@ -38,7 +38,9 @@ export default {
       this.$emit('editTrail', trailId)
     },
     async createAndEditTrail () {
-      const trailId = await this.createTrail()
+      // TODO: set position to navigator position or (0, 0)
+      const position = this.$geo.point(46.788520179927225, 7.121350765228272)
+      const trailId = await this.createTrail({ position })
       this.edit(trailId)
     }
   }
