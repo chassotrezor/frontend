@@ -1,5 +1,15 @@
 <template>
   <div class="row justify-between full-width">
+    <update-btn
+      :old-data="{
+        trailName: trail.name,
+        stationName: trail.graph.nodes[stationId].name,
+        rows: station.rows
+      }"
+      :new-data="{ trailName, stationName, rows }"
+      :update-fn="update"
+      :cancel-fn="cancelChanges"
+    />
     <q-page-sticky
       ref="preview"
       position="left"
@@ -65,14 +75,16 @@
 import { mapActions, mapGetters } from 'vuex'
 import StationRow from './StationRow/StationRow'
 import StationPreview from './StationPreview'
-import { copyNodes } from 'components/editor/TrailEditor/graphHelpers'
+import UpdateBtn from '../UpdateBtn'
+import { copyGraph } from 'components/editor/TrailEditor/graphHelpers'
 import types from 'src/types'
 
 export default {
   name: 'StationEditor',
   components: {
     StationRow,
-    StationPreview
+    StationPreview,
+    UpdateBtn
   },
   props: {
     stationId: {
@@ -111,10 +123,7 @@ export default {
     }
   },
   mounted () {
-    this.trailName = this.trail.name
-    this.stationName = this.trail.graph.nodes[this.stationId].name
-    // TODO: replace with a smarter deep copy
-    this.rows = JSON.parse(JSON.stringify(this.station.rows))
+    this.duplicateStation()
     const vm = this
     this.$nextTick(() => {
       vm.previewWidth = vm.$refs.preview.$el.scrollWidth
@@ -125,6 +134,16 @@ export default {
       updateStationInTrail: 'editor/updateStationInTrail',
       updateTrail: 'editor/updateTrail'
     }),
+    duplicateStation () {
+      this.trailName = this.trail.name
+      this.stationName = this.trail.graph.nodes[this.stationId].name
+      // TODO: replace with a smarter deep copy
+      this.rows = JSON.parse(JSON.stringify(this.station.rows))
+    },
+    cancelChanges () {
+      // TODO: remove new images in storage
+      this.duplicateStation()
+    },
     update () {
       this.updateStationInTrail({
         trailId: this.trailId,
@@ -133,13 +152,13 @@ export default {
           rows: this.rows
         }
       })
-      const nodes = copyNodes(this.trail.graph.nodes)
-      nodes[this.stationId].name = this.stationName
+      const graph = copyGraph(this.trail.graph)
+      graph.nodes[this.stationId].name = this.stationName
       this.updateTrail({
         trailId: this.trailId,
         newProps: {
           name: this.trailName,
-          nodes
+          graph
         }
       })
     },

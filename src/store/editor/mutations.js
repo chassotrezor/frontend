@@ -30,3 +30,7 @@ export function setStation (state, { trailId, stationId, station }) {
 export function deleteStations (state, { trailId }) {
   Vue.delete(state.myTrails[trailId], 'stations')
 }
+
+export function setRouteGuard (state, { action, next }) {
+  state.routeGuard = { action, next }
+}

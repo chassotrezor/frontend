@@ -102,15 +102,18 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
     return nodeProps
   }, {})
   return db.runTransaction(async t => {
-    const oldNodes = (await t.get(trailRef)).data().nodes
-    const nodes = {
-      ...oldNodes,
-      [stationId]: {
-        ...oldNodes[stationId],
-        ...newPropsForNodes
+    const oldGraph = (await t.get(trailRef)).data().graph
+    const graph = {
+      ...oldGraph,
+      nodes: {
+        ...oldGraph.nodes,
+        [stationId]: {
+          ...oldGraph.nodes[stationId],
+          ...newPropsForNodes
+        }
       }
     }
-    t.update(trailRef, { nodes })
+    t.update(trailRef, { graph })
     t.update(stationRef, newProps)
   })
 }
@@ -120,7 +123,7 @@ export function removeStationInTrail (__, { trailId, removedStationId, updatedGr
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(removedStationId)
   return db.runTransaction(async t => {
-    t.update(trailRef, updatedGraph)
+    t.update(trailRef, { graph: updatedGraph })
     t.delete(stationRef)
   })
 }
@@ -150,3 +153,7 @@ export function removeStationInTrail (__, { trailId, removedStationId, updatedGr
 //     t.update(trailRef, { ...trail })
 //   })
 // }
+
+export function delegateRouteGuard ({ commit }, { action, next }) {
+  commit('setRouteGuard', { action, next })
+}

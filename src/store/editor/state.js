@@ -1,5 +1,9 @@
 export default function () {
   return {
-    myTrails: {}
+    myTrails: {},
+    routeGuard: {
+      action: null,
+      next: () => {}
+    }
   }
 }

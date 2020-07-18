@@ -1,12 +1,12 @@
 <template>
   <div class="full-width">
-    <q-input v-model="name" />
-    <q-btn
-      class="UpdateBtn_test"
-      icon="send"
-      color="primary"
-      @click="updateTrailWithPosition"
+    <update-btn
+      :old-data="{ graph: trail.graph, name: trail.name }"
+      :new-data="{ graph, name }"
+      :update-fn="updateTrailWithPosition"
+      :cancel-fn="() => duplicateTrail(trail)"
     />
+    <q-input v-model="name" />
     <br>
     <trail-graph
       class="TrailGraph_test"
@@ -21,7 +21,7 @@
       class="QrCodesGenerator_test"
       :trail-id="trailId"
       :trail-name="trail.name"
-      :trail-nodes="trail.nodes"
+      :trail-nodes="trail.graph.nodes"
     />
   </div>
 </template>
@@ -30,12 +30,14 @@
 import { mapActions, mapGetters } from 'vuex'
 import TrailGraph from './TrailGraph'
 import QrCodesGenerator from './QrCodesGenerator'
+import UpdateBtn from '../UpdateBtn'
 
 export default {
   name: 'TrailEditor',
   components: {
     TrailGraph,
-    QrCodesGenerator
+    QrCodesGenerator,
+    UpdateBtn
   },
   props: {
     trailId: {
@@ -62,14 +64,13 @@ export default {
       return trail
     }
   },
+  watch: {
+    trail (newTrail) {
+      this.duplicateTrail(newTrail)
+    }
+  },
   mounted () {
-    const vm = this
-    this.name = this.trail.name
-    this.graph.trailEntries = [...this.trail.trailEntries]
-    this.graph.endNodes = [...this.trail.endNodes]
-    Object.entries(this.trail.nodes).forEach(node => {
-      vm.$set(vm.graph.nodes, node[0], { ...node[1] })
-    })
+    this.duplicateTrail(this.trail)
   },
   methods: {
     ...mapActions({
@@ -77,6 +78,15 @@ export default {
       createStation: 'editor/createStation',
       removeStationInTrail: 'editor/removeStationInTrail'
     }),
+    duplicateTrail (trail) {
+      const vm = this
+      this.name = trail.name
+      this.graph.trailEntries = [...trail.graph.trailEntries]
+      this.graph.endNodes = [...trail.graph.endNodes]
+      Object.entries(trail.graph.nodes).forEach(node => {
+        vm.$set(vm.graph.nodes, node[0], { ...node[1] })
+      })
+    },
     updateName ({ stationId, newName }) {
       this.graph.nodes[stationId].name = newName
     },
@@ -106,9 +116,7 @@ export default {
         newProps: {
           name: this.name,
           position,
-          endNodes: this.graph.endNodes,
-          trailEntries: this.graph.trailEntries,
-          nodes: this.graph.nodes
+          graph: this.graph
         }
       })
     },

@@ -18,3 +18,7 @@ export function getStation (state) {
     }
   }
 }
+
+export function routeGuard (state) {
+  return state.routeGuard
+}
