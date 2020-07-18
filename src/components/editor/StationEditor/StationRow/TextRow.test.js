@@ -5,7 +5,7 @@ describe('TextRow', () => {
   const wrapper = mountQuasar(TextRow, {
     propsData: {
       row: {
-        rawHtml: '<div>TEST</div>'
+        data: { rawHtml: '<div>TEST</div>' }
       }
     },
     mocks: {

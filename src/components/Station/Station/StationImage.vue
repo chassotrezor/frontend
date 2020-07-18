@@ -1,7 +1,7 @@
 <template>
   <q-img
     class="QImg_test"
-    :src="src"
+    :src="row.data.url"
   />
 </template>
 
@@ -9,8 +9,8 @@
 export default {
   name: 'StationImage',
   props: {
-    src: {
-      type: String,
+    row: {
+      type: Object,
       required: true
     }
   }

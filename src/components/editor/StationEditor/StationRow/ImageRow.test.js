@@ -9,9 +9,11 @@ const $route = {
 }
 
 const defaultRow = {
-  url: 'path/to/file',
-  rowId: 'testRowId',
-  fileId: 'testFileId'
+  data: {
+    url: 'path/to/file',
+    fileId: 'testFileId'
+  },
+  rowId: 'testRowId'
 }
 
 describe('ImageRow', () => {
@@ -26,9 +28,9 @@ describe('ImageRow', () => {
     }
   })
 
-  it('displays a "QImg" with "row.url" as "src" prop', () => {
+  it('displays a "QImg" with "row.data.url" as "src" prop', () => {
     const img = wrapper.find('.QImg_test')
-    expect(img.props().src).toBe(defaultRow.url)
+    expect(img.props().src).toBe(defaultRow.data.url)
   })
 
   describe('FirebaseUploader', () => {
@@ -41,21 +43,24 @@ describe('ImageRow', () => {
       expect(fu.props().path).toBe(expectedPath)
     })
 
-    test('its "file-id" prop is "row.fileId" when "row.fileId" is defined', async () => {
+    test('its "file-id" prop is "row.data.fileId" when "row.data.fileId" is defined', async () => {
       wrapper.setProps({
         row: {
           ...defaultRow
         }
       })
       await wrapper.vm.$nextTick()
-      expect(fu.props().fileId).toBe(defaultRow.fileId)
+      expect(fu.props().fileId).toBe(defaultRow.data.fileId)
     })
 
     test('its "file-id" prop is "row.rowId" when "row.fileId" is undefined', async () => {
       wrapper.setProps({
         row: {
           ...defaultRow,
-          fileId: undefined
+          data: {
+            ...defaultRow,
+            fileId: undefined
+          }
         }
       })
       await wrapper.vm.$nextTick()
@@ -74,8 +79,10 @@ describe('ImageRow', () => {
       await wrapper.vm.$nextTick()
       expect(wrapper.emitted().input[0][0]).toEqual({
         ...defaultRow,
-        url: newUrl,
-        fileId: newFileId
+        data: {
+          url: newUrl,
+          fileId: newFileId
+        }
       })
     })
   })

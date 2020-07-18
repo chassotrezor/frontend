@@ -2,9 +2,15 @@ import { mountQuasar } from '@test'
 import StationText from './StationText'
 
 const $sanitize = rawHtml => '<div>sanitized</div>'
+
+const row = {
+  rowId: 'rowId',
+  data: { rawHtml: '<div>unsanitized</div>' }
+}
+
 const wrapper = mountQuasar(StationText, {
   propsData: {
-    rawHtml: '<div>unsanitized</div>'
+    row
   },
   mocks: {
     $sanitize

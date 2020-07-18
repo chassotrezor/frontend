@@ -12,5 +12,9 @@ export default {
     HINT: 'HINT',
     AND: 'AND',
     OR: 'OR'
+  },
+  rows: {
+    IMAGE: 'IMAGE',
+    TEXT: 'TEXT'
   }
 }

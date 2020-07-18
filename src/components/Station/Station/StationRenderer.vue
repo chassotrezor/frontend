@@ -7,14 +7,14 @@
       :key="row.rowId"
     >
       <station-image
-        v-if="row.type === 'image'"
+        v-if="row.type === types.rows.IMAGE"
         class="StationImage_test"
-        :src="row.url"
+        :row="row"
       />
       <station-text
-        v-if="row.type === 'text'"
+        v-if="row.type === types.rows.TEXT"
         class="StationText_test"
-        :raw-html="row.rawHtml"
+        :row="row"
       />
     </div>
   </div>
@@ -23,6 +23,7 @@
 <script>
 import StationImage from './StationImage'
 import StationText from './StationText'
+import types from 'src/types'
 
 export default {
   name: 'StationRenderer',
@@ -42,6 +43,11 @@ export default {
     rows: {
       type: Array,
       required: true
+    }
+  },
+  data () {
+    return {
+      types: types
     }
   }
 }

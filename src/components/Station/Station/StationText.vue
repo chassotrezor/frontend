@@ -6,14 +6,14 @@
 export default {
   name: 'StationText',
   props: {
-    rawHtml: {
-      type: String,
+    row: {
+      type: Object,
       required: true
     }
   },
   computed: {
     sanitizedRawHtml () {
-      return this.$sanitize(this.rawHtml)
+      return this.$sanitize(this.row.data.rawHtml)
     }
   }
 }

@@ -1,16 +1,17 @@
 import { mountQuasar } from '@test'
 import StationRenderer from './StationRenderer'
+import types from 'src/types'
 
 const trailName = 'testTrail'
 const stationName = 'testStation'
 const rows = [
   {
     type: 'text',
-    rawHtml: 'testText'
+    data: { rawHtml: 'testText' }
   },
   {
     type: 'image',
-    url: 'testSrc'
+    data: { url: 'testSrc' }
   }
 ]
 
@@ -26,11 +27,11 @@ const wrapper = mountQuasar(StationRenderer, {
 describe('StationRenderer', () => {
   it('displays as many "StationImage" components as rows with type "image" in station', () => {
     const stationTexts = wrapper.findAll('.StationImage_test')
-    expect(stationTexts.length).toBe(nbRowsOfType('image'))
+    expect(stationTexts.length).toBe(nbRowsOfType(types.rows.IMAGE))
   })
 
   it('displays as many "StationText" components as rows with type "text" in station', () => {
     const stationTexts = wrapper.findAll('.StationText_test')
-    expect(stationTexts.length).toBe(nbRowsOfType('text'))
+    expect(stationTexts.length).toBe(nbRowsOfType(types.rows.TEXT))
   })
 })

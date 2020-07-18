@@ -1,5 +1,6 @@
 import { mountQuasar } from '@test'
 import StationRow from './StationRow'
+import types from 'src/types'
 
 describe('StationRow', () => {
   const wrapper = mountQuasar(StationRow, {
@@ -52,10 +53,10 @@ describe('StationRow', () => {
   })
 
   describe('row', () => {
-    it('displays a textRow if prop "row.type" is "text"', async () => {
+    it('displays a textRow if prop "row.type" is "TEXT"', async () => {
       wrapper.setProps({
         row: {
-          type: 'text'
+          type: types.rows.TEXT
         }
       })
       await wrapper.vm.$nextTick()
@@ -63,10 +64,10 @@ describe('StationRow', () => {
       expect(textRow.exists()).toBe(true)
     })
 
-    it('displays a imageRow if prop "row.type" is "image"', async () => {
+    it('displays a imageRow if prop "row.type" is "IMAGE"', async () => {
       wrapper.setProps({
         row: {
-          type: 'image'
+          type: types.rows.IMAGE
         }
       })
       await wrapper.vm.$nextTick()

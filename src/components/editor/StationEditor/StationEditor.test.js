@@ -1,5 +1,6 @@
 import { mountQuasar } from '@test'
 import StationEditor from './StationEditor'
+import types from 'src/types'
 
 const stationId = 'testStationId'
 const trailId = 'testTrailId'
@@ -18,12 +19,12 @@ const testStation = {
     {
       rowId: 'id1',
       type: 'text',
-      rawHtml: '<div>TEST TEXT</div>'
+      data: { rawHtml: '<div>TEST TEXT</div>' }
     },
     {
       rowId: 'id2',
       type: 'image',
-      url: 'url/to/image'
+      data: { url: 'url/to/image' }
     }
   ]
 }
@@ -157,7 +158,7 @@ describe('StationEditor', () => {
       const length = wrapper.vm.rows.length
       expect(length).toBe(testStation.rows.length + 1)
       const lastRow = wrapper.vm.rows[length - 1]
-      expect(lastRow.type).toBe('text')
+      expect(lastRow.type).toBe(types.rows.TEXT)
       wrapper.setData({ rows: [...testStation.rows] })
       await wrapper.vm.$nextTick()
     })
@@ -169,7 +170,7 @@ describe('StationEditor', () => {
       const length = wrapper.vm.rows.length
       expect(length).toBe(testStation.rows.length + 1)
       const lastRow = wrapper.vm.rows[length - 1]
-      expect(lastRow.type).toBe('image')
+      expect(lastRow.type).toBe(types.rows.IMAGE)
       wrapper.setData({ rows: [...testStation.rows] })
       await wrapper.vm.$nextTick()
     })

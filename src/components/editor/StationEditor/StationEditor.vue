@@ -48,13 +48,13 @@
           class="AddText_test"
           icon="edit"
           :label="$t('editor.station.addRow.text')"
-          @click="addRow('text')"
+          @click="addRow(types.rows.TEXT)"
         />
         <q-btn
           class="AddImage_test"
           icon="image"
           :label="$t('editor.station.addRow.image')"
-          @click="addRow('image')"
+          @click="addRow(types.rows.IMAGE)"
         />
       </q-btn-group>
     </div>
@@ -66,6 +66,7 @@ import { mapActions, mapGetters } from 'vuex'
 import StationRow from './StationRow/StationRow'
 import StationPreview from './StationPreview'
 import { copyNodes } from 'components/editor/TrailEditor/graphHelpers'
+import types from 'src/types'
 
 export default {
   name: 'StationEditor',
@@ -88,7 +89,8 @@ export default {
       trailName: '',
       stationName: '',
       rows: [],
-      previewWidth: 200
+      previewWidth: 200,
+      types: types
     }
   },
   computed: {
@@ -111,6 +113,7 @@ export default {
   mounted () {
     this.trailName = this.trail.name
     this.stationName = this.trail.nodes[this.stationId].name
+    // TODO: replace with a smarter deep copy
     this.rows = JSON.parse(JSON.stringify(this.station.rows))
     const vm = this
     this.$nextTick(() => {
@@ -141,13 +144,20 @@ export default {
       })
     },
     addRow (type) {
+      let data
+      switch (type) {
+        case types.rows.IMAGE: data = { url: null }; break
+        case types.rows.TEXT: data = { rawHtml: '' }; break
+        default: data = {}; break
+      }
       let rowId
       do {
         rowId = Math.random().toString(36).substring(2)
       } while (this.rows.some(row => row.rowId === rowId))
       this.rows.push({
         rowId,
-        type
+        type,
+        data
       })
     },
     removeRow (i) {

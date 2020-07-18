@@ -1,16 +1,21 @@
 import { mountQuasar } from '@test'
 import StationImage from './StationImage'
 
-const src = 'sourceImage'
+const row = {
+  rowId: 'rowId',
+  data: {
+    url: 'sourceImage'
+  }
+}
 const wrapper = mountQuasar(StationImage, {
   propsData: {
-    src
+    row
   }
 })
 
 describe('StationImage', () => {
   it('displays a "QImg" with "src" prop as source', () => {
     const img = wrapper.find('.QImg_test')
-    expect(img.props().src).toBe(src)
+    expect(img.attributes().src).toBe(row.data.url)
   })
 })

@@ -5,12 +5,12 @@
       width="200px"
       height="200px"
       contain
-      :src="row.url"
+      :src="row.data.url"
     />
     <firebase-uploader
       class="FirebaseUploader_test"
       :path="path"
-      :file-id="row.fileId ? row.fileId : row.rowId"
+      :file-id="row.data.fileId ? row.data.fileId : row.rowId"
       @uploaded="emitImageData"
     />
   </div>
@@ -41,7 +41,9 @@ export default {
     emitImageData (event) {
       this.$emit('input', {
         ...this.row,
-        ...event
+        data: {
+          ...event
+        }
       })
     }
   }

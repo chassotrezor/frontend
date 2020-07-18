@@ -3,10 +3,10 @@ import PositionTranslator from 'src/mixins/PositionTranslator'
 
 export function copyNode (node) {
   return {
-    name: node.name,
-    dependencies: [...node.dependencies],
-    position: PositionTranslator.methods.fromGeopoint(node.position).toGeopoint(),
-    type: node.type
+    name: node.name || null,
+    dependencies: node.dependencies ? [...node.dependencies] : [],
+    position: node.position ? PositionTranslator.methods.fromGeopoint(node.position).toGeopoint() : null,
+    type: node.type || null
   }
 }
 
