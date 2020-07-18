@@ -33,12 +33,6 @@
         v-model="stationName"
         class="QInputName_test"
       />
-      <q-btn
-        class="UpdateBtn_test"
-        icon="send"
-        color="primary"
-        @click="update"
-      />
       <station-row
         v-for="(row, index) in rows"
         :key="row.rowId"
