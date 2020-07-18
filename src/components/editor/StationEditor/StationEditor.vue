@@ -53,6 +53,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import StationRow from './StationRow/StationRow'
 import StationPreview from './StationPreview'
+import { copyNodes } from 'components/editor/TrailEditor/graphHelpers'
 
 export default {
   name: 'StationEditor',
@@ -112,7 +113,7 @@ export default {
           rows: this.rows
         }
       })
-      const nodes = JSON.parse(JSON.stringify(this.trail.nodes))
+      const nodes = copyNodes(this.trail.nodes)
       nodes[this.stationId].name = this.stationName
       this.updateTrail({
         trailId: this.trailId,
