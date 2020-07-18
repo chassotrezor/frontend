@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="q-ma-md">
     <q-btn
       class="RemoveBtn_test"
       round

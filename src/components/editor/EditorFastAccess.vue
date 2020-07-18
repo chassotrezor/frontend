@@ -1,6 +1,8 @@
 <template>
-  <div
-    class="row items-center"
+  <q-page-sticky
+    class="full-width q-pa-sm bg-grey-3"
+    style="justify-content: flex-start; z-index: 10000"
+    position="top"
   >
     <q-btn
       class="UnselectBtn_test"
@@ -13,6 +15,7 @@
       class="TrailName_test"
       :label="`> ${trailName}`"
       flat
+      no-caps
       @click="$emit('editTrail')"
     />
     <q-btn
@@ -20,8 +23,10 @@
       class="StationName_test"
       :label="`> ${stationName}`"
       flat
+      no-caps
     />
-  </div>
+    <div class="col-3" />
+  </q-page-sticky>
 </template>
 
 <script>

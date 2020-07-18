@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div class="row no-wrap q-gutter-md">
     <q-img
       class="QImg_test"
+      width="200px"
+      height="200px"
+      contain
       :src="row.url"
     />
     <firebase-uploader

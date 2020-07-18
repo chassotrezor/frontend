@@ -1,12 +1,24 @@
 <template>
-  <div class="row justify-around full-width">
-    <station-preview
-      class="StationPreview_test"
-      :trail-name="trailName"
-      :station-name="stationName"
-      :rows="rows"
+  <div class="row justify-between full-width">
+    <q-page-sticky
+      ref="preview"
+      position="left"
+    >
+      <station-preview
+        class="StationPreview_test q-ma-md"
+        :trail-name="trailName"
+        :station-name="stationName"
+        :rows="rows"
+      />
+    </q-page-sticky>
+    <div
+      class="col-shrink bg-grey-3"
+      :style="`width: ${previewWidth}px`"
     />
-    <div>
+    <div
+      class="col-grow bg-grey-3 column justify-start items-center"
+      style="z-index: 10"
+    >
       <q-input
         v-model="stationName"
         class="QInputName_test"
@@ -75,7 +87,8 @@ export default {
     return {
       trailName: '',
       stationName: '',
-      rows: []
+      rows: [],
+      previewWidth: 200
     }
   },
   computed: {
@@ -99,6 +112,10 @@ export default {
     this.trailName = this.trail.name
     this.stationName = this.trail.nodes[this.stationId].name
     this.rows = JSON.parse(JSON.stringify(this.station.rows))
+    const vm = this
+    this.$nextTick(() => {
+      vm.previewWidth = vm.$refs.preview.$el.scrollWidth
+    })
   },
   methods: {
     ...mapActions({
