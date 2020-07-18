@@ -55,7 +55,7 @@ export default {
       return this.trail.name
     },
     stationName () {
-      return this.trail.nodes[this.selectedStation].name
+      return this.trail.graph.nodes[this.selectedStation].name
     }
   }
 }

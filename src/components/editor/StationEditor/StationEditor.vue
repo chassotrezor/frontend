@@ -112,7 +112,7 @@ export default {
   },
   mounted () {
     this.trailName = this.trail.name
-    this.stationName = this.trail.nodes[this.stationId].name
+    this.stationName = this.trail.graph.nodes[this.stationId].name
     // TODO: replace with a smarter deep copy
     this.rows = JSON.parse(JSON.stringify(this.station.rows))
     const vm = this
@@ -133,7 +133,7 @@ export default {
           rows: this.rows
         }
       })
-      const nodes = copyNodes(this.trail.nodes)
+      const nodes = copyNodes(this.trail.graph.nodes)
       nodes[this.stationId].name = this.stationName
       this.updateTrail({
         trailId: this.trailId,
