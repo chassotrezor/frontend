@@ -6,7 +6,10 @@ import {
   generateNodeBefore,
   generateNodeAfter,
   moveBefore,
-  moveAfter
+  moveAfter,
+  copyGraph,
+  copyNodes,
+  copyNode
 } from './graphHelpers'
 
 const graph = {
@@ -146,6 +149,45 @@ describe('graphHelpers', () => {
       expect(newGraph.nodes[nodeIdsInOrder[2]].dependencies).toEqual([nodeIdsInOrder[0]])
       expect(newGraph.nodes[nodeIdsInOrder[1]].dependencies).toEqual([])
       expect(newGraph.trailEntries).toEqual([nodeIdsInOrder[1]])
+    })
+  })
+
+  describe('copyGraph returns a deep copy of the graph', () => {
+    test('both graph match', () => {
+      const newGraph = copyGraph(graph)
+      expect(newGraph).toEqual(graph)
+    })
+
+    test('changes on new graph do not affect old graph', () => {
+      const newGraph = copyGraph(graph)
+      newGraph.nodes.testNodeId1.dependencies[0] = 'newValue'
+      expect(newGraph).not.toEqual(graph)
+    })
+  })
+
+  describe('copyNodes returns a deep copy of the graph nodes', () => {
+    test('both nodes collections match', () => {
+      const newNodes = copyNodes(graph.nodes)
+      expect(newNodes).toEqual(graph.nodes)
+    })
+
+    test('changes on new graph do not affect old graph', () => {
+      const newNodes = copyNodes(graph.nodes)
+      newNodes.testNodeId1.dependencies[0] = 'newValue'
+      expect(newNodes).not.toEqual(graph.nodes)
+    })
+  })
+
+  describe('copyNode returns a deep copy of one of the graph nodes', () => {
+    test('both nodes match', () => {
+      const newNode = copyNode(graph.nodes.testNodeId1)
+      expect(newNode).toEqual(graph.nodes.testNodeId1)
+    })
+
+    test('changes on new graph do not affect old graph', () => {
+      const newNode = copyNode(graph.nodes.testNodeId1)
+      newNode.dependencies[0] = 'newValue'
+      expect(newNode).not.toEqual(graph.nodes.testNodeId1)
     })
   })
 })

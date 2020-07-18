@@ -2,7 +2,7 @@ import { firestore } from 'firebase'
 import { mountQuasar } from '@test'
 import TrailGraph from './TrailGraph'
 import types from 'src/types'
-import { remove, moveBefore, moveAfter } from './graphHelpers'
+import { remove, moveBefore, moveAfter, copyGraph } from './graphHelpers'
 import PositionTranslator from 'src/mixins/PositionTranslator'
 
 const graph = {
@@ -96,7 +96,7 @@ describe('TrailGraph', () => {
         nodeCard.vm.$emit('update:lat-lng', newLatLng)
         await wrapper.vm.$nextTick()
         const stationId = expectedNodeIdsInOrder[0]
-        const expectedNewGraph = JSON.parse(JSON.stringify(graph))
+        const expectedNewGraph = copyGraph(graph)
         expectedNewGraph.nodes[stationId].position = PositionTranslator.methods.fromLatLng(newLatLng).toGeopoint()
         expect(wrapper.emitted('updateGraph')[0][0]).toEqual(expectedNewGraph)
       })

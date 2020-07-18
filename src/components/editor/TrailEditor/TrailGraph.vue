@@ -35,7 +35,7 @@ import { LPolyline } from 'vue2-leaflet'
 import BasicMap from 'components/Navigation/map/BasicMap'
 import NodeMarker from './NodeMarker'
 import PositionTranslator from 'src/mixins/PositionTranslator'
-import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove } from './graphHelpers'
+import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove, copyGraph } from './graphHelpers'
 
 export default {
   name: 'TrailGraph',
@@ -94,7 +94,7 @@ export default {
       this.$emit('updateName', { stationId, newName })
     },
     updatePosition (stationId, latLng) {
-      const newGraph = JSON.parse(JSON.stringify(this.graph))
+      const newGraph = copyGraph(this.graph)
       const newPosition = this.fromLatLng(latLng).toGeopoint()
       newGraph.nodes[stationId].position = newPosition
       this.$emit('updateGraph', newGraph)

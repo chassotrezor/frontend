@@ -1,7 +1,7 @@
 import { defaultNode } from 'src/store/defaultData'
 import PositionTranslator from 'src/mixins/PositionTranslator'
 
-function copyNode (node) {
+export function copyNode (node) {
   return {
     name: node.name,
     dependencies: [...node.dependencies],
@@ -10,14 +10,14 @@ function copyNode (node) {
   }
 }
 
-function copyNodes (nodes) {
+export function copyNodes (nodes) {
   return Object.entries(nodes).reduce((newNodes, node) => {
     newNodes[node[0]] = copyNode(node[1])
     return newNodes
   }, {})
 }
 
-function copyGraph (graph) {
+export function copyGraph (graph) {
   return {
     trailEntries: [...graph.trailEntries],
     endNodes: [...graph.endNodes],
