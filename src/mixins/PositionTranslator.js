@@ -10,12 +10,12 @@ function to (positionArray) {
 }
 
 function fromGeopoint (geopoint) {
-  const positionArray = Object.values(geopoint)
+  const positionArray = [geopoint.latitude, geopoint.longitude]
   return to(positionArray)
 }
 
 function fromLatLng (latlng) {
-  const positionArray = Object.values(latlng)
+  const positionArray = [latlng.lat, latlng.lng]
   return to(positionArray)
 }
 

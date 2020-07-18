@@ -1,18 +1,9 @@
+import { firestore } from 'firebase'
 import { mountQuasar } from '@test'
 import TrailGraph from './TrailGraph'
 import types from 'src/types'
-import { remove, moveBefore, moveAfter, generateNodeBefore, generateNodeAfter } from './graphHelpers'
+import { remove, moveBefore, moveAfter } from './graphHelpers'
 import PositionTranslator from 'src/mixins/PositionTranslator'
-
-jest.mock('firebase/app', () => {
-  return {
-    firestore: {
-      GeoPoint: array => {
-        return { Ac: array[0], Rc: array[1] }
-      }
-    }
-  }
-})
 
 const graph = {
   trailEntries: ['testNodeId1'],
@@ -22,25 +13,25 @@ const graph = {
       name: 'testStationName1',
       type: types.nodes.STATION,
       dependencies: [],
-      position: { Ac: 1, Rc: 1 }
+      position: new firestore.GeoPoint(1, 1)
     },
     testNodeId2: {
       name: 'testStationName2',
       type: types.nodes.STATION,
       dependencies: ['testNodeId1'],
-      position: { Ac: 2, Rc: 2 }
+      position: new firestore.GeoPoint(2, 2)
     },
     testNodeId3: {
       name: 'testStationName3',
       type: types.nodes.STATION,
       dependencies: ['testNodeId2'],
-      position: { Ac: 3, Rc: 3 }
+      position: new firestore.GeoPoint(3, 3)
     },
     testNodeId4: {
       name: 'testStationName4',
       type: types.nodes.STATION,
       dependencies: ['testNodeId3'],
-      position: { Ac: 4, Rc: 4 }
+      position: new firestore.GeoPoint(4, 4)
     }
   },
 
