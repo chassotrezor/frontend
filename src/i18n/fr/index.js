@@ -31,11 +31,12 @@ export default {
     },
     stayOnPage: 'Rester sur la page',
     trail: {
+      doNotCreateStation: 'Ne pas créer le poste',
+      doNotRemovetation: 'Ne pas supprimer le poste',
       downloadQrCodes: 'télécharger les codes QR',
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
-      doNotCreateStation: 'Ne pas créer le poste',
       saveChangesThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste',
-      doNotRemovetation: 'Ne pas supprimer le poste'
+      qrCodes: 'Codes QR'
     },
     unsavedChanges: 'Changements non sauvegardés'
   },

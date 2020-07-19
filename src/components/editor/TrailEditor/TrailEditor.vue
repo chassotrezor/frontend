@@ -22,7 +22,7 @@
       class="QrCodesGenerator_test"
       :trail-id="trailId"
       :trail-name="trail.name"
-      :trail-nodes="trail.graph.nodes"
+      :graph="trail.graph"
     />
     <q-dialog
       v-model="dialog.open"
