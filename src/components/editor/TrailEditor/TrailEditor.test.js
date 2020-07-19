@@ -1,6 +1,7 @@
 import { mountQuasar } from '@test'
 import TrailEditor from './TrailEditor'
 import types from 'src/types'
+import { isEqual } from 'lodash'
 
 jest.mock('html2pdf.js', () => {})
 
@@ -125,7 +126,7 @@ describe('TrailEditor', () => {
         const newGraph = {
           trailEntries: ['testNodeId2'],
           nodes: {
-            testnodeId1: {
+            testNodeId1: {
               name: 'testStationName1',
               position: { Ac: 1, Rc: 1 },
               type: types.nodes.STATION,
@@ -146,9 +147,11 @@ describe('TrailEditor', () => {
       })
     })
 
-    describe('When TrailGraph emits "createStation" with { newGraph, newStationId }', () => {
+    describe('When TrailGraph emits "createStation" with { newGraph, newStationId } when all changes are saved', () => {
       const newStationId = 'stationId'
       beforeAll(async () => {
+        wrapper.vm.duplicateTrail(wrapper.vm.trail)
+        await wrapper.vm.$nextTick()
         const newGraph = trail.graph
         trailGraph.vm.$emit('createStation', { newGraph, newStationId })
         store.modules.editor.actions.updateTrail.mockResolvedValueOnce()
@@ -172,15 +175,66 @@ describe('TrailEditor', () => {
       afterAll(jest.clearAllMocks)
     })
 
-    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId }', () => {
+    describe('When TrailGraph emits "createStation" with { newGraph, newStationId } when some changes are unsaved', () => {
+      const newStationId = 'stationId'
+      beforeAll(async () => {
+        const changedTrail = JSON.parse(JSON.stringify(trail))
+        changedTrail.name = 'otherName'
+        wrapper.vm.duplicateTrail(changedTrail)
+        await wrapper.vm.$nextTick()
+        const newGraph = trail.graph
+        trailGraph.vm.$emit('createStation', { newGraph, newStationId })
+        await wrapper.vm.$nextTick()
+      })
+
+      it('opens a dialog', () => {
+        expect(wrapper.vm.dialog.open).toBe(true)
+      })
+
+      it('waits for user validation for updating trail on server', async () => {
+        expect(store.modules.editor.actions.updateTrail).not.toHaveBeenCalled()
+      })
+
+      it('waits for user validation for creating a new station on server', () => {
+        expect(store.modules.editor.actions.createStation).not.toHaveBeenCalled()
+      })
+
+      describe('when user click on "OK"', () => {
+        beforeAll(async () => {
+          const okBtn = wrapper.find('.OkBtn_test')
+          okBtn.vm.$emit('click')
+          await wrapper.vm.$nextTick()
+        })
+
+        it('updates trail on server', async () => {
+          expect(store.modules.editor.actions.updateTrail).toHaveBeenCalled()
+        })
+
+        it('creates a new station on server with "newStationId"', () => {
+          expect(store.modules.editor.actions.createStation).toHaveBeenCalledWith(
+            expect.any(Object),
+            {
+              trailId,
+              stationId: newStationId
+            }
+          )
+        })
+      })
+
+      afterAll(jest.clearAllMocks)
+    })
+
+    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId } when all changes are saved', () => {
       const removedStationId = 'stationId'
       const updatedGraph = trail.graph
       beforeAll(async () => {
+        wrapper.vm.duplicateTrail(wrapper.vm.trail)
+        await wrapper.vm.$nextTick()
         trailGraph.vm.$emit('removeStation', { updatedGraph, removedStationId })
         await wrapper.vm.$nextTick()
       })
 
-      it('updates trail on server', async () => {
+      it('removes station on server', () => {
         expect(store.modules.editor.actions.removeStationInTrail).toHaveBeenCalledWith(
           expect.any(Object),
           {
@@ -189,6 +243,48 @@ describe('TrailEditor', () => {
             updatedGraph
           }
         )
+      })
+
+      afterAll(jest.clearAllMocks)
+    })
+
+    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId } when some changes are unsaved', () => {
+      const removedStationId = 'stationId'
+      const updatedGraph = trail.graph
+      beforeAll(async () => {
+        const changedTrail = JSON.parse(JSON.stringify(trail))
+        changedTrail.name = 'otherName'
+        wrapper.vm.duplicateTrail(changedTrail)
+        await wrapper.vm.$nextTick()
+        trailGraph.vm.$emit('removeStation', { updatedGraph, removedStationId })
+        await wrapper.vm.$nextTick()
+      })
+
+      it('opens a dialog', () => {
+        expect(wrapper.vm.dialog.open).toBe(true)
+      })
+
+      it('waits for user validation for removing station on server', async () => {
+        expect(store.modules.editor.actions.removeStationInTrail).not.toHaveBeenCalled()
+      })
+
+      describe('when user click on "OK"', () => {
+        beforeAll(async () => {
+          const okBtn = wrapper.find('.OkBtn_test')
+          okBtn.vm.$emit('click')
+          await wrapper.vm.$nextTick()
+        })
+
+        it('removes station on server', () => {
+          expect(store.modules.editor.actions.removeStationInTrail).toHaveBeenCalledWith(
+            expect.any(Object),
+            {
+              trailId,
+              removedStationId,
+              updatedGraph
+            }
+          )
+        })
       })
 
       afterAll(jest.clearAllMocks)

@@ -15,8 +15,8 @@
       @updateName="updateName"
       @updateGraph="updateGraph"
       @editStation="editStation($event)"
-      @createStation="updateTrailAndCreateStation"
-      @removeStation="removeStation($event)"
+      @createStation="promptSaveBefore('updateTrailAndCreateStation', $event)"
+      @removeStation="promptSaveBefore('removeStation', $event)"
     />
     <qr-codes-generator
       class="QrCodesGenerator_test"
@@ -24,10 +24,36 @@
       :trail-name="trail.name"
       :trail-nodes="trail.graph.nodes"
     />
+    <q-dialog
+      v-model="dialog.open"
+      persistent
+    >
+      <q-card>
+        <q-card-section class="text-h6">
+          {{ $t('editor.unsavedChanges') }}
+        </q-card-section>
+        <q-card-actions class="column items-center q-gutter-md">
+          <q-btn
+            class="OkBtn_test"
+            color="primary"
+            no-caps
+            :label="dialog.okBtn.label"
+            @click="dialog.okBtn.method"
+          />
+          <q-btn
+            color="primary"
+            no-caps
+            :label="dialog.cancelBtn.label"
+            @click="dialog.cancelBtn.method"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import { isEqual } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import TrailGraph from './TrailGraph'
 import QrCodesGenerator from './QrCodesGenerator'
@@ -53,6 +79,17 @@ export default {
         trailEntries: [],
         endNodes: [],
         nodes: {}
+      },
+      dialog: {
+        open: false,
+        okBtn: {
+          label: '',
+          method: () => {}
+        },
+        cancelBtn: {
+          label: '',
+          method: () => {}
+        }
       }
     }
   },
@@ -63,6 +100,11 @@ export default {
     trail () {
       const trail = this.getTrail({ trailId: this.trailId })
       return trail
+    },
+    difference () {
+      const nameDifference = this.trail.name !== this.name
+      const graphDifference = !isEqual(this.trail.graph, this.graph)
+      return nameDifference || graphDifference
     }
   },
   watch: {
@@ -124,6 +166,34 @@ export default {
     removeStation ({ removedStationId, updatedGraph }) {
       this.updateGraph(updatedGraph)
       return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
+    },
+    promptSaveBefore (methodName, payload) {
+      const vm = this
+      const method = () => {
+        this.dialog.open = false
+        return vm[methodName](payload)
+      }
+
+      if (this.difference) {
+        this.dialog.okBtn.method = method
+        this.dialog.cancelBtn.method = () => { vm.dialog.open = false }
+        switch (methodName) {
+          case 'updateTrailAndCreateStation': {
+            this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenCreateStation')
+            this.dialog.cancelBtn.label = this.$t('editor.trail.doNotCreateStation')
+            break
+          }
+          case 'removeStation': {
+            this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenRemoveStation')
+            this.dialog.cancelBtn.label = this.$t('editor.trail.doNotRemoveStation')
+            break
+          }
+          default: break
+        }
+        this.dialog.open = true
+      } else {
+        method()
+      }
     }
   }
 }
