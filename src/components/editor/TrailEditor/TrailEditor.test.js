@@ -4,7 +4,7 @@ import types from 'src/types'
 
 jest.mock('html2pdf.js', () => {})
 
-const expectedGeoPoint = 'expectedGeoPoint'
+const expectedGeoPoint = { Ac: 0, Rc: 0 }
 const $geo = {
   point: () => expectedGeoPoint
 }
@@ -12,23 +12,26 @@ const $geo = {
 const trailId = 'testTrailId'
 
 const trail = {
-  trailEntries: ['testNodeId1'],
-  nodes: {
-    testNodeId1: {
-      name: 'testStationName1',
-      position: { Ac: 1, Rc: 1 },
-      type: types.nodes.STATION,
-      dependencies: []
+  graph: {
+    trailEntries: ['testNodeId1'],
+    nodes: {
+      testNodeId1: {
+        name: 'testStationName1',
+        position: { Ac: 1, Rc: 1 },
+        type: types.nodes.STATION,
+        dependencies: []
+      },
+      testNodeId2: {
+        name: 'testStationName2',
+        position: { Ac: 2, Rc: 2 },
+        type: types.nodes.STATION,
+        dependencies: ['testNodeId1']
+      }
     },
-    testNodeId2: {
-      name: 'testStationName2',
-      position: { Ac: 2, Rc: 2 },
-      type: types.nodes.STATION,
-      dependencies: ['testNodeId1']
-    }
+    endNodes: ['testNodeId2']
   },
   name: 'testTrailName',
-  endNodes: ['testNodeId2']
+  position: { AC: 3, RC: 3 }
 }
 
 const store = {
@@ -62,18 +65,18 @@ describe('TrailEditor', () => {
     await wrapper.vm.$nextTick()
   })
 
-  it('displays an "update" button', () => {
+  it('displays an "UpdateBtn"', () => {
     const btn = wrapper.find('.UpdateBtn_test')
     expect(btn.exists()).toBe(true)
   })
 
-  describe('when "update" button emits "click"', () => {
+  describe('when "UpdateBtn" calls "updateFn"', () => {
     const expectedName = 'newName'
 
     beforeAll(async () => {
       wrapper.vm.name = expectedName
       const btn = wrapper.find('.UpdateBtn_test')
-      btn.vm.$emit('click')
+      btn.props().updateFn()
       await wrapper.vm.$nextTick()
     })
 
@@ -85,9 +88,7 @@ describe('TrailEditor', () => {
           newProps: {
             name: expectedName,
             position: expectedGeoPoint,
-            endNodes: trail.endNodes,
-            trailEntries: trail.trailEntries,
-            nodes: trail.nodes
+            graph: trail.graph
           }
         }
       )
@@ -148,8 +149,9 @@ describe('TrailEditor', () => {
     describe('When TrailGraph emits "createStation" with { newGraph, newStationId }', () => {
       const newStationId = 'stationId'
       beforeAll(async () => {
-        const newGraph = trail
+        const newGraph = trail.graph
         trailGraph.vm.$emit('createStation', { newGraph, newStationId })
+        store.modules.editor.actions.updateTrail.mockResolvedValueOnce()
         await wrapper.vm.$nextTick()
       })
 
@@ -157,9 +159,7 @@ describe('TrailEditor', () => {
         expect(store.modules.editor.actions.updateTrail).toHaveBeenCalled()
       })
 
-      it('creates a new station on server with "newStationId"', async () => {
-        store.modules.editor.actions.updateTrail.mockResolvedValue()
-        await wrapper.vm.$nextTick()
+      it('creates a new station on server with "newStationId"', () => {
         expect(store.modules.editor.actions.createStation).toHaveBeenCalledWith(
           expect.any(Object),
           {
@@ -174,7 +174,7 @@ describe('TrailEditor', () => {
 
     describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId }', () => {
       const removedStationId = 'stationId'
-      const updatedGraph = trail
+      const updatedGraph = trail.graph
       beforeAll(async () => {
         trailGraph.vm.$emit('removeStation', { updatedGraph, removedStationId })
         await wrapper.vm.$nextTick()

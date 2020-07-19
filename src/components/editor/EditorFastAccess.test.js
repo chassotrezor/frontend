@@ -13,9 +13,11 @@ const store = {
           return {
             name: 'testTrailName',
             id: testTrailId,
-            nodes: {
-              [testStationId]: {
-                name: 'testStationName'
+            graph: {
+              nodes: {
+                [testStationId]: {
+                  name: 'testStationName'
+                }
               }
             }
           }

@@ -1,6 +1,7 @@
 <template>
   <div class="full-width">
     <update-btn
+      class="UpdateBtn_test"
       :old-data="{ graph: trail.graph, name: trail.name }"
       :new-data="{ graph, name }"
       :update-fn="updateTrailWithPosition"

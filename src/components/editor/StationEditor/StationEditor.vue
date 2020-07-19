@@ -1,6 +1,7 @@
 <template>
   <div class="row justify-between full-width">
     <update-btn
+      class="UpdateBtn_test"
       :old-data="{
         trailName: trail.name,
         stationName: trail.graph.nodes[stationId].name,

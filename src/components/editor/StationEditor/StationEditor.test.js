@@ -7,10 +7,14 @@ const trailId = 'testTrailId'
 
 const testTrail = {
   name: 'testTrailName',
-  nodes: {
-    [stationId]: {
-      name: 'testStationName'
-    }
+  graph: {
+    nodes: {
+      [stationId]: {
+        name: 'testStationName'
+      }
+    },
+    endNodes: [],
+    trailEntries: []
   }
 }
 
@@ -73,7 +77,7 @@ describe('StationEditor', () => {
 
   it('displays a "QInput" for "name"', () => {
     const qInput = wrapper.find('.QInputName_test')
-    expect(qInput.props().value).toBe(testTrail.nodes[stationId].name)
+    expect(qInput.props().value).toBe(testTrail.graph.nodes[stationId].name)
   })
 
   describe('station rows', () => {
@@ -176,15 +180,15 @@ describe('StationEditor', () => {
     })
   })
 
-  it('displays an "update" button', () => {
+  it('displays an "UpdateBtn"', () => {
     const btn = wrapper.find('.UpdateBtn_test')
     expect(btn.exists()).toBe(true)
   })
 
-  describe('when "update" button emits "click"', () => {
+  describe('when "UpdateBtn" calls "updateFn', () => {
     beforeAll(async () => {
       const btn = wrapper.find('.UpdateBtn_test')
-      btn.vm.$emit('click')
+      btn.props().updateFn()
       await wrapper.vm.$nextTick()
     })
 

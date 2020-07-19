@@ -26,14 +26,22 @@ const store = {
     }
   }
 }
+
+const $geo = {
+  point: () => {
+    return { Ac: 0, Rc: 0 }
+  }
+}
+
 describe('TrailsList', () => {
   let wrapper
 
-  beforeAll(done => {
+  beforeAll(async () => {
     wrapper = mountQuasar(TrailsList, {
-      store
+      store,
+      mocks: { $geo }
     })
-    wrapper.vm.$nextTick(done)
+    await wrapper.vm.$nextTick()
   })
 
   it('displays a "TrailCard" component for each trail I created', () => {
@@ -42,10 +50,10 @@ describe('TrailsList', () => {
   })
 
   describe('when "TrailCard" component emits "edit"', () => {
-    beforeAll(done => {
+    beforeAll(async () => {
       const editTrail = wrapper.find('.TrailCard_test')
       editTrail.vm.$emit('edit')
-      wrapper.vm.$nextTick(done)
+      await wrapper.vm.$nextTick()
     })
 
     it('emits "editTrail" event with "trailId" parameter', () => {
@@ -59,10 +67,10 @@ describe('TrailsList', () => {
   })
 
   describe('when "create trail" button emits "click"', () => {
-    beforeAll(done => {
+    beforeAll(async () => {
       const btn = wrapper.find('.CreateTrail_test')
       btn.vm.$emit('click')
-      wrapper.vm.$nextTick(done)
+      await wrapper.vm.$nextTick()
     })
 
     it('creates a new trail on the server', () => {
