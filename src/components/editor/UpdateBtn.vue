@@ -64,13 +64,15 @@ export default {
       if (routeGuard.action === 'routeUpdate' || routeGuard.action === 'routeLeave') {
         if (this.difference) {
           this.$q.dialog({
-            title: 'Changements non sauvegardés',
+            title: this.$t('editor.unsavedChanges'),
             persistent: true,
             ok: {
-              label: 'sauvegarder et continuer'
+              noCaps: true,
+              label: this.$t('editor.saveAndContinue')
             },
             cancel: {
-              label: 'rester sur la page'
+              noCaps: true,
+              label: this.$t('editor.stayOnPage')
             }
           }).onOk(() => {
             vm.updateFn()

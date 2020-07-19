@@ -22,15 +22,22 @@ export default {
     }
   },
   editor: {
+    saveAndContinue: 'Sauvegarder et continuer',
     station: {
       addRow: {
         text: 'texte',
         image: 'image'
       }
     },
+    stayOnPage: 'Rester sur la page',
     trail: {
-      downloadQrCodes: 'télécharger les codes QR'
-    }
+      downloadQrCodes: 'télécharger les codes QR',
+      saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
+      doNotCreateStation: 'Ne pas créer le poste',
+      saveChangesThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste',
+      doNotRemovetation: 'Ne pas supprimer le poste'
+    },
+    unsavedChanges: 'Changements non sauvegardés'
   },
   routes: {
     stationsList: 'historique des postes',
