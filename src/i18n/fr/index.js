@@ -22,7 +22,9 @@ export default {
     }
   },
   editor: {
+    cancelChanges: 'Annuler les modifications',
     saveAndContinue: 'Sauvegarder et continuer',
+    saveChanges: 'Sauvegarder les modifications',
     station: {
       addRow: {
         text: 'texte',

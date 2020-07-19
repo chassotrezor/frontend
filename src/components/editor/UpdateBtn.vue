@@ -11,7 +11,7 @@
       color="warning"
       text-color="black"
       no-caps
-      :label="$t('editor/saveChanges')"
+      :label="$t('editor.saveChanges')"
       @click="updateFn"
     />
     <q-btn
@@ -20,7 +20,7 @@
       color="warning"
       text-color="black"
       no-caps
-      :label="$t('editor/cancelChanges')"
+      :label="$t('editor.cancelChanges')"
       @click="cancelFn"
     />
   </q-page-sticky>
