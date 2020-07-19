@@ -6,7 +6,7 @@
     style="z-index: 5001"
   >
     <q-btn
-      class="q-mr-md"
+      class="q-mr-md SaveChangesBtn_test"
       icon="cloud_upload"
       color="warning"
       text-color="black"
@@ -15,7 +15,7 @@
       @click="updateFn"
     />
     <q-btn
-      class="q-mr-sm"
+      class="q-mr-sm CancelChangesBtn_test"
       icon="undo"
       color="warning"
       text-color="black"
@@ -75,13 +75,15 @@ export default {
           }).onOk(() => {
             vm.updateFn()
             routeGuard.next()
+            vm.releaseGuard()
           }).onCancel(() => {
             routeGuard.next(false)
+            vm.releaseGuard()
           })
         } else {
           routeGuard.next()
+          vm.releaseGuard()
         }
-        vm.releaseGuard()
       }
     }
   },
