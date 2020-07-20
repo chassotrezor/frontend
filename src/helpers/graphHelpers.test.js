@@ -53,8 +53,8 @@ const nodeIdsInOrder = [
 ]
 
 describe('graphHelpers', () => {
-  test('generateNodeId returns a random String', () => {
-    expect(generateNodeId()).not.toBe(generateNodeId())
+  test('generateNodeId returns a random String of length 8', () => {
+    expect(generateNodeId().length).toBe(8)
   })
 
   test('generateNodeIdIn returns a string different of all object keys', () => {

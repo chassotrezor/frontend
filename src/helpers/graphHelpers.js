@@ -1,5 +1,6 @@
 import { defaultNode } from 'src/store/defaultData'
 import { fromGeopoint, fromArray } from 'src/helpers/mapHelpers'
+import { generateId, generateIdIn } from './dataHelpers'
 
 const nodeIdLength = 8
 
@@ -25,26 +26,6 @@ export function copyGraph (graph) {
     endNodes: [...graph.endNodes],
     nodes: copyNodes(graph.nodes)
   }
-}
-
-function generateId (length) {
-  let result = ''
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length))
-  }
-  return result
-  // return Math.random().toString(36).substring(2)
-}
-
-function generateIdIn (object, length) {
-  const objectIds = Object.keys(object)
-  const idAlreadyExists = id => objectIds.some(nodeId => id === nodeId)
-  let newId
-  do {
-    newId = generateId(length)
-  } while (idAlreadyExists(newId))
-  return newId
 }
 
 export function generateNodeId () {
