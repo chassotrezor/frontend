@@ -1,8 +1,8 @@
 import { firestore } from 'firebase'
 import types from 'src/types'
 import {
-  generateId,
-  generateIdIn,
+  generateNodeId,
+  generateNodeIdIn,
   generateNodeBefore,
   generateNodeAfter,
   moveBefore,
@@ -53,14 +53,14 @@ const nodeIdsInOrder = [
 ]
 
 describe('graphHelpers', () => {
-  test('generateId returns a random String', () => {
-    expect(generateId()).not.toBe(generateId())
+  test('generateNodeId returns a random String', () => {
+    expect(generateNodeId()).not.toBe(generateNodeId())
   })
 
-  test('generateIdIn returns a string different of all object keys', () => {
+  test('generateNodeIdIn returns a string different of all object keys', () => {
     const object = {}
-    for (let i = 0; i < 100; i++) object[generateId()] = ''
-    const newKey = generateIdIn(object)
+    for (let i = 0; i < 100; i++) object[generateNodeId()] = ''
+    const newKey = generateNodeIdIn(object)
     expect(object).not.toContain(newKey)
   })
 

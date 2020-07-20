@@ -1,6 +1,6 @@
 import firebase from 'firebase/app'
 import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
-import { generateId } from 'components/editor/TrailEditor/graphHelpers'
+import { generateNodeId } from 'components/editor/TrailEditor/graphHelpers'
 
 let myTrailsListener
 
@@ -32,7 +32,7 @@ export async function createTrail (__, { position }) {
   const userId = firebase.auth().currentUser.uid
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc()
-  const stationId = generateId()
+  const stationId = generateNodeId()
   const stationRef = trailRef.collection('stations').doc(stationId)
   await db.runTransaction(async t => {
     t.set(trailRef, defaultTrail(userId, stationId, position))

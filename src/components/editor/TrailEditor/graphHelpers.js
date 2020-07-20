@@ -1,6 +1,8 @@
 import { defaultNode } from 'src/store/defaultData'
 import PositionTranslator from 'src/mixins/PositionTranslator'
 
+const nodeIdLength = 8
+
 export function copyNode (node) {
   return {
     name: node.name || null,
@@ -25,18 +27,32 @@ export function copyGraph (graph) {
   }
 }
 
-export function generateId () {
-  return Math.random().toString(36).substring(2)
+function generateId (length) {
+  let result = ''
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return result
+  // return Math.random().toString(36).substring(2)
 }
 
-export function generateIdIn (object) {
+function generateIdIn (object, length) {
   const objectIds = Object.keys(object)
   const idAlreadyExists = id => objectIds.some(nodeId => id === nodeId)
   let newId
   do {
-    newId = generateId()
+    newId = generateId(length)
   } while (idAlreadyExists(newId))
   return newId
+}
+
+export function generateNodeId () {
+  return generateId(nodeIdLength)
+}
+
+export function generateNodeIdIn (nodes) {
+  return generateIdIn(nodes, nodeIdLength)
 }
 
 function getNextNodeId (nodeId, graph) {
@@ -78,7 +94,7 @@ function getMiddlePosition (firstNodeId, secondNodeId, graph) {
 
 function insertNodeBefore (beforeNodeId, newNode, graph) {
   const before = graph.nodes[beforeNodeId]
-  const newNodeId = generateIdIn(graph.nodes)
+  const newNodeId = generateNodeIdIn(graph.nodes)
   newNode.dependencies = [...before.dependencies]
   const newGraph = copyGraph(graph)
   newGraph.nodes[newNodeId] = newNode
@@ -91,7 +107,7 @@ function insertNodeBefore (beforeNodeId, newNode, graph) {
 }
 
 function generateNodeBeforeFirst (firstNodeId, graph) {
-  const newNodeId = generateIdIn(graph.nodes)
+  const newNodeId = generateNodeIdIn(graph.nodes)
   const newPosition = getPosition1ArcSecEastFrom(firstNodeId, graph)
   const newNode = defaultNode(newPosition)
   const newGraph = copyGraph(graph)
@@ -113,7 +129,7 @@ function generateNodeBetween (firstNodeId, secondNodeId, graph) {
 }
 
 function generateNodeAfterLast (lastNodeId, graph) {
-  const newNodeId = generateIdIn(graph.nodes)
+  const newNodeId = generateNodeIdIn(graph.nodes)
   const newPosition = getPosition1ArcSecEastFrom(lastNodeId, graph)
   const newNode = defaultNode(newPosition)
   newNode.dependencies = [lastNodeId]
