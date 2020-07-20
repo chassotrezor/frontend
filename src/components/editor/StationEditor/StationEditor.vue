@@ -71,7 +71,7 @@ import { mapActions, mapGetters } from 'vuex'
 import StationRow from './StationRow/StationRow'
 import StationPreview from './StationPreview'
 import UpdateBtn from '../UpdateBtn'
-import { copyGraph } from 'components/editor/TrailEditor/graphHelpers'
+import { copyGraph } from 'src/helpers/graphHelpers'
 import types from 'src/types'
 
 export default {

@@ -2,7 +2,7 @@ import { firestore } from 'firebase'
 import { mountQuasar } from '@test'
 import TrailGraph from './TrailGraph'
 import types from 'src/types'
-import { remove, moveBefore, moveAfter, copyGraph } from './graphHelpers'
+import { remove, moveBefore, moveAfter, copyGraph } from 'src/helpers/graphHelpers'
 import PositionTranslator from 'src/mixins/PositionTranslator'
 
 const graph = {

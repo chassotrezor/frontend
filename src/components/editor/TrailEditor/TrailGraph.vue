@@ -35,7 +35,7 @@ import { LPolyline } from 'vue2-leaflet'
 import BasicMap from 'components/Navigation/map/BasicMap'
 import NodeMarker from './NodeMarker'
 import PositionTranslator from 'src/mixins/PositionTranslator'
-import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove, copyGraph } from './graphHelpers'
+import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove, copyGraph } from 'src/helpers/graphHelpers'
 
 export default {
   name: 'TrailGraph',

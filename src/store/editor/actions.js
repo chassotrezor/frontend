@@ -1,6 +1,6 @@
 import firebase from 'firebase/app'
 import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
-import { generateNodeId } from 'components/editor/TrailEditor/graphHelpers'
+import { generateNodeId } from 'src/helpers/graphHelpers'
 
 let myTrailsListener
 
