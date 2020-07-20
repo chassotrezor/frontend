@@ -1,7 +1,7 @@
 import {
   generateString,
-  gettrailId,
-  getstationId,
+  getTrailId,
+  getStationId,
   checkCodeValidity
 } from './codeHelpers'
 
@@ -9,10 +9,10 @@ describe('codeHelpers.js', () => {
   const testtrailId = 'testtrailId'
   const teststationId = 'teststationId'
 
-  test('generateString and (gettrailId, getstationId) are inverse functions', () => {
+  test('generateString and (getTrailId, getStationId) are inverse functions', () => {
     const codeString = generateString(testtrailId, teststationId)
-    const inverseTrailId = gettrailId(codeString)
-    const inverseStationId = getstationId(codeString)
+    const inverseTrailId = getTrailId(codeString)
+    const inverseStationId = getStationId(codeString)
     expect([inverseTrailId, inverseStationId]).toEqual([testtrailId, teststationId])
   })
 

@@ -7,11 +7,11 @@ function getPart (code, index) {
   return parts[index]
 }
 
-export function gettrailId (code) {
+export function getTrailId (code) {
   return getPart(code, 4)
 }
 
-export function getstationId (code) {
+export function getStationId (code) {
   return getPart(code, 6)
 }
 

@@ -43,7 +43,7 @@
 <script>
 import QRCode from 'qrcode-svg'
 import html2pdf from 'html2pdf.js'
-import { generateString } from 'components/codeHelpers.js'
+import { generateString } from 'src/helpers/codeHelpers.js'
 import types from 'src/types'
 
 export default {
