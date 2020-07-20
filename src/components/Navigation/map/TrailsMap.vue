@@ -22,7 +22,7 @@ import PositionTranslator from 'src/mixins/PositionTranslator'
 import BasicMap from './BasicMap'
 import TrailMarker from './TrailMarker'
 import trailMarker from 'assets/trailPlace.png'
-import { isOutOfBoundsBounds, getRadius } from './mapHelpers'
+import { isOutOfBoundsBounds, getRadius } from 'src/helpers/mapHelpers'
 
 export default {
   name: 'TrailsMap',
