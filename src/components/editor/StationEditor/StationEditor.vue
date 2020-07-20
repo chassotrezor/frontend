@@ -72,7 +72,7 @@ import StationRow from './StationRow/StationRow'
 import StationPreview from './StationPreview'
 import UpdateBtn from '../UpdateBtn'
 import { copyGraph } from 'src/helpers/graphHelpers'
-import { generateId, generateIdIn } from 'src/helpers/dataHelpers'
+import { generateIdIn } from 'src/helpers/dataHelpers'
 import types from 'src/types'
 
 export default {

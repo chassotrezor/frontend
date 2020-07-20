@@ -85,7 +85,7 @@ async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
 
       if (currentStationIsNotAccessible) {
         accessibleStations[trailId].stations[stationId] = {
-          name: trail.data().nodes[stationId].name
+          name: trail.data().graph.nodes[stationId].name
         }
       }
 
@@ -122,7 +122,7 @@ async function saveStationAccessLocally ({ trailId, stationId }) {
 
   if (currentStationIsNotAccessible) {
     accessibleStations[trailId].stations[stationId] = {
-      name: trail.data().nodes[stationId].name
+      name: trail.data().graph.nodes[stationId].name
     }
   }
 
@@ -174,7 +174,6 @@ export async function updateTrailAccess (__, { trailId }) {
   try {
     await db.runTransaction(async transaction => {
       const accessibleStations = await getAccessibleStations({ currentUser, transaction })
-      console.log(currentUser, accessibleStations)
       const trail = await transaction.get(trailRef)
       const trailDoesNotExist = !trail.data()
       if (trailDoesNotExist) delete accessibleStations[trailId]

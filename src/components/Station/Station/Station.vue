@@ -26,7 +26,7 @@ export default {
       const stationId = this.$route.params.stationId
       const trail = this.getTrail({ trailId })
       const trailName = trail.name
-      const stationName = trail.nodes[stationId].name
+      const stationName = trail.graph.nodes[stationId].name
       const rows = this.getStation({ trailId, stationId }).rows
       return { trailName, stationName, rows }
     }

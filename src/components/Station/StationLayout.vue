@@ -68,7 +68,7 @@ export default {
     },
     isTrailEntry () {
       const vm = this
-      return this.trail.trailEntries.some(entryId => vm.stationId === entryId)
+      return this.trail.graph.trailEntries.some(entryId => vm.stationId === entryId)
     },
     stationIsAccessible () {
       return this.trailIsOpen || this.start
