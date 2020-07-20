@@ -59,7 +59,7 @@ import {
   LControl
 } from 'vue2-leaflet'
 import FillPageHeight from 'src/mixins/FillPageHeight'
-import PositionTranslator from 'src/mixins/PositionTranslator'
+import { fromNavigatorPosition } from 'src/helpers/mapHelpers'
 import positionMarker from 'assets/hat.png'
 import shadow from 'assets/shadow.png'
 
@@ -73,7 +73,7 @@ export default {
     LCircle,
     LControl
   },
-  mixins: [FillPageHeight, PositionTranslator],
+  mixins: [FillPageHeight],
   props: {
     width: {
       type: String,
@@ -132,7 +132,7 @@ export default {
     startWatch () {
       navigator.geolocation.getCurrentPosition(
         navigatorPosition => {
-          const newCenter = this.fromNavigatorPosition(navigatorPosition).toLatLng()
+          const newCenter = fromNavigatorPosition(navigatorPosition).toLatLng()
           const map = this.$refs.map.mapObject
           const zoom = Math.max(map.getZoom(), 9)
           map.setView(newCenter, zoom)
@@ -141,7 +141,7 @@ export default {
       )
       this.positionWatcher = navigator.geolocation.watchPosition(
         navigatorPosition => {
-          this.position.latLng = this.fromNavigatorPosition(navigatorPosition).toLatLng()
+          this.position.latLng = fromNavigatorPosition(navigatorPosition).toLatLng()
           this.position.accuracy = navigatorPosition.accuracy
         },
         this.geolocationError

@@ -1,7 +1,7 @@
 <template>
   <l-marker
     class="LMarker_test"
-    :lat-lng="fromGeopoint(node.position).toLatLng()"
+    :lat-lng="latLng"
     draggable
     :visible="visible"
     @update:lat-lng="$emit('update:lat-lng', $event)"
@@ -39,7 +39,7 @@
 
 <script>
 import { LMarker, LPopup, LIcon, LTooltip } from 'vue2-leaflet'
-import PositionTranslator from 'src/mixins/PositionTranslator'
+import { fromGeopoint } from 'src/helpers/mapHelpers'
 import NodeCard from './NodeCard'
 import station from 'assets/station.png'
 import trailEntry from 'assets/trailEntry.png'
@@ -55,7 +55,6 @@ export default {
     LTooltip,
     NodeCard
   },
-  mixins: [PositionTranslator],
   props: {
     node: {
       type: Object,
@@ -89,6 +88,9 @@ export default {
       if (this.first) return trailEntry
       if (this.last) return endNode
       return station
+    },
+    latLng () {
+      return fromGeopoint(this.node.position).toLatLng()
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 import { defaultNode } from 'src/store/defaultData'
-import PositionTranslator from 'src/mixins/PositionTranslator'
+import { fromGeopoint, fromArray } from 'src/helpers/mapHelpers'
 
 const nodeIdLength = 8
 
@@ -7,7 +7,7 @@ export function copyNode (node) {
   return {
     name: node.name || null,
     dependencies: node.dependencies ? [...node.dependencies] : [],
-    position: node.position ? PositionTranslator.methods.fromGeopoint(node.position).toGeopoint() : null,
+    position: node.position ? fromGeopoint(node.position).toGeopoint() : null,
     type: node.type || null
   }
 }
@@ -74,21 +74,21 @@ function getPreviousNodeId (nodeId, graph) {
 
 function getPosition1ArcSecEastFrom (nodeId, graph) {
   const nodeGeopoint = graph.nodes[nodeId].position
-  const positionArray = PositionTranslator.methods.fromGeopoint(nodeGeopoint).toArray()
+  const positionArray = fromGeopoint(nodeGeopoint).toArray()
   const newPositionArray = [positionArray[0], positionArray[1] + 1 / 360]
-  const newGeopoint = PositionTranslator.methods.fromArray(newPositionArray).toGeopoint()
+  const newGeopoint = fromArray(newPositionArray).toGeopoint()
   return newGeopoint
 }
 
 function getMiddlePosition (firstNodeId, secondNodeId, graph) {
   const firstNodeGeopoint = graph.nodes[firstNodeId].position
   const secondNodeGeopoint = graph.nodes[secondNodeId].position
-  const firstPositionArray = PositionTranslator.methods.fromGeopoint(firstNodeGeopoint).toArray()
-  const secondPositionArray = PositionTranslator.methods.fromGeopoint(secondNodeGeopoint).toArray()
+  const firstPositionArray = fromGeopoint(firstNodeGeopoint).toArray()
+  const secondPositionArray = fromGeopoint(secondNodeGeopoint).toArray()
   const centerArray = firstPositionArray.map((currentAxis, index) => {
     return (currentAxis + secondPositionArray[index]) / 2
   })
-  const centerGeopoint = PositionTranslator.methods.fromArray(centerArray).toGeopoint()
+  const centerGeopoint = fromArray(centerArray).toGeopoint()
   return centerGeopoint
 }
 

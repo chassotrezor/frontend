@@ -34,7 +34,7 @@
 import { LPolyline } from 'vue2-leaflet'
 import BasicMap from 'components/Navigation/map/BasicMap'
 import NodeMarker from './NodeMarker'
-import PositionTranslator from 'src/mixins/PositionTranslator'
+import { fromGeopoint, fromLatLng } from 'src/helpers/mapHelpers'
 import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove, copyGraph } from 'src/helpers/graphHelpers'
 
 export default {
@@ -44,7 +44,6 @@ export default {
     NodeMarker,
     LPolyline
   },
-  mixins: [PositionTranslator],
   props: {
     graph: {
       type: Object,
@@ -55,10 +54,10 @@ export default {
     positionsInOrder () {
       let currentNode = this.graph.nodes[this.graph.endNodes[0]]
       if (!currentNode) return []
-      const positions = [this.fromGeopoint(currentNode.position).toArray()]
+      const positions = [fromGeopoint(currentNode.position).toArray()]
       while (currentNode.dependencies.length > 0) {
         currentNode = this.graph.nodes[currentNode.dependencies[0]]
-        const position = this.fromGeopoint(currentNode.position).toArray()
+        const position = fromGeopoint(currentNode.position).toArray()
         positions.unshift(position)
       }
       return positions
@@ -95,7 +94,7 @@ export default {
     },
     updatePosition (stationId, latLng) {
       const newGraph = copyGraph(this.graph)
-      const newPosition = this.fromLatLng(latLng).toGeopoint()
+      const newPosition = fromLatLng(latLng).toGeopoint()
       newGraph.nodes[stationId].position = newPosition
       this.$emit('updateGraph', newGraph)
     },

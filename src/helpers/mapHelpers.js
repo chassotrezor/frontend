@@ -1,3 +1,37 @@
+// position translator
+
+import { firestore } from 'firebase/app'
+import { latLng } from 'leaflet'
+
+function to (positionArray) {
+  return {
+    toLatLng: () => latLng(...positionArray),
+    toGeopoint: () => new firestore.GeoPoint(...positionArray),
+    toArray: () => positionArray
+  }
+}
+
+export function fromGeopoint (geopoint) {
+  const positionArray = [geopoint.latitude, geopoint.longitude]
+  return to(positionArray)
+}
+
+export function fromLatLng (latlng) {
+  const positionArray = [latlng.lat, latlng.lng]
+  return to(positionArray)
+}
+
+export function fromNavigatorPosition (navigatorPosition) {
+  const positionArray = [navigatorPosition.coords.latitude, navigatorPosition.coords.longitude]
+  return to(positionArray)
+}
+
+export function fromArray (array) {
+  return to(array)
+}
+
+// geofirex helpers
+
 const earthRadius = 6371
 const defaultPositionChangeToleranceRatio = 0.1
 

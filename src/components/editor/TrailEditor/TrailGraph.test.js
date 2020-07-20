@@ -3,7 +3,7 @@ import { mountQuasar } from '@test'
 import TrailGraph from './TrailGraph'
 import types from 'src/types'
 import { remove, moveBefore, moveAfter, copyGraph } from 'src/helpers/graphHelpers'
-import PositionTranslator from 'src/mixins/PositionTranslator'
+import { fromLatLng } from 'src/helpers/mapHelpers'
 
 const graph = {
   trailEntries: ['testNodeId1'],
@@ -97,7 +97,7 @@ describe('TrailGraph', () => {
         await wrapper.vm.$nextTick()
         const stationId = expectedNodeIdsInOrder[0]
         const expectedNewGraph = copyGraph(graph)
-        expectedNewGraph.nodes[stationId].position = PositionTranslator.methods.fromLatLng(newLatLng).toGeopoint()
+        expectedNewGraph.nodes[stationId].position = fromLatLng(newLatLng).toGeopoint()
         expect(wrapper.emitted('updateGraph')[0][0]).toEqual(expectedNewGraph)
       })
     })
