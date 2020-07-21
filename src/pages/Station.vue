@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import StationLayout from 'components/Station/StationLayout'
+import StationLayout from 'components/Trail/StationLayout'
 
 export default {
   name: 'PageStation',

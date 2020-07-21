@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import StationRenderer from 'components/Station/Station/StationRenderer'
+import StationRenderer from 'components/Trail/Station/StationRenderer'
 
 export default {
   name: 'StationPreview',
