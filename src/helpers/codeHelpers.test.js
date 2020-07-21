@@ -17,11 +17,11 @@ describe('codeHelpers.js', () => {
   })
 
   describe('checkCodeValidity checks if code has format "https://chassotrezor.web.app/trail/trailId/station/stationId"', () => {
-    const validCodes = ['https://chassotrezor.web.app/trail/trailId/station/stationId']
+    const validCodes = ['https://chassotrezor.web.app/trailId/stationId']
     const invalidCodes = [
-      'http://chassotrezor.web.app/trail/trailId/station/stationId',
-      'https://chassotrezor.web.app/trail//station/stationId',
-      'https://chassotrezor.web.app/trail/trailId/station/'
+      'http://chassotrezor.web.app/trailId/stationId',
+      'https://chassotrezor.web.app/trail/trailId/station/stationId',
+      'https://chassotrezor.web.app/trailId'
     ]
     for (let i = 0; i < validCodes.length; i++) {
       test('valid codes', () => {
