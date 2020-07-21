@@ -68,13 +68,14 @@ async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
   try {
     await db.runTransaction(async (t) => {
       const user = await t.get(userRef)
-      const trail = await t.get(trailRef)
+      const trailDoc = await t.get(trailRef)
+      const trail = trailDoc.data()
       const accessibleStations = user.data().accessibleStations
       const currentTrailIsNotAccessible = !accessibleStations[trailId]
       if (currentTrailIsNotAccessible) {
         accessibleStations[trailId] = {
           data: {
-            name: trail.data().name
+            name: trail.name
           },
           stations: {}
         }
@@ -84,8 +85,10 @@ async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
         Object.keys(accessibleStations[trailId].stations).every(id => id !== stationId)
 
       if (currentStationIsNotAccessible) {
+        const station = trail.graph.nodes[stationId]
         accessibleStations[trailId].stations[stationId] = {
-          name: trail.data().graph.nodes[stationId].name
+          name: station.name,
+          position: station.position
         }
       }
 
@@ -193,4 +196,36 @@ export async function updateTrailAccess (__, { trailId }) {
   } catch (err) {
     console.log('Transaction failure:', err)
   }
+}
+
+export function toggleTrailDisplay (__, { trailId }) {
+  const db = firebase.firestore()
+  const userId = firebase.auth().currentUser.uid
+  const userRef = db.collection('users').doc(userId)
+  return db.runTransaction(async transaction => {
+    const user = await transaction.get(userRef)
+    const trail = user.data().accessibleStations[trailId]
+    const accessibleStations = {
+      [trailId]: {
+        data: {
+          display: !trail.data.display
+        }
+      }
+    }
+    transaction.set(userRef, { accessibleStations }, { merge: true })
+  })
+}
+
+export function setTrailColor (__, { trailId, color }) {
+  const db = firebase.firestore()
+  const userId = firebase.auth().currentUser.uid
+  const userRef = db.collection('users').doc(userId)
+  const accessibleStations = {
+    [trailId]: {
+      data: {
+        color
+      }
+    }
+  }
+  userRef.set({ accessibleStations }, { merge: true })
 }

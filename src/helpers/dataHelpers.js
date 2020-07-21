@@ -39,3 +39,19 @@ export function generateIdIn (objectOrArray, length, pathToValue) {
   } while (idAlreadyExists(newId, existingIds))
   return newId
 }
+
+export function ratioToQuasarColor (ratio, level) {
+  const index = Math.floor(ratio * 19)
+  const colors = [
+    'red', 'pink', 'purple', 'deep-purple', 'indigo',
+    'blue', 'light-blue', 'cyan', 'teal', 'green',
+    'light-green', 'lime', 'yellow', 'amber', 'orange',
+    'deep-orange', 'brown', 'grey', 'blue-grey'
+  ]
+  const levelInRange =
+    Number.isInteger(level) &&
+    level >= 0 &&
+    level <= 14
+  const color = levelInRange ? `${colors[index]}-${level}` : colors[index]
+  return color
+}

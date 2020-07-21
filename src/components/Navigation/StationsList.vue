@@ -1,99 +1,68 @@
 <template>
-  <div>
-    Stations List
-    <div
-      v-if="hasTrails"
+  <div class="full-width">
+    <basic-map
+      width="100%"
+      height="100%"
     >
-      <q-select
-        v-model="selectedTrail"
-        class="QSelect_test"
-        :options="trails"
+      <station-list-marker
+        v-for="station in stations"
+        :key="station.stationId"
+        :station="station"
       />
-      <q-list>
-        <q-item
-          v-for="stationId in stations"
-          :key="stationId"
-          class="QItem_test"
-          :class="`${stationId}_test`"
-          clickable
-          @click="() => push(stationId)"
-        >
-          <q-item-section>
-            <q-item-label>
-              {{ accessibleStations[selectedTrail.value].stations[stationId].name }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
-    <div v-else>
-      no station yet
-    </div>
+    </basic-map>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import BasicMap from 'components/Navigation/map/BasicMap'
+import StationListMarker from './StationListMarker'
+import { fromGeopoint } from 'src/helpers/mapHelpers'
+// import { ratioToQuasarColor } from 'src/helpers/dataHelpers'
 
 export default {
   name: 'StationsList',
-  data () {
-    return {
-      selectedTrail: undefined
-    }
+  components: {
+    BasicMap,
+    StationListMarker
   },
   computed: {
     ...mapGetters({
       accessibleStations: 'user/accessibleStations',
       lastTrail: 'user/lastTrail'
     }),
-    trails () {
+    stations () {
       if (this.accessibleStations) {
-        return Object.entries(this.accessibleStations).map(trail => {
-          return {
-            label: trail[1].data.name,
-            value: trail[0]
+        const trails = Object.entries(this.accessibleStations)
+        const stations = []
+        trails.forEach((trail, index) => {
+          if (trail[1].data.display) {
+            Object.entries(trail[1].stations).forEach(station => {
+              stations.push({
+                trailId: trail[0],
+                trailName: trail[1].data.name,
+                stationId: station[0],
+                stationName: station[1].name,
+                latLng: fromGeopoint(station[1].position).toLatLng(),
+                color: trail[1].data.color
+              })
+            })
           }
         })
+        return stations
       } else {
         return []
-      }
-    },
-    stations () {
-      if (
-        this.selectedTrail &&
-        this.accessibleStations &&
-        this.accessibleStations[this.selectedTrail.value] &&
-        this.accessibleStations[this.selectedTrail.value].stations
-      ) {
-        return Object.keys(this.accessibleStations[this.selectedTrail.value].stations)
-      } else {
-        return undefined
       }
     },
     hasTrails () {
       return Object.keys(this.trails).length > 0
     }
   },
-  watch: {
-    lastTrail (trailId) {
-      this.selectedTrail = this.trails.find(option => option.value === trailId)
-    }
-  },
-  mounted () {
-    this.selectedTrail = this.trails.find(option => option.value === this.lastTrail)
-  },
   methods: {
-    push (station) {
-      const route = {
-        name: 'station',
-        params: {
-          trailId: this.selectedTrail.value,
-          stationId: station
-        }
-      }
-      this.$router.push(route)
-    }
+    ...mapActions({
+      toggleTrail: 'user/toggleTrailDisplay',
+      setTrailColor: 'user/setTrailColor'
+    })
   }
 }
 </script>

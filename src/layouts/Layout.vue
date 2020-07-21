@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -14,12 +14,22 @@
         <q-toolbar-title>
           Chassotrezor
         </q-toolbar-title>
+        <q-btn
+          v-if="rightDrawerStatus"
+          flat
+          dense
+          round
+          size="lg"
+          padding="none"
+          :icon="rightDrawerOpen ? 'arrow_right' :'arrow_left'"
+          @click="rightDrawerOpen = !rightDrawerOpen"
+        />
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
+      side="left"
       bordered
       content-class="bg-grey-1"
     >
@@ -40,6 +50,17 @@
         />
       </q-list>
     </q-drawer>
+    <q-drawer
+      v-model="rightDrawerOpen"
+      side="right"
+      overlay
+      bordered
+      content-class="bg-grey-1"
+    >
+      <station-list-drawer-content
+        v-if="rightDrawerStatus === 'stationsList'"
+      />
+    </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -49,6 +70,7 @@
 <script>
 import firebase from 'firebase/app'
 import NavigationLink from 'components/Navigation/NavigationLink'
+import StationListDrawerContent from 'components/Navigation/StationListDrawerContent'
 import routes from 'src/router/routes'
 import types from 'src/types'
 
@@ -56,12 +78,14 @@ export default {
   name: 'Layout',
 
   components: {
-    NavigationLink
+    NavigationLink,
+    StationListDrawerContent
   },
 
   data () {
     return {
       leftDrawerOpen: false,
+      rightDrawerOpen: false,
       connectionState: '',
       types,
       removeObserver: () => {}
@@ -91,6 +115,13 @@ export default {
       })
 
       return orderedRoutes
+    },
+
+    rightDrawerStatus () {
+      switch (this.$route.name) {
+        case 'stationsList': return 'stationsList'
+        default: return null
+      }
     }
   },
 
@@ -99,6 +130,11 @@ export default {
     vm.removeObserver = firebase.auth().onAuthStateChanged(user => {
       vm.connectionState = user ? types.connection.CONNECTED : types.connection.DISCONNECTED
     })
+  },
+
+  beforeRouteUpdate (to, from, next) {
+    this.rightDrawerOpen = false
+    next()
   },
 
   beforeDestroy () {

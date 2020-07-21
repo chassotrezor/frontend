@@ -1,7 +1,7 @@
 <template>
   <q-page-sticky
     class="full-width q-pa-sm bg-grey-3"
-    style="justify-content: flex-start; z-index: 5000"
+    style="justify-content: flex-start; z-index: 2000"
     position="top"
   >
     <q-btn
