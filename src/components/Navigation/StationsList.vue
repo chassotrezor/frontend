@@ -4,9 +4,10 @@
       width="100%"
       height="100%"
     >
-      <station-list-marker
+      <stations-list-marker
         v-for="station in stations"
         :key="station.stationId"
+        class="StationsListMarker_test"
         :station="station"
       />
     </basic-map>
@@ -14,17 +15,16 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import BasicMap from 'components/Navigation/map/BasicMap'
-import StationListMarker from './StationListMarker'
+import StationsListMarker from './StationsListMarker'
 import { fromGeopoint } from 'src/helpers/mapHelpers'
-// import { ratioToQuasarColor } from 'src/helpers/dataHelpers'
 
 export default {
   name: 'StationsList',
   components: {
     BasicMap,
-    StationListMarker
+    StationsListMarker
   },
   computed: {
     ...mapGetters({
@@ -35,7 +35,7 @@ export default {
       if (this.accessibleStations) {
         const trails = Object.entries(this.accessibleStations)
         const stations = []
-        trails.forEach((trail, index) => {
+        trails.forEach(trail => {
           if (trail[1].data.display) {
             Object.entries(trail[1].stations).forEach(station => {
               stations.push({
@@ -53,16 +53,7 @@ export default {
       } else {
         return []
       }
-    },
-    hasTrails () {
-      return Object.keys(this.trails).length > 0
     }
-  },
-  methods: {
-    ...mapActions({
-      toggleTrail: 'user/toggleTrailDisplay',
-      setTrailColor: 'user/setTrailColor'
-    })
   }
 }
 </script>

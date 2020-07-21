@@ -57,7 +57,7 @@
       bordered
       content-class="bg-grey-1"
     >
-      <station-list-drawer-content
+      <stations-list-drawer-content
         v-if="rightDrawerStatus === 'stationsList'"
       />
     </q-drawer>
@@ -70,7 +70,7 @@
 <script>
 import firebase from 'firebase/app'
 import NavigationLink from 'components/Navigation/NavigationLink'
-import StationListDrawerContent from 'components/Navigation/StationListDrawerContent'
+import StationsListDrawerContent from 'components/Navigation/StationsListDrawerContent'
 import routes from 'src/router/routes'
 import types from 'src/types'
 
@@ -79,7 +79,7 @@ export default {
 
   components: {
     NavigationLink,
-    StationListDrawerContent
+    StationsListDrawerContent
   },
 
   data () {

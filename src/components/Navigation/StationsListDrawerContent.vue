@@ -4,9 +4,11 @@
       <q-item
         v-for="trail in sortedAccessibleTrails"
         :key="trail.trailId"
+        class="QItem_test"
       >
         <q-item-section avatar>
           <q-toggle
+            class="ToggleDisplay_test"
             :value="trail.display"
             round
             @input="toggleTrailDisplay({ trailId: trail.trailId })"
@@ -19,6 +21,7 @@
 
         <q-item-section avatar>
           <q-btn
+            class="PickColor_test"
             :style="`color: ${trail.display ? trail.color : 'grey'}`"
             round
             flat
@@ -35,6 +38,7 @@
       v-model="chooseColor"
     >
       <q-color
+        class="ColorPicker_test"
         no-header
         no-footer
         default-view="palette"
@@ -48,7 +52,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'StationListDrawerContent',
+  name: 'StationsListDrawerContent',
   data () {
     return {
       chooseColor: false,
