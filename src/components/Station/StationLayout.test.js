@@ -20,11 +20,11 @@ const $q = {
 }
 
 const testTrail = {
-  trailEntries: ['testStationId']
+  graph: { trailEntries: ['testStationId'] }
 }
 
 const closedTestTrail = {
-  trailEntries: []
+  graph: { trailEntries: [] }
 }
 
 const testStation = {
