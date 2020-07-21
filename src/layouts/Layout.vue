@@ -35,14 +35,15 @@
     >
       <q-list>
         <navigation-link
-          v-for="route in routes[types.displayGroups.CONNECTION]"
+          v-for="route in routes[types.displayGroups.NAVIGATION]"
           :key="route.name"
           :title="$t(`routes.${route.name}`)"
           :route="route"
           :icon="route.meta.display.icon"
         />
+        <q-item />
         <navigation-link
-          v-for="route in routes[types.displayGroups.NAVIGATION]"
+          v-for="route in routes[types.displayGroups.CONNECTION]"
           :key="route.name"
           :title="$t(`routes.${route.name}`)"
           :route="route"

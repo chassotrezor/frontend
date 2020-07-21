@@ -46,7 +46,7 @@ const routes = [
             rule: disconnected,
             group: types.displayGroups.CONNECTION,
             priority: 1000,
-            icon: 'person'
+            icon: 'login'
           }
         }
       },
