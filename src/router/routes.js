@@ -76,9 +76,9 @@ const routes = [
         }
       },
       {
-        path: '/stationsList',
-        name: 'stationsList',
-        component: () => import('pages/StationsList.vue'),
+        path: '/history',
+        name: 'history',
+        component: () => import('pages/History.vue'),
         meta: {
           access: anyTime,
           display: {
@@ -90,7 +90,7 @@ const routes = [
         }
       },
       {
-        path: '/scanner/',
+        path: '/scanner',
         name: 'scanner',
         component: () => import('pages/Scanner.vue'),
         meta: {
@@ -104,7 +104,7 @@ const routes = [
         }
       },
       {
-        path: '/map/',
+        path: '/map',
         name: 'map',
         component: () => import('pages/Map.vue'),
         meta: {

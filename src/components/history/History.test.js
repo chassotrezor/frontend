@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import StationsList from './StationsList'
+import History from './History'
 import { fromGeopoint } from 'src/helpers/mapHelpers'
 
 const defaultAccessibleStations = {
@@ -77,14 +77,10 @@ const store = {
   }
 }
 
-const $router = {
-  push: jest.fn()
-}
-
-describe('StationsList', () => {
+describe('History', () => {
   let wrapper
   beforeAll(async () => {
-    wrapper = mountQuasar(StationsList, {
+    wrapper = mountQuasar(History, {
       store
     })
     await wrapper.vm.$nextTick()

@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import StationsListMarker from './StationsListMarker'
+import HistoryMarker from './HistoryMarker'
 import { latLng } from 'leaflet'
 
 const station = {
@@ -15,10 +15,10 @@ const $router = {
   push: jest.fn()
 }
 
-describe('StationsListMarker', () => {
+describe('HistoryMarker', () => {
   let wrapper
   beforeAll(async () => {
-    wrapper = mountQuasar(StationsListMarker, {
+    wrapper = mountQuasar(HistoryMarker, {
       propsData: { station },
       mocks: {
         $router

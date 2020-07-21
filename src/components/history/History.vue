@@ -4,7 +4,7 @@
       width="100%"
       height="100%"
     >
-      <stations-list-marker
+      <history-marker
         v-for="station in stations"
         :key="station.stationId"
         class="StationsListMarker_test"
@@ -17,14 +17,14 @@
 <script>
 import { mapGetters } from 'vuex'
 import BasicMap from 'components/Navigation/map/BasicMap'
-import StationsListMarker from './StationsListMarker'
+import HistoryMarker from './HistoryMarker'
 import { fromGeopoint } from 'src/helpers/mapHelpers'
 
 export default {
-  name: 'StationsList',
+  name: 'History',
   components: {
     BasicMap,
-    StationsListMarker
+    HistoryMarker
   },
   computed: {
     ...mapGetters({

@@ -52,7 +52,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'StationsListDrawerContent',
+  name: 'HistoryDrawerContent',
   data () {
     return {
       chooseColor: false,

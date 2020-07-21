@@ -57,8 +57,8 @@
       bordered
       content-class="bg-grey-1"
     >
-      <stations-list-drawer-content
-        v-if="rightDrawerStatus === 'stationsList'"
+      <history-drawer-content
+        v-if="rightDrawerStatus === 'history'"
       />
     </q-drawer>
     <q-page-container>
@@ -70,7 +70,7 @@
 <script>
 import firebase from 'firebase/app'
 import NavigationLink from 'components/Navigation/NavigationLink'
-import StationsListDrawerContent from 'components/Navigation/StationsListDrawerContent'
+import HistoryDrawerContent from 'components/history/HistoryDrawerContent'
 import routes from 'src/router/routes'
 import types from 'src/types'
 
@@ -79,7 +79,7 @@ export default {
 
   components: {
     NavigationLink,
-    StationsListDrawerContent
+    HistoryDrawerContent
   },
 
   data () {
@@ -119,7 +119,7 @@ export default {
 
     rightDrawerStatus () {
       switch (this.$route.name) {
-        case 'stationsList': return 'stationsList'
+        case 'history': return 'history'
         default: return null
       }
     }

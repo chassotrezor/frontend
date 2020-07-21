@@ -1,16 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-    <stations-list />
+    <history />
   </q-page>
 </template>
 
 <script>
-import StationsList from 'components/Navigation/StationsList'
+import History from 'components/history/History'
 
 export default {
-  name: 'PageStationsList',
+  name: 'PageHistory',
   components: {
-    StationsList
+    History
   }
 }
 </script>

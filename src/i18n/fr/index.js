@@ -43,12 +43,12 @@ export default {
     unsavedChanges: 'Changements non sauvegardés'
   },
   routes: {
-    stationsList: 'historique des postes',
-    editor: 'créer un parcours',
+    history: 'postes visités',
+    editor: 'éditeur',
     home: 'accueil',
     logout: 'se déconnecter',
     map: 'trouver un parcours',
-    scanner: 'scanner un code QR',
+    scanner: 'scanner',
     sign: 'se connecter'
   }
 }

@@ -68,7 +68,7 @@
 import { LMarker, LIcon, LTooltip } from 'vue2-leaflet'
 
 export default {
-  name: 'StationsListMarker',
+  name: 'HistoryMarker',
   components: {
     LMarker,
     LIcon,

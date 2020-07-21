@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import StationsListDrawerContent from './StationsListDrawerContent'
+import HistoryDrawerContent from './HistoryDrawerContent'
 
 const sortedAccessibleTrails = [
   {
@@ -37,11 +37,11 @@ const store = {
   }
 }
 
-describe('StationsListDrawerContent', () => {
+describe('HistoryDrawerContent', () => {
   let wrapper
   let items
   beforeAll(async () => {
-    wrapper = mountQuasar(StationsListDrawerContent, {
+    wrapper = mountQuasar(HistoryDrawerContent, {
       store
     })
     await wrapper.vm.$nextTick()
