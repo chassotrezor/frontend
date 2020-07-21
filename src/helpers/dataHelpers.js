@@ -55,3 +55,19 @@ export function ratioToQuasarColor (ratio, level) {
   const color = levelInRange ? `${colors[index]}-${level}` : colors[index]
   return color
 }
+
+function randomHexString (range) {
+  const length = Math.ceil(Math.log(range) / Math.log(16))
+  const hexValue = Math.floor(Math.random() * range)
+  let hexString = hexValue.toString(16)
+  while (hexString.length < length) hexString = '0' + hexString
+  return hexString
+}
+
+export function randomHexColor (brightness) {
+  const red = randomHexString(brightness)
+  const green = randomHexString(brightness)
+  const blue = randomHexString(brightness)
+  const hexColor = `#${red}${green}${blue}`
+  return hexColor
+}

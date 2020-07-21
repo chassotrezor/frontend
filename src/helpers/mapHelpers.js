@@ -12,7 +12,10 @@ function to (positionArray) {
 }
 
 export function fromGeopoint (geopoint) {
-  const positionArray = [geopoint.latitude, geopoint.longitude]
+  const positionArray = [
+    geopoint.latitude || geopoint.Rc,
+    geopoint.longitude || geopoint.Ac
+  ]
   return to(positionArray)
 }
 

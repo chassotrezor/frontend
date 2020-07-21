@@ -1,6 +1,13 @@
 import firebase from 'firebase/app'
 import { defaultUser } from 'src/store/defaultData'
 import { merge } from 'lodash'
+import { randomHexColor } from 'src/helpers/dataHelpers'
+
+function getLocalUser () {
+  const userString = localStorage.getItem('user') || JSON.stringify(defaultUser)
+  const user = JSON.parse(userString)
+  return user
+}
 
 function getUserRef (userId) {
   return firebase.firestore().collection('users').doc(userId)
@@ -61,6 +68,10 @@ export function unbindUser ({ commit }) {
   commit('delUser')
 }
 
+function isConnected () {
+  return !!firebase.auth().currentUser
+}
+
 async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
   const db = firebase.firestore()
   const userRef = db.collection('users').doc(userId)
@@ -75,7 +86,9 @@ async function saveStationAccessOnServer ({ trailId, stationId, userId }) {
       if (currentTrailIsNotAccessible) {
         accessibleStations[trailId] = {
           data: {
-            name: trail.name
+            name: trail.name,
+            display: true,
+            color: randomHexColor(128)
           },
           stations: {}
         }
@@ -108,13 +121,14 @@ async function saveStationAccessLocally ({ trailId, stationId }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   const trail = await trailRef.get()
-  const oldUser = localStorage.getItem('user') || JSON.stringify(defaultUser)
-  const accessibleStations = JSON.parse(oldUser).accessibleStations
+  const accessibleStations = getLocalUser().accessibleStations
   const currentTrailIsNotAccessible = !accessibleStations[trailId]
   if (currentTrailIsNotAccessible) {
     accessibleStations[trailId] = {
       data: {
-        name: trail.data().name
+        name: trail.data().name,
+        display: true,
+        color: randomHexColor(128)
       },
       stations: {}
     }
@@ -125,7 +139,8 @@ async function saveStationAccessLocally ({ trailId, stationId }) {
 
   if (currentStationIsNotAccessible) {
     accessibleStations[trailId].stations[stationId] = {
-      name: trail.data().graph.nodes[stationId].name
+      name: trail.data().graph.nodes[stationId].name,
+      position: trail.data().graph.nodes[stationId].position
     }
   }
 
@@ -140,7 +155,7 @@ async function saveStationAccessLocally ({ trailId, stationId }) {
 
 export async function saveStationAccess (__, { trailId, stationId }) {
   const currentUser = firebase.auth().currentUser
-  if (currentUser) await saveStationAccessOnServer({ trailId, stationId, userId: currentUser.uid })
+  if (isConnected()) await saveStationAccessOnServer({ trailId, stationId, userId: currentUser.uid })
   else saveStationAccessLocally({ trailId, stationId })
 }
 
@@ -150,8 +165,7 @@ async function getAccessibleStations ({ currentUser, transaction }) {
     const doc = await transaction.get(userRef)
     return doc.data().accessibleStations
   } else {
-    const user = localStorage.getItem('user') || JSON.stringify(defaultUser)
-    return JSON.parse(user).accessibleStations
+    return getLocalUser().accessibleStations
   }
 }
 
@@ -160,10 +174,8 @@ async function updateAccessibleStations ({ accessibleStations, currentUser, tran
     const userRef = firebase.firestore().collection('users').doc(currentUser.uid)
     return transaction.update(userRef, { accessibleStations })
   } else {
-    const oldUserString = localStorage.getItem('user') || JSON.stringify(defaultUser)
-    const oldUser = JSON.parse(oldUserString)
     const user = {
-      ...oldUser,
+      ...getLocalUser(),
       accessibleStations
     }
     return localStorage.setItem('user', JSON.stringify(user))
@@ -198,7 +210,7 @@ export async function updateTrailAccess (__, { trailId }) {
   }
 }
 
-export function toggleTrailDisplay (__, { trailId }) {
+function toggleTrailDisplayOnServer (trailId) {
   const db = firebase.firestore()
   const userId = firebase.auth().currentUser.uid
   const userRef = db.collection('users').doc(userId)
@@ -216,7 +228,18 @@ export function toggleTrailDisplay (__, { trailId }) {
   })
 }
 
-export function setTrailColor (__, { trailId, color }) {
+function toggleTrailDisplayLocally (trailId) {
+  const user = getLocalUser()
+  user.accessibleStations[trailId].data.display = !user.accessibleStations[trailId].data.display
+  localStorage.setItem('user', JSON.stringify(user))
+}
+
+export function toggleTrailDisplay (__, { trailId }) {
+  if (isConnected()) toggleTrailDisplayOnServer(trailId)
+  else toggleTrailDisplayLocally(trailId)
+}
+
+function setTrailColorOnServer (trailId, color) {
   const db = firebase.firestore()
   const userId = firebase.auth().currentUser.uid
   const userRef = db.collection('users').doc(userId)
@@ -228,4 +251,15 @@ export function setTrailColor (__, { trailId, color }) {
     }
   }
   userRef.set({ accessibleStations }, { merge: true })
+}
+
+function setTrailColorLocally (trailId, color) {
+  const user = getLocalUser()
+  user.accessibleStations[trailId].data.color = color
+  localStorage.setItem('user', JSON.stringify(user))
+}
+
+export function setTrailColor (__, { trailId, color }) {
+  if (isConnected()) setTrailColorOnServer(trailId, color)
+  else setTrailColorLocally(trailId, color)
 }
