@@ -23,7 +23,7 @@ describe('Scanner', () => {
 
       const onDecode = wrapper.vm.onDecode
       it('pushes to station when code is valid', () => {
-        onDecode('https://chassotrezor.web.app/trail/testTrail/station/testStation')
+        onDecode('https://chassotrezor.web.app/testTrail/testStation')
         expect(push).toHaveBeenCalledWith({
           name: 'station',
           params: {
