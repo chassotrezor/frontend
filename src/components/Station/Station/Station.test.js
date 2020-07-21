@@ -6,9 +6,11 @@ const stationId = 'testStationId'
 
 const trail = {
   name: 'testTrail',
-  nodes: {
-    [stationId]: {
-      name: 'testStation'
+  graph: {
+    nodes: {
+      [stationId]: {
+        name: 'testStation'
+      }
     }
   }
 }
