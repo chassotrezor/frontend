@@ -1,10 +1,13 @@
 <template>
-  <div>
+  <div
+    class="full-width column items-center"
+  >
     <div>{{ trailName }}</div>
     <div>{{ stationName }}</div>
     <div
       v-for="row in rows"
       :key="row.rowId"
+      class="full-width column items-center"
     >
       <station-image
         v-if="row.type === types.rows.IMAGE"
