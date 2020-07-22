@@ -6,15 +6,6 @@
     style="z-index: 2001"
   >
     <q-btn
-      class="q-mr-md SaveChangesBtn_test"
-      icon="cloud_upload"
-      color="warning"
-      text-color="black"
-      no-caps
-      :label="$t('editor.saveChanges')"
-      @click="updateFn"
-    />
-    <q-btn
       class="q-mr-sm CancelChangesBtn_test"
       icon="undo"
       color="warning"
@@ -22,6 +13,15 @@
       no-caps
       :label="$t('editor.cancelChanges')"
       @click="cancelFn"
+    />
+    <q-btn
+      class="q-mr-md SaveChangesBtn_test"
+      icon="cloud_upload"
+      color="warning"
+      text-color="black"
+      no-caps
+      :label="$t('editor.saveChanges')"
+      @click="updateFn"
     />
   </q-page-sticky>
 </template>
