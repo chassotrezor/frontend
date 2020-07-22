@@ -1,6 +1,16 @@
 import { mountQuasar } from '@test'
 import Station from './Station'
 
+jest.mock('firebase/app', () => {
+  return {
+    auth: () => {
+      return {
+        currentUser: null
+      }
+    }
+  }
+})
+
 const trailId = 'testTrailId'
 const stationId = 'testStationId'
 
@@ -35,6 +45,10 @@ const $route = {
   }
 }
 
+const $q = {
+  notify: jest.fn()
+}
+
 const store = {
   modules: {
     user: {
@@ -52,14 +66,20 @@ const store = {
     }
   }
 }
+
 const wrapper = mountQuasar(Station, {
   store,
   mocks: {
-    $route
+    $route,
+    $q
   }
 })
 
 describe('Station', () => {
+  it('notifies user for connection if user is not connected', () => {
+    expect($q.notify).toHaveBeenCalled()
+  })
+
   it('saves access for this station for this user on the server', () => {
     expect(store.modules.user.actions.saveStationAccess).toHaveBeenCalled()
   })
@@ -67,5 +87,34 @@ describe('Station', () => {
   it('displays a "StationRenderer"', () => {
     const renderer = wrapper.find('.StationRenderer_test')
     expect(renderer.exists()).toBe(true)
+  })
+
+  /*
+    TODO: make this test work without setTimeout
+    there might be a way to wait for the mock to be done, or to chain methods
+  */
+
+  it('does not notify user for connection if user is connected', () => {
+    jest
+      .clearAllMocks()
+      .mock('firebase/app', () => {
+        return {
+          auth: () => {
+            return {
+              currentUser: { uid: 'exists' }
+            }
+          }
+        }
+      })
+    setTimeout(() => {
+      mountQuasar(Station, {
+        store,
+        mocks: {
+          $route,
+          $q
+        }
+      })
+      expect($q.notify).not.toHaveBeenCalled()
+    }, 0)
   })
 })
