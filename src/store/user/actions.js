@@ -169,7 +169,7 @@ async function getAccessibleStations ({ currentUser, transaction }) {
   }
 }
 
-async function updateAccessibleStations ({ accessibleStations, currentUser, transaction }) {
+async function setAccessibleStations ({ accessibleStations, currentUser, transaction }) {
   if (currentUser) {
     const userRef = firebase.firestore().collection('users').doc(currentUser.uid)
     return transaction.update(userRef, { accessibleStations })
@@ -180,6 +180,23 @@ async function updateAccessibleStations ({ accessibleStations, currentUser, tran
     }
     return localStorage.setItem('user', JSON.stringify(user))
   }
+}
+
+export function updateAccessibleStations () {
+  const db = firebase.firestore()
+  const currentUser = firebase.auth().currentUser
+  return db.runTransaction(async transaction => {
+    const accessibleStations = await getAccessibleStations({ currentUser, transaction })
+    await Promise.all(Object.entries(accessibleStations).map(async accessibleTrail => {
+      const trailRef = db.collection('trails').doc(accessibleTrail[0])
+      const trail = await transaction.get(trailRef)
+      Object.entries(accessibleTrail[1].stations).forEach(station => {
+        station[1].name = trail.data().graph.nodes[station[0]].name
+        station[1].position = trail.data().graph.nodes[station[0]].position
+      })
+    }))
+    await setAccessibleStations({ accessibleStations, currentUser, transaction })
+  })
 }
 
 export async function updateTrailAccess (__, { trailId }) {
@@ -203,7 +220,7 @@ export async function updateTrailAccess (__, { trailId }) {
         }))
         if (noStationExist) delete accessibleStations[trailId]
       }
-      await updateAccessibleStations({ accessibleStations, currentUser, transaction })
+      await setAccessibleStations({ accessibleStations, currentUser, transaction })
     })
   } catch (err) {
     console.log('Transaction failure:', err)

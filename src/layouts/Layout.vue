@@ -130,6 +130,7 @@ export default {
     const vm = this
     vm.removeObserver = firebase.auth().onAuthStateChanged(user => {
       vm.connectionState = user ? types.connection.CONNECTED : types.connection.DISCONNECTED
+      if (user) this.$store.dispatch('user/updateAccessibleStations')
     })
   },
 
