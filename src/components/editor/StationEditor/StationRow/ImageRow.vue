@@ -1,18 +1,26 @@
 <template>
-  <div class="row no-wrap q-gutter-md">
-    <q-img
-      class="QImg_test"
-      width="200px"
-      height="200px"
-      contain
-      :src="row.data.url"
+  <div class="column">
+    <q-slider
+      :value="width"
+      :min="10"
+      :max="100"
+      @input="updateWidth"
     />
-    <firebase-uploader
-      class="FirebaseUploader_test"
-      :path="path"
-      :file-id="row.data.fileId ? row.data.fileId : row.rowId"
-      @uploaded="emitImageData"
-    />
+    <div class="row no-wrap q-gutter-md">
+      <q-img
+        class="QImg_test"
+        width="200px"
+        height="200px"
+        contain
+        :src="row.data.url"
+      />
+      <firebase-uploader
+        class="FirebaseUploader_test"
+        :path="path"
+        :file-id="row.data.fileId ? row.data.fileId : row.rowId"
+        @uploaded="updateFile"
+      />
+    </div>
   </div>
 </template>
 
@@ -30,6 +38,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      width: 100
+    }
+  },
   computed: {
     path () {
       const trailId = this.$route.params.trailId
@@ -37,14 +50,31 @@ export default {
       return `${trailId}/${stationId}`
     }
   },
+  mounted () {
+    this.width = this.row.data.width
+    this.fileId = this.row.data.fileId
+    this.url = this.row.data.url
+  },
   methods: {
-    emitImageData (event) {
+    emitImageData () {
       this.$emit('input', {
         ...this.row,
         data: {
-          ...event
+          ...this.row.data,
+          width: this.width,
+          fileId: this.fileId,
+          url: this.url
         }
       })
+    },
+    updateFile (fileData) {
+      this.fileId = fileData.fileId
+      this.url = fileData.url
+      this.emitImageData()
+    },
+    updateWidth (width) {
+      this.width = width
+      this.emitImageData()
     }
   }
 }
