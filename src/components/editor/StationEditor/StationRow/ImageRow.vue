@@ -1,6 +1,7 @@
 <template>
   <div class="column">
     <q-slider
+      class="WidthHandler_test"
       :value="width"
       :min="10"
       :max="100"
@@ -60,7 +61,6 @@ export default {
       this.$emit('input', {
         ...this.row,
         data: {
-          ...this.row.data,
           width: this.width,
           fileId: this.fileId,
           url: this.url
