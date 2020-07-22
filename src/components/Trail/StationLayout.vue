@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <div v-if="station && trail">
       <station
         v-if="stationIsAccessible"
