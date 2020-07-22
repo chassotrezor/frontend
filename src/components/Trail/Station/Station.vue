@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
 import { mapActions, mapGetters } from 'vuex'
 import StationRenderer from './StationRenderer'
 
@@ -35,6 +36,14 @@ export default {
     const trailId = this.$route.params.trailId
     const stationId = this.$route.params.stationId
     this.saveStationAccess({ trailId, stationId })
+    if (firebase.auth().currentUser === null) {
+      this.$q.notify({
+        message: this.$t('trail.station.connectForFullUse'),
+        color: 'warning',
+        position: 'bottom-right',
+        textColor: 'black'
+      })
+    }
   },
   methods: {
     ...mapActions({

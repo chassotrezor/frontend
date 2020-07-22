@@ -18,6 +18,7 @@ export default {
       start: 'Commencer le parcours'
     },
     station: {
+      connectForFullUse: 'Connectez-vous pour sauvegarder votre progression en ligne et pour créer vos propre parcours.',
       waitForStation: 'patientez pendant le chargement du poste...'
     }
   },
