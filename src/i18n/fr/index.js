@@ -1,6 +1,7 @@
 export default {
   auth: {
     connect: 'se connecter',
+    connected: 'connecté',
     createAccount: 'créer mon compte',
     email: 'adresse e-mail',
     emailError: 'veuillez entrer un e-mail valide',
@@ -13,17 +14,9 @@ export default {
     pleaseWait: 'Veuillez patienter',
     sendingMail: 'envoi du lien de connexion...'
   },
-  trail: {
-    manage: {
-      start: 'Commencer le parcours'
-    },
-    station: {
-      connectForFullUse: 'Connectez-vous pour sauvegarder votre progression en ligne et pour créer vos propre parcours.',
-      waitForStation: 'patientez pendant le chargement du poste...'
-    }
-  },
   editor: {
     cancelChanges: 'Annuler les modifications',
+    createTrail: 'créer un parcours',
     saveAndContinue: 'Sauvegarder et continuer',
     saveChanges: 'Sauvegarder les modifications',
     station: {
@@ -43,6 +36,9 @@ export default {
     },
     unsavedChanges: 'Changements non sauvegardés'
   },
+  navigation: {
+    goHome: 'accueil'
+  },
   routes: {
     history: 'postes visités',
     editor: 'éditeur',
@@ -51,5 +47,14 @@ export default {
     map: 'trouver un parcours',
     scanner: 'scanner',
     sign: 'se connecter'
+  },
+  trail: {
+    manage: {
+      start: 'Commencer le parcours'
+    },
+    station: {
+      connectForFullUse: 'Connectez-vous pour sauvegarder votre progression en ligne et pour créer vos propre parcours.',
+      waitForStation: 'patientez pendant le chargement du poste...'
+    }
   }
 }

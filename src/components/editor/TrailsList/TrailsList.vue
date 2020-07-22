@@ -10,7 +10,7 @@
     <q-btn
       class="CreateTrail_test"
       icon="add"
-      label="create trail"
+      :label="$t('editor.createTrail')"
       @click="createAndEditTrail"
     />
   </div>
