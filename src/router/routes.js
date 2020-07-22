@@ -1,19 +1,25 @@
 import types from 'src/types'
 
-const anyTime = [
-  types.connection.CONNECTED,
-  types.connection.DISCONNECTED
-]
+const anyTime = {
+  allowedConnectionStates: [
+    types.connection.CONNECTED,
+    types.connection.DISCONNECTED
+  ]
+}
 
-const connected = [
-  types.connection.CONNECTED
-]
+const connected = {
+  allowedConnectionStates: [
+    types.connection.CONNECTED
+  ]
+}
 
-const disconnected = [
-  types.connection.DISCONNECTED
-]
+const disconnected = {
+  allowedConnectionStates: [
+    types.connection.DISCONNECTED
+  ]
+}
 
-const never = []
+const never = { allowedConnectionStates: [] }
 
 // priority: the route with the greatest priority will be displayed first in the layout drawer
 
@@ -82,7 +88,13 @@ const routes = [
         meta: {
           access: anyTime,
           display: {
-            rule: anyTime,
+            rule: {
+              allowedConnectionStates: [...anyTime.allowedConnectionStates],
+              forcedVuexGetterStates: [{
+                getter: 'user/accessibleStations',
+                ifValid: value => Object.keys(value).length > 0
+              }]
+            },
             group: types.displayGroups.NAVIGATION,
             priority: 100,
             icon: 'info'

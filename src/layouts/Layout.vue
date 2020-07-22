@@ -145,7 +145,15 @@ export default {
   methods: {
     mustBeDisplayed (displayRule) {
       const vm = this
-      return displayRule.some(value => value === vm.connectionState)
+      const connectionStateIsValid = displayRule.allowedConnectionStates
+        .some(allowedState => allowedState === vm.connectionState)
+      const vuexStateIsValid = !displayRule.forcedVuexGetterStates ||
+        displayRule.forcedVuexGetterStates.every(check => {
+          const value = vm.$store.getters[check.getter]
+          const valueIsValid = check.ifValid(value)
+          return valueIsValid
+        })
+      return connectionStateIsValid && vuexStateIsValid
     }
   }
 }
