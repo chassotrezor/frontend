@@ -134,9 +134,11 @@ export default {
       this.graph.nodes[stationId].name = newName
     },
     updateGraph (graph) {
-      this.graph.trailEntries = [...graph.trailEntries]
-      this.graph.endNodes = [...graph.endNodes]
-      this.graph.nodes = { ...graph.nodes }
+      if (Object.keys(graph.nodes).length > 1) {
+        this.graph.trailEntries = [...graph.trailEntries]
+        this.graph.endNodes = [...graph.endNodes]
+        this.graph.nodes = { ...graph.nodes }
+      }
     },
     // TODO: when geofirex will be accessible in vuex, replace this with a single transaction
     async updateTrailAndCreateStation ({ newGraph, newStationId }) {

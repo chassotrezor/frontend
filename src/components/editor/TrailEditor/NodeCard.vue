@@ -15,6 +15,7 @@
           icon="delete_forever"
           color="negative"
           padding="xs"
+          :disable="first && last"
           @click="$emit('removeStation')"
         />
       </div>

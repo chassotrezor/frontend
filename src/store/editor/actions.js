@@ -135,13 +135,15 @@ export function updateStationInTrail ({ getters }, { trailId, stationId, newProp
 }
 
 export function removeStationInTrail (__, { trailId, removedStationId, updatedGraph }) {
-  const db = firebase.firestore()
-  const trailRef = db.collection('trails').doc(trailId)
-  const stationRef = trailRef.collection('stations').doc(removedStationId)
-  return db.runTransaction(async t => {
-    t.update(trailRef, { graph: updatedGraph })
-    t.delete(stationRef)
-  })
+  if (Object.keys(updatedGraph.nodes).length > 1) {
+    const db = firebase.firestore()
+    const trailRef = db.collection('trails').doc(trailId)
+    const stationRef = trailRef.collection('stations').doc(removedStationId)
+    return db.runTransaction(async t => {
+      t.update(trailRef, { graph: updatedGraph })
+      t.delete(stationRef)
+    })
+  }
 }
 
 // old function (may be useful)

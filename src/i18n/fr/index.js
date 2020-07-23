@@ -35,7 +35,7 @@ export default {
     stayOnPage: 'Rester sur la page',
     trail: {
       doNotCreateStation: 'Ne pas créer le poste',
-      doNotRemovetation: 'Ne pas supprimer le poste',
+      doNotRemoveStation: 'Ne pas supprimer le poste',
       downloadQrCodes: 'télécharger les codes QR',
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
       saveChangesThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste',
