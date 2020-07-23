@@ -1,6 +1,6 @@
 <template>
   <div
-    class="full-width column items-center"
+    class="full-width column items-center q-gutter-y-sm"
   >
     <div>{{ trailName }}</div>
     <div>{{ stationName }}</div>

@@ -1,5 +1,8 @@
 <template>
-  <div v-html="sanitizedRawHtml" />
+  <div
+    class="full-width q-px-sm"
+    v-html="sanitizedRawHtml"
+  />
 </template>
 
 <script>
