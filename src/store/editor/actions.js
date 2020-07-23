@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
-import { defaultTrail, defaultNode, defaultStation } from 'src/store/defaultData'
+import { defaultTrail, defaultStation, defaultNode } from 'src/store/defaultData'
 import { generateNodeId } from 'src/helpers/graphHelpers'
+import types from 'src/types'
 
 let myTrailsListener
 
@@ -93,7 +94,7 @@ const isNodeProp = key => {
   return Object.keys(defaultNode([0, 0])).some(nodeKey => key === nodeKey)
 }
 
-export function updateStationInTrail (__, { trailId, stationId, newProps }) {
+export function updateStationInTrail ({ getters }, { trailId, stationId, newProps }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(stationId)
@@ -101,6 +102,21 @@ export function updateStationInTrail (__, { trailId, stationId, newProps }) {
     if (isNodeProp(newProp[0])) nodeProps[newProp[0]] = newProp[1]
     return nodeProps
   }, {})
+
+  const imageRows = newProps.rows.filter(row => row.type === types.rows.IMAGE)
+  const imageRowsWithoutFileId = imageRows.filter(row => !row.data.fileId)
+  const imageFilesToDelete = imageRowsWithoutFileId.reduce((fileIds, row) => {
+    const oldRow = getters.getStation({ trailId, stationId }).rows.find(r => r.rowId === row.rowId)
+    if (oldRow && oldRow.data.fileId) fileIds.push(oldRow.data.fileId)
+    return fileIds
+  }, [])
+  imageFilesToDelete.forEach(fileId => {
+    const userId = firebase.auth().currentUser.uid
+    const path = `${userId}/${trailId}/${stationId}/${fileId}`
+    const imageRef = firebase.storage().ref().child(path)
+    imageRef.delete()
+  })
+
   return db.runTransaction(async t => {
     const oldGraph = (await t.get(trailRef)).data().graph
     const graph = {

@@ -39,12 +39,14 @@
         :key="row.rowId"
         class="StationRow_test"
         :row="row"
+        :old-row-data="oldRowsData[row.rowId]"
         :first="index === 0"
         :last="index === rows.length - 1"
         @up="up(index)"
         @down="down(index)"
         @remove="removeRow(index)"
         @input="set(index, $event)"
+        @triggerSave="update"
       />
       <q-btn-group
         class="AddRow_test"
@@ -67,6 +69,7 @@
 </template>
 
 <script>
+import { cloneDeep, merge } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import StationRow from './StationRow/StationRow'
 import StationPreview from './StationPreview'
@@ -74,6 +77,7 @@ import UpdateBtn from '../UpdateBtn'
 import { copyGraph } from 'src/helpers/graphHelpers'
 import { generateIdIn } from 'src/helpers/dataHelpers'
 import types from 'src/types'
+import rowDefault from './StationRow/rowsDefaultData'
 
 export default {
   name: 'StationEditor',
@@ -116,6 +120,12 @@ export default {
       return this.getTrail({
         trailId: this.trailId
       })
+    },
+    oldRowsData () {
+      return this.station.rows.reduce((oldData, row) => {
+        oldData[row.rowId] = { ...row.data }
+        return oldData
+      }, {})
     }
   },
   mounted () {
@@ -133,11 +143,9 @@ export default {
     duplicateStation () {
       this.trailName = this.trail.name
       this.stationName = this.trail.graph.nodes[this.stationId].name
-      // TODO: replace with a smarter deep copy
-      this.rows = JSON.parse(JSON.stringify(this.station.rows))
+      this.rows = cloneDeep(this.station.rows)
     },
     cancelChanges () {
-      // TODO: remove new images in storage
       this.duplicateStation()
     },
     update () {
@@ -158,13 +166,12 @@ export default {
         }
       })
     },
+    async thenUpdate () {
+      await this.$nextTick()
+      this.update()
+    },
     addRow (type) {
-      let data
-      switch (type) {
-        case types.rows.IMAGE: data = { url: null }; break
-        case types.rows.TEXT: data = { rawHtml: '' }; break
-        default: data = {}; break
-      }
+      const data = rowDefault[type]
       const rowId = generateIdIn(this.rows, 4, 'rowId')
       this.rows.push({
         rowId,
@@ -186,7 +193,9 @@ export default {
       this.rows.splice(i, 2, nextRow, row)
     },
     set (index, row) {
-      this.$set(this.rows, index, row)
+      const newRow = cloneDeep(this.rows[index])
+      merge(newRow, row)
+      this.$set(this.rows, index, newRow)
     }
   }
 }

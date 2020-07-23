@@ -23,6 +23,13 @@ export default {
       addRow: {
         text: 'texte',
         image: 'image'
+      },
+      image: {
+        sendImage: 'envoyer une image',
+        uploadThenSave: 'Envoyer l\'image, puis sauvegarder tous les changements sur ce poste ?',
+        url: 'lien de l\'image',
+        warningDeleteImage: 'L\'image précédemment envoyée sera supprimée du serveur.',
+        width: 'largeur de l\'image: '
       }
     },
     stayOnPage: 'Rester sur la page',
@@ -37,7 +44,10 @@ export default {
     unsavedChanges: 'Changements non sauvegardés'
   },
   navigation: {
-    goHome: 'accueil'
+    cancel: 'annuler',
+    goHome: 'accueil',
+    ok: 'continuer',
+    warning: 'Attention !'
   },
   routes: {
     history: 'postes visités',

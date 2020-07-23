@@ -1,42 +1,50 @@
 <template>
-  <div class="q-ma-md">
-    <q-btn
-      class="RemoveBtn_test"
-      round
-      icon="close"
-      color="negative"
-      @click="$emit('remove')"
-    />
-    <q-btn
-      class="UpBtn_test"
-      round
-      icon="keyboard_arrow_up"
-      color="primary"
-      :disable="first"
-      @click="$emit('up')"
-    />
-    <q-btn
-      class="DownBtn_test"
-      round
-      icon="keyboard_arrow_down"
-      color="primary"
-      :disable="last"
-      @click="$emit('down')"
-    />
+  <div
+    class="row no-wrap q-ma-md q-gutter-x-md"
+    style="width: 600px"
+  >
     <text-row
       v-if="row.type === types.rows.TEXT"
-      class="TextRow_test"
+      class="col-grow TextRow_test"
       :row="row"
+      :old-row-data="oldRowData"
       @input="$emit('input', $event)"
     />
     <image-row
       v-else-if="row.type === types.rows.IMAGE"
-      class="ImageRow_test"
+      class="col-grow ImageRow_test"
       :row="row"
+      :old-row-data="oldRowData"
       @input="$emit('input', $event)"
+      @triggerSave="$emit('triggerSave')"
     />
-    <div v-else>
+    <div
+      v-else
+      class="col-grow"
+    >
       {{ row.type }}
+    </div>
+    <div class="column justify-between full-height">
+      <q-btn
+        class="moveBtn UpBtn_test"
+        icon="keyboard_arrow_up"
+        color="primary"
+        :disable="first"
+        @click="$emit('up')"
+      />
+      <q-btn
+        class="RemoveBtn_test"
+        icon="close"
+        color="negative"
+        @click="$emit('remove')"
+      />
+      <q-btn
+        class="moveBtn DownBtn_test"
+        icon="keyboard_arrow_down"
+        color="primary"
+        :disable="last"
+        @click="$emit('down')"
+      />
     </div>
   </div>
 </template>
@@ -57,6 +65,10 @@ export default {
       type: Object,
       required: true
     },
+    oldRowData: {
+      type: Object,
+      default: () => undefined
+    },
     first: {
       type: Boolean,
       default: () => false
@@ -73,3 +85,8 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.moveBtn
+  height: 60px
+</style>
