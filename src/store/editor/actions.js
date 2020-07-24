@@ -3,6 +3,36 @@ import { defaultTrail, defaultStation, defaultNode } from 'src/store/defaultData
 import { generateNodeId } from 'src/helpers/graphHelpers'
 import types from 'src/types'
 
+// Images handlers
+
+async function removeImages (storedImagesGraph) {
+  const userId = firebase.auth().currentUser.uid
+  await Promise.all(Object.entries(storedImagesGraph).map(async trail => {
+    const trailId = trail[0]
+    await Promise.all(Object.entries(trail[1]).map(async station => {
+      const stationId = station[0]
+      await Promise.all(station[1].map(fileId => {
+        const path = `${userId}/${trailId}/${stationId}/${fileId}`
+        const ref = firebase.storage().ref().child(path)
+        return ref.delete()
+      }))
+    }))
+  }))
+}
+
+async function getStationStoredImagesArray (stationRef, transaction) {
+  const stationStoredImagesArray = []
+  const rows = (await transaction.get(stationRef)).data().rows
+  rows.map(row => {
+    if (row.type === types.rows.IMAGE && row.data.fileId !== null) {
+      stationStoredImagesArray.push(row.data.fileId)
+    }
+  })
+  return stationStoredImagesArray
+}
+
+// trail handlers
+
 let myTrailsListener
 
 export function bindMyTrails ({ commit }) {
@@ -47,17 +77,33 @@ export function updateTrail (__, { trailId, newProps }) {
   return trailRef.update(newProps)
 }
 
-/*
-  TODO: delete station subcollection as well
-  needs to use cloud functions
-  https://firebase.google.com/docs/firestore/solutions/delete-collections
-*/
-export function deleteTrail (__, trailId) {
-  const trailRef = firebase.firestore().collection('trails').doc(trailId)
-  return trailRef.delete()
+export async function deleteTrail (__, { trailId }) {
+  const db = firebase.firestore()
+  const storedImagesGraph = {
+    [trailId]: {}
+  }
+  await db.runTransaction(async transaction => {
+    const trailRef = db.collection('trails').doc(trailId)
+    const nodes = (await transaction.get(trailRef)).data().graph.nodes
+    const stationsIds = Object.keys(nodes)
+    await Promise.all(stationsIds.map(async stationId => {
+      const stationRef = trailRef.collection('stations').doc(stationId)
+      const stationStoredImagesArray = await getStationStoredImagesArray(stationRef, transaction)
+      if (stationStoredImagesArray.length > 0) storedImagesGraph[trailId][stationId] = stationStoredImagesArray
+      transaction.delete(stationRef)
+    }))
+    transaction.delete(trailRef)
+  })
+  return removeImages(storedImagesGraph)
 }
 
+// stations handlers
+
 const stationsListener = {}
+
+function isNodeProp (key) {
+  return Object.keys(defaultNode([0, 0])).some(nodeKey => key === nodeKey)
+}
 
 export function bindStations ({ commit }, { trailId }) {
   const db = firebase.firestore()
@@ -90,11 +136,7 @@ export function createStation (__, { trailId, stationId }) {
   })
 }
 
-const isNodeProp = key => {
-  return Object.keys(defaultNode([0, 0])).some(nodeKey => key === nodeKey)
-}
-
-export function updateStationInTrail ({ getters }, { trailId, stationId, newProps }) {
+export async function updateStationInTrail ({ getters }, { trailId, stationId, newProps }) {
   const db = firebase.firestore()
   const trailRef = db.collection('trails').doc(trailId)
   const stationRef = trailRef.collection('stations').doc(stationId)
@@ -103,21 +145,7 @@ export function updateStationInTrail ({ getters }, { trailId, stationId, newProp
     return nodeProps
   }, {})
 
-  const imageRows = newProps.rows.filter(row => row.type === types.rows.IMAGE)
-  const imageRowsWithoutFileId = imageRows.filter(row => !row.data.fileId)
-  const imageFilesToDelete = imageRowsWithoutFileId.reduce((fileIds, row) => {
-    const oldRow = getters.getStation({ trailId, stationId }).rows.find(r => r.rowId === row.rowId)
-    if (oldRow && oldRow.data.fileId) fileIds.push(oldRow.data.fileId)
-    return fileIds
-  }, [])
-  imageFilesToDelete.forEach(fileId => {
-    const userId = firebase.auth().currentUser.uid
-    const path = `${userId}/${trailId}/${stationId}/${fileId}`
-    const imageRef = firebase.storage().ref().child(path)
-    imageRef.delete()
-  })
-
-  return db.runTransaction(async t => {
+  await db.runTransaction(async t => {
     const oldGraph = (await t.get(trailRef)).data().graph
     const graph = {
       ...oldGraph,
@@ -132,17 +160,39 @@ export function updateStationInTrail ({ getters }, { trailId, stationId, newProp
     t.update(trailRef, { graph })
     t.update(stationRef, newProps)
   })
+
+  const imageRows = newProps.rows.filter(row => row.type === types.rows.IMAGE)
+  const imageRowsWithoutFileId = imageRows.filter(row => !row.data.fileId)
+  const imageFilesToDelete = imageRowsWithoutFileId.reduce((fileIds, row) => {
+    const oldRow = getters.getStation({ trailId, stationId }).rows.find(r => r.rowId === row.rowId)
+    if (oldRow && oldRow.data.fileId) fileIds.push(oldRow.data.fileId)
+    return fileIds
+  }, [])
+  if (imageFilesToDelete.length > 0) {
+    const storedImagesGraph = {
+      [trailId]: {
+        [stationId]: imageFilesToDelete
+      }
+    }
+    await removeImages(storedImagesGraph)
+  }
 }
 
-export function removeStationInTrail (__, { trailId, removedStationId, updatedGraph }) {
+export async function removeStationInTrail (__, { trailId, removedStationId, updatedGraph }) {
   if (Object.keys(updatedGraph.nodes).length > 1) {
     const db = firebase.firestore()
     const trailRef = db.collection('trails').doc(trailId)
     const stationRef = trailRef.collection('stations').doc(removedStationId)
-    return db.runTransaction(async t => {
-      t.update(trailRef, { graph: updatedGraph })
-      t.delete(stationRef)
+    const storedImagesGraph = {
+      [trailId]: {}
+    }
+    await db.runTransaction(async transaction => {
+      const stationStoredImagesArray = await getStationStoredImagesArray(stationRef, transaction)
+      if (stationStoredImagesArray.length > 0) storedImagesGraph[trailId][removedStationId] = stationStoredImagesArray
+      transaction.update(trailRef, { graph: updatedGraph })
+      transaction.delete(stationRef)
     })
+    return removeImages(storedImagesGraph)
   }
 }
 

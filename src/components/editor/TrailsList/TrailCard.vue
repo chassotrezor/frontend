@@ -16,7 +16,7 @@
       round
       icon="close"
       color="negative"
-      @click="deleteTrail(trail.id)"
+      @click="deleteTrail({ trailId: trail.id })"
     />
   </div>
 </template>
