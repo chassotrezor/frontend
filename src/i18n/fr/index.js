@@ -15,6 +15,8 @@ export default {
     sendingMail: 'envoi du lien de connexion...'
   },
   editor: {
+    allTrailDataWillBeLost: 'Toutes les données de ce parcours ainsi que celles de tous ses postes seront définitivement perdues !',
+    askRemoveTrail: 'Supprimer le parcours ?',
     cancelChanges: 'Annuler les modifications',
     createTrail: 'créer un parcours',
     saveAndContinue: 'Sauvegarder et continuer',

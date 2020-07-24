@@ -16,7 +16,7 @@
       round
       icon="close"
       color="negative"
-      @click="deleteTrail({ trailId: trail.id })"
+      @click="confirmRemove"
     />
   </div>
 </template>
@@ -46,6 +46,22 @@ export default {
     }),
     edit () {
       this.$emit('edit')
+    },
+    confirmRemove () {
+      const vm = this
+      this.$q.dialog({
+        title: this.$t('editor.askRemoveTrail'),
+        message: this.$t('editor.allTrailDataWillBeLost'),
+        ok: {
+          label: this.$t('navigation.ok')
+        },
+        cancel: {
+          label: this.$t('navigation.cancel')
+        }
+      })
+        .onOk(() => {
+          vm.deleteTrail({ trailId: this.trailId })
+        })
     }
   }
 }
