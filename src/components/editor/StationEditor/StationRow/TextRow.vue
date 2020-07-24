@@ -1,9 +1,11 @@
 <template>
-  <q-editor
-    class="QEditor_test"
-    :value="sanitizedText"
-    @input="emitTextData"
-  />
+  <div>
+    <q-editor
+      class="QEditor_test"
+      :value="sanitizedText"
+      @input="emitTextData"
+    />
+  </div>
 </template>
 
 <script>
@@ -23,8 +25,11 @@ export default {
   },
   methods: {
     emitTextData (event) {
-      const newRow = JSON.parse(JSON.stringify(this.row))
-      newRow.data.rawHtml = event
+      const newRow = {
+        data: {
+          rawHtml: event
+        }
+      }
       this.$emit('input', newRow)
     }
   }

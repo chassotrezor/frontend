@@ -24,8 +24,14 @@ describe('TextRow', () => {
   })
 
   it('emits "input" with param "textValue" when text editor emits "input" with param "textValue"', async () => {
-    editor.vm.$emit('input', '<div>New Text</div>')
+    const newRawHtml = '<div>New Text</div>'
+    editor.vm.$emit('input', newRawHtml)
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted().input[0][0]).toBe('<div>New Text</div>')
+    const expectedPayload = {
+      data: {
+        rawHtml: newRawHtml
+      }
+    }
+    expect(wrapper.emitted().input[0][0]).toEqual(expectedPayload)
   })
 })
