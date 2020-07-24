@@ -12,7 +12,7 @@
         @input="updateWidth"
       />
       <q-input
-        class="col-grow"
+        class="col-grow UrlInput_test"
         :value="row.data.url"
         :label="$t('editor.station.image.url')"
         @input="updateUrl"
@@ -42,7 +42,7 @@
           key="uploader"
           class="col-grow FirebaseUploader_test"
           :path="path"
-          :file-id="row.data.fileId ? row.data.fileId : row.rowId"
+          :file-id="row.rowId"
           @uploaded="updateFile"
         >
           <template v-slot:header="scope">
@@ -83,7 +83,7 @@
         <q-card
           v-else
           key="warningDelete"
-          class="col-grow bg-warning text-black"
+          class="col-grow bg-warning text-black WarningDeleteImage_test"
           style="width: 300px"
         >
           <q-card-section class="text-h6">

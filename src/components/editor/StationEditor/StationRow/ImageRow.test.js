@@ -22,7 +22,8 @@ describe('ImageRow', () => {
   const row = cloneDeep(defaultRow)
   const wrapper = mountQuasar(ImageRow, {
     propsData: {
-      row
+      row,
+      oldRowData: row.data
     },
     mocks: {
       $route
@@ -34,7 +35,7 @@ describe('ImageRow', () => {
     expect(img.props().src).toBe(defaultRow.data.url)
   })
 
-  describe('widht handler', () => {
+  describe('width handler', () => {
     const handler = wrapper.find('.WidthHandler_test')
     it('displays a width handler', () => {
       expect(handler.exists()).toBe(true)
@@ -45,8 +46,11 @@ describe('ImageRow', () => {
       handler.vm.$emit('input', newWidth)
       await wrapper.vm.$nextTick()
 
-      const expectedPayload = cloneDeep(defaultRow)
-      expectedPayload.data.width = newWidth
+      const expectedPayload = {
+        data: {
+          width: newWidth
+        }
+      }
       expect(wrapper.emitted().input[0][0]).toEqual(expectedPayload)
       wrapper.vm.width = defaultRow.data.width
     })
@@ -62,39 +66,104 @@ describe('ImageRow', () => {
       expect(fu.props().path).toBe(expectedPath)
     })
 
-    test('its "file-id" prop is "row.data.fileId" when "row.data.fileId" is defined', async () => {
-      const row = cloneDeep(defaultRow)
-      wrapper.setProps({ row })
-      await wrapper.vm.$nextTick()
-      expect(fu.props().fileId).toBe(defaultRow.data.fileId)
-    })
-
-    test('its "file-id" prop is "row.rowId" when "row.fileId" is undefined', async () => {
-      const row = cloneDeep(defaultRow)
-      row.data.fileId = undefined
-      wrapper.setProps({ row })
-      await wrapper.vm.$nextTick()
+    test('its "file-id" prop is "row.rowId"', () => {
       expect(fu.props().fileId).toBe(defaultRow.rowId)
     })
 
-    test('ImageRow emits "input" with updated row, when FirebaseUploader emits "uploaded" with new "url" and "fileId"', async () => {
-      const row = cloneDeep(defaultRow)
-      wrapper.setProps({ row })
-
+    describe('When FirebaseUploader emits "uploaded" with new "url" and "fileId"', () => {
       const newUrl = 'new/url'
       const newFileId = 'newFileId'
 
-      fu.vm.$emit('uploaded', {
-        url: newUrl,
-        fileId: newFileId
+      beforeAll(async () => {
+        fu.vm.$emit('uploaded', {
+          url: newUrl,
+          fileId: newFileId
+        })
+        await wrapper.vm.$nextTick()
       })
-      await wrapper.vm.$nextTick()
 
-      const expectedPayload = cloneDeep(defaultRow)
+      test('"ImageRow" emits "input" with new "fileId" and "url"', () => {
+        const expectedPayload = {
+          data: {
+            url: newUrl,
+            fileId: newFileId
+          }
+        }
+        expect(wrapper.emitted().input[1][0]).toEqual(expectedPayload)
+      })
 
-      expectedPayload.data.url = newUrl
-      expectedPayload.data.fileId = newFileId
-      expect(wrapper.emitted().input[1][0]).toEqual(expectedPayload)
+      test('"ImageRow" emits "triggerSave"', () => {
+        expect(wrapper.emitted().triggerSave).toBeTruthy()
+      })
+    })
+  })
+
+  describe('Url input', () => {
+    const url = wrapper.find('.UrlInput_test')
+    describe('when "Url input" emits "input" with "handWrittenUrl"', () => {
+      const newUrl = 'handWrittenUrl'
+      beforeAll(async () => {
+        url.vm.$emit('input', newUrl)
+        const updatedRow = cloneDeep(row)
+        row.data.url = newUrl
+        row.data.fileId = null
+        wrapper.setProps({ row: updatedRow })
+        await wrapper.vm.$nextTick()
+      })
+
+      test('"ImageRow" emits "input" with new "url" and nulled "fileId"', () => {
+        const expectedPayload = {
+          data: {
+            url: newUrl,
+            fileId: null
+          }
+        }
+        expect(wrapper.emitted().input[2][0]).toEqual(expectedPayload)
+      })
+
+      describe('when "oldRowData.fileId" is not null', () => {
+        test('"ImageRow" displays no "FirebaseUploader" card', () => {
+          const fu = wrapper.find('.FirebaseUploader_test')
+          expect(fu.exists()).toBe(false)
+        })
+
+        test('"ImageRow" displays a "WarningDeleteImage" card', () => {
+          const card = wrapper.find('.WarningDeleteImage_test')
+          expect(card.exists()).toBe(true)
+        })
+      })
+
+      describe('when "oldRowData.fileId" is null', () => {
+        const rowWithNullFileId = cloneDeep(row)
+        rowWithNullFileId.data.fileId = null
+        const oldRowData = rowWithNullFileId.data
+
+        beforeAll(async () => {
+          wrapper.setProps({
+            row: rowWithNullFileId,
+            oldRowData
+          })
+          const url = wrapper.find('.UrlInput_test')
+          url.vm.$emit('input', newUrl)
+          const updatedRow = cloneDeep(row)
+          row.data.url = newUrl
+          row.data.fileId = null
+          wrapper.setProps({
+            row: updatedRow
+          })
+          await wrapper.vm.$nextTick()
+        })
+
+        test('"ImageRow" displays a "FirebaseUploader" card', () => {
+          const fu = wrapper.find('.FirebaseUploader_test')
+          expect(fu.exists()).toBe(true)
+        })
+
+        test('"ImageRow" displays no "WarningDeleteImage" card', () => {
+          const card = wrapper.find('.WarningDeleteImage_test')
+          expect(card.exists()).toBe(false)
+        })
+      })
     })
   })
 })
