@@ -137,16 +137,6 @@ export default {
     this.url = this.row.data.url
   },
   methods: {
-    emitImageData () {
-      this.$emit('input', {
-        ...this.row,
-        data: {
-          width: this.width,
-          fileId: this.fileId,
-          url: this.url
-        }
-      })
-    },
     updateFile (fileData) {
       this.fileId = fileData.fileId
       this.url = fileData.url
