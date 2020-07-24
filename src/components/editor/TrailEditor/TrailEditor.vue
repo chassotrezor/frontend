@@ -30,7 +30,10 @@
     >
       <q-card>
         <q-card-section class="text-h6">
-          {{ $t('editor.unsavedChanges') }}
+          {{ dialog.title }}
+        </q-card-section>
+        <q-card-section class="text-body1">
+          {{ dialog.message }}
         </q-card-section>
         <q-card-actions class="column items-center q-gutter-md">
           <q-btn
@@ -82,6 +85,8 @@ export default {
       },
       dialog: {
         open: false,
+        title: '',
+        message: '',
         okBtn: {
           label: '',
           method: () => {}
@@ -165,27 +170,46 @@ export default {
         }
       })
     },
-    removeStation ({ removedStationId, updatedGraph }) {
-      this.updateGraph(updatedGraph)
-      return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
+    removeStation ({ removedStationId, updatedGraph, bypassConfirm }) {
+      const vm = this
+      if (!bypassConfirm) {
+        this.dialog.okBtn.method = () => {
+          vm.dialog.open = false
+          vm.updateGraph(updatedGraph)
+          return vm.removeStationInTrail({ trailId: vm.trailId, removedStationId, updatedGraph })
+        }
+        this.dialog.cancelBtn.method = () => { vm.dialog.open = false }
+        this.dialog.title = this.$t('editor.trail.askRemoveStation')
+        this.dialog.message = this.$t('editor.trail.allStationDataWillBeLost')
+        this.dialog.okBtn.label = this.$t('editor.trail.confirmRemoveStation')
+        this.dialog.cancelBtn.label = this.$t('editor.trail.doNotRemoveStation')
+        this.dialog.open = true
+      } else {
+        this.updateGraph(updatedGraph)
+        return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
+      }
     },
     promptSaveBefore (methodName, payload) {
       const vm = this
-      const method = () => {
-        this.dialog.open = false
-        return vm[methodName](payload)
-      }
 
       if (this.difference) {
-        this.dialog.okBtn.method = method
+        this.dialog.okBtn.method = () => {
+          this.dialog.open = false
+          const newPayload = { ...payload, bypassConfirm: true }
+          return vm[methodName](newPayload)
+        }
         this.dialog.cancelBtn.method = () => { vm.dialog.open = false }
         switch (methodName) {
           case 'updateTrailAndCreateStation': {
+            this.dialog.title = this.$t('editor.unsavedChanges')
+            this.dialog.message = ''
             this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenCreateStation')
             this.dialog.cancelBtn.label = this.$t('editor.trail.doNotCreateStation')
             break
           }
           case 'removeStation': {
+            this.dialog.title = this.$t('editor.trail.askSaveThenRemoveStation')
+            this.dialog.message = this.$t('editor.trail.allStationDataWillBeLost')
             this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenRemoveStation')
             this.dialog.cancelBtn.label = this.$t('editor.trail.doNotRemoveStation')
             break
@@ -194,7 +218,7 @@ export default {
         }
         this.dialog.open = true
       } else {
-        method()
+        return vm[methodName](payload)
       }
     }
   }

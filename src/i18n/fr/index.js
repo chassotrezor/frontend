@@ -34,12 +34,16 @@ export default {
     },
     stayOnPage: 'Rester sur la page',
     trail: {
+      allStationDataWillBeLost: 'Toutes les données du poste seront perdues.',
+      askRemoveStation: 'Supprimer le poste ?',
+      askSaveThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste ?',
+      confirmRemoveStation: 'Oui, supprimer le poste',
       doNotCreateStation: 'Ne pas créer le poste',
-      doNotRemoveStation: 'Ne pas supprimer le poste',
+      doNotRemoveStation: 'Non, ne pas supprimer le poste',
       downloadQrCodes: 'télécharger les codes QR',
+      qrCodes: 'Codes QR',
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
-      saveChangesThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste',
-      qrCodes: 'Codes QR'
+      saveChangesThenRemoveStation: 'Oui, sauvegarder les changements, puis supprimer le poste'
     },
     unsavedChanges: 'Changements non sauvegardés'
   },
