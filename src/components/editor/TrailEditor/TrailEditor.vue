@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width column items-center q-gutter-md q-mt-md">
+  <div>
     <update-btn
       class="UpdateBtn_test"
       :old-data="{
@@ -14,135 +14,137 @@
       :update-fn="updateTrailWithPosition"
       :cancel-fn="() => duplicateTrail(trail)"
     />
-    <div
-      class="row q-pr-md justify-center q-gutter-md"
-    >
-      <q-card
-        style="width: 400px"
+    <div class="full-width column items-center q-gutter-md q-mt-md">
+      <div
+        class="row q-pr-md justify-center q-gutter-md"
       >
-        <q-card-section>
-          <q-input
-            v-model="name"
-            class="InputName_test"
-            :label="$t('editor.trail.name')"
-          />
-        </q-card-section>
-        <q-card-section>
-          <q-editor
-            v-model="description"
-            class="InputDescription_test"
-            :definitions="{
-              label: {
-                label: $t('editor.trail.description'),
-                disable: false
-              }
-            }"
-            :toolbar="[
-              ['label'],
-              ['bold', 'italic', 'underline']
-            ]"
-          />
-        </q-card-section>
-      </q-card>
-      <q-card
-        class="column justify-around"
-        style="width: 400px"
-      >
-        <q-card-section
-          class="row justify-between items-center"
+        <q-card
           style="width: 400px"
         >
-          <div class="text-body1 text-weight-bold">
-            {{ $t('trail.manage.duration') }} :
-          </div>
-          <q-slider
-            v-model="durationMinutes"
-            class="InputDuration_test"
-            style="width: 240px"
-            :min="30"
-            :max="480"
-            :step="15"
-            label
-            :label-value="renderedDuration"
-            label-always
-          />
-        </q-card-section>
-        <q-card-section
-          class="row justify-between items-center"
+          <q-card-section>
+            <q-input
+              v-model="name"
+              class="InputName_test"
+              :label="$t('editor.trail.name')"
+            />
+          </q-card-section>
+          <q-card-section>
+            <q-editor
+              v-model="description"
+              class="InputDescription_test"
+              :definitions="{
+                label: {
+                  label: $t('editor.trail.description'),
+                  disable: false
+                }
+              }"
+              :toolbar="[
+                ['label'],
+                ['bold', 'italic', 'underline']
+              ]"
+            />
+          </q-card-section>
+        </q-card>
+        <q-card
+          class="column justify-around"
           style="width: 400px"
         >
-          <div class="text-body1 text-weight-bold">
-            {{ $t('trail.manage.physicalEffort') }} :
-          </div>
-          <q-rating
-            v-model="physicalEffort"
-            class="InputPhysicalEffort_test"
-            icon="star"
-            size="xl"
-          />
-        </q-card-section>
-        <q-card-section
-          class="row justify-between items-center"
-          style="width: 400px"
-        >
-          <div class="text-body1 text-weight-bold">
-            {{ $t('trail.manage.mentalEffort') }} :
-          </div>
-          <q-rating
-            v-model="mentalEffort"
-            class="InputMentalEffort_test"
-            icon="star"
-            size="xl"
-          />
-        </q-card-section>
-      </q-card>
-    </div>
+          <q-card-section
+            class="row justify-between items-center"
+            style="width: 400px"
+          >
+            <div class="text-body1 text-weight-bold">
+              {{ $t('trail.manage.duration') }} :
+            </div>
+            <q-slider
+              v-model="durationMinutes"
+              class="InputDuration_test"
+              style="width: 240px"
+              :min="30"
+              :max="480"
+              :step="15"
+              label
+              :label-value="renderedDuration"
+              label-always
+            />
+          </q-card-section>
+          <q-card-section
+            class="row justify-between items-center"
+            style="width: 400px"
+          >
+            <div class="text-body1 text-weight-bold">
+              {{ $t('trail.manage.physicalEffort') }} :
+            </div>
+            <q-rating
+              v-model="physicalEffort"
+              class="InputPhysicalEffort_test"
+              icon="star"
+              size="xl"
+            />
+          </q-card-section>
+          <q-card-section
+            class="row justify-between items-center"
+            style="width: 400px"
+          >
+            <div class="text-body1 text-weight-bold">
+              {{ $t('trail.manage.mentalEffort') }} :
+            </div>
+            <q-rating
+              v-model="mentalEffort"
+              class="InputMentalEffort_test"
+              icon="star"
+              size="xl"
+            />
+          </q-card-section>
+        </q-card>
+      </div>
 
-    <br>
-    <trail-graph
-      class="TrailGraph_test"
-      :graph="graph"
-      :center="trail.position.geopoint"
-      @updateName="updateName"
-      @updateGraph="updateGraph"
-      @editStation="editStation($event)"
-      @createStation="promptSaveBefore('updateTrailAndCreateStation', $event)"
-      @removeStation="promptSaveBefore('removeStation', $event)"
-    />
-    <qr-codes-generator
-      class="QrCodesGenerator_test"
-      :trail-id="trailId"
-      :trail-name="trail.name"
-      :graph="trail.graph"
-    />
-    <q-dialog
-      v-model="dialog.open"
-      persistent
-    >
-      <q-card>
-        <q-card-section class="text-h6">
-          {{ dialog.title }}
-        </q-card-section>
-        <q-card-section class="text-body1">
-          {{ dialog.message }}
-        </q-card-section>
-        <q-card-actions class="column items-center q-gutter-md">
-          <q-btn
-            class="OkBtn_test"
-            color="primary"
-            no-caps
-            :label="dialog.okBtn.label"
-            @click="dialog.okBtn.method"
-          />
-          <q-btn
-            color="primary"
-            no-caps
-            :label="dialog.cancelBtn.label"
-            @click="dialog.cancelBtn.method"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      <br>
+      <trail-graph
+        class="TrailGraph_test"
+        :graph="graph"
+        :center="trail.position.geopoint"
+        @updateName="updateName"
+        @updateGraph="updateGraph"
+        @editStation="editStation($event)"
+        @createStation="promptSaveBefore('updateTrailAndCreateStation', $event)"
+        @removeStation="promptSaveBefore('removeStation', $event)"
+      />
+      <qr-codes-generator
+        class="QrCodesGenerator_test"
+        :trail-id="trailId"
+        :trail-name="trail.name"
+        :graph="trail.graph"
+      />
+      <q-dialog
+        v-model="dialog.open"
+        persistent
+      >
+        <q-card>
+          <q-card-section class="text-h6">
+            {{ dialog.title }}
+          </q-card-section>
+          <q-card-section class="text-body1">
+            {{ dialog.message }}
+          </q-card-section>
+          <q-card-actions class="column items-center q-gutter-md">
+            <q-btn
+              class="OkBtn_test"
+              color="primary"
+              no-caps
+              :label="dialog.okBtn.label"
+              @click="dialog.okBtn.method"
+            />
+            <q-btn
+              color="primary"
+              no-caps
+              :label="dialog.cancelBtn.label"
+              @click="dialog.cancelBtn.method"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
   </div>
 </template>
 
@@ -242,11 +244,9 @@ export default {
       this.graph.nodes[stationId].name = newName
     },
     updateGraph (graph) {
-      if (Object.keys(graph.nodes).length > 1) {
-        this.graph.trailEntries = [...graph.trailEntries]
-        this.graph.endNodes = [...graph.endNodes]
-        this.graph.nodes = { ...graph.nodes }
-      }
+      this.graph.trailEntries = [...graph.trailEntries]
+      this.graph.endNodes = [...graph.endNodes]
+      this.graph.nodes = { ...graph.nodes }
     },
     // TODO: when geofirex will be accessible in vuex, replace this with a single transaction
     async updateTrailAndCreateStation ({ newGraph, newStationId }) {
@@ -278,22 +278,24 @@ export default {
       })
     },
     removeStation ({ removedStationId, updatedGraph, bypassConfirm }) {
-      const vm = this
-      if (!bypassConfirm) {
-        this.dialog.okBtn.method = () => {
-          vm.dialog.open = false
-          vm.updateGraph(updatedGraph)
-          return vm.removeStationInTrail({ trailId: vm.trailId, removedStationId, updatedGraph })
+      if (Object.keys(updatedGraph.nodes).length > 1) {
+        const vm = this
+        if (!bypassConfirm) {
+          this.dialog.okBtn.method = () => {
+            vm.dialog.open = false
+            vm.updateGraph(updatedGraph)
+            return vm.removeStationInTrail({ trailId: vm.trailId, removedStationId, updatedGraph })
+          }
+          this.dialog.cancelBtn.method = () => { vm.dialog.open = false }
+          this.dialog.title = this.$t('editor.trail.askRemoveStation')
+          this.dialog.message = this.$t('editor.trail.allStationDataWillBeLost')
+          this.dialog.okBtn.label = this.$t('editor.trail.confirmRemoveStation')
+          this.dialog.cancelBtn.label = this.$t('editor.trail.doNotRemoveStation')
+          this.dialog.open = true
+        } else {
+          this.updateGraph(updatedGraph)
+          return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
         }
-        this.dialog.cancelBtn.method = () => { vm.dialog.open = false }
-        this.dialog.title = this.$t('editor.trail.askRemoveStation')
-        this.dialog.message = this.$t('editor.trail.allStationDataWillBeLost')
-        this.dialog.okBtn.label = this.$t('editor.trail.confirmRemoveStation')
-        this.dialog.cancelBtn.label = this.$t('editor.trail.doNotRemoveStation')
-        this.dialog.open = true
-      } else {
-        this.updateGraph(updatedGraph)
-        return this.removeStationInTrail({ trailId: this.trailId, removedStationId, updatedGraph })
       }
     },
     promptSaveBefore (methodName, payload) {

@@ -16,7 +16,7 @@ export const defaultTrail = (userId, firstStationId, position) => {
     name: 'New Trail',
     position,
     description: '',
-    duration: 0,
+    durationMinutes: 60,
     physicalEffort: 0,
     mentalEffort: 0
   }

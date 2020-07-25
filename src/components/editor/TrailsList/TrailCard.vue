@@ -1,21 +1,31 @@
 <template>
-  <div>
+  <div
+    class="row no-wrap justify-between bg-grey-4 rounded-borders shadow-3"
+    style="width: 600px"
+  >
+    <q-btn
+      class="ClickToOpen_test q-ma-sm"
+      icon="edit"
+      flat
+      round
+      size="xl"
+      padding="sm"
+      @click="edit"
+    />
     <div
-      class="
-        cursor-pointer
-        bg-grey-4
-        q-pa-sm
-        ClickToOpen_test
-      "
+      class="q-pa-md text-h4 text-center cursor-pointer"
       @click="edit"
     >
       {{ trail.name }}
     </div>
     <q-btn
-      class="DeleteBtn_test"
-      round
-      icon="close"
+      class="DeleteBtn_test q-ma-sm"
+      icon="delete_forever"
       color="negative"
+      flat
+      round
+      size="xl"
+      padding="sm"
       @click="confirmRemove"
     />
   </div>

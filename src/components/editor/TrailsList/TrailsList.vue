@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width column items-center q-gutter-y-xl q-pt-xl">
     <trail-card
       v-for="trail in myTrails"
       :key="trail.id"
@@ -12,6 +12,7 @@
       icon="add"
       :label="$t('editor.trailsList.createTrail')"
       no-caps
+      size="lg"
       @click="createAndEditTrail"
     />
   </div>
@@ -20,6 +21,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import TrailCard from './TrailCard'
+import { fromNavigatorPosition } from 'src/helpers/mapHelpers'
 
 export default {
   name: 'TrailsList',
@@ -39,10 +41,19 @@ export default {
       this.$emit('editTrail', trailId)
     },
     async createAndEditTrail () {
-      // TODO: set position to navigator position or (0, 0)
-      const position = this.$geo.point(46.788520179927225, 7.121350765228272)
-      const trailId = await this.createTrail({ position })
-      this.edit(trailId)
+      navigator.geolocation.getCurrentPosition(
+        async navigatorPosition => {
+          const position = this.$geo.point(...fromNavigatorPosition(navigatorPosition).toArray())
+          console.log(position)
+          const trailId = await this.createTrail({ position })
+          this.edit(trailId)
+        },
+        async () => {
+          const position = this.$geo.point(0, 0)
+          console.log(position)
+          const trailId = await this.createTrail({ position })
+          this.edit(trailId)
+        })
     }
   }
 }
