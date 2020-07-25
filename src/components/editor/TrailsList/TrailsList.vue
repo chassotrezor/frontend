@@ -43,14 +43,13 @@ export default {
     async createAndEditTrail () {
       navigator.geolocation.getCurrentPosition(
         async navigatorPosition => {
-          const position = this.$geo.point(...fromNavigatorPosition(navigatorPosition).toArray())
-          console.log(position)
+          const positionArray = fromNavigatorPosition(navigatorPosition).toArray()
+          const position = this.$geo.point(...positionArray)
           const trailId = await this.createTrail({ position })
           this.edit(trailId)
         },
         async () => {
           const position = this.$geo.point(0, 0)
-          console.log(position)
           const trailId = await this.createTrail({ position })
           this.edit(trailId)
         })

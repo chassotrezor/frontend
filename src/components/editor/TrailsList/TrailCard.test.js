@@ -40,10 +40,10 @@ describe('TrailCard', () => {
     }
   })
 
-  describe('when clicked on main area', () => {
+  describe('when "edit button" emits "click"', () => {
     beforeAll(async () => {
       const clickToOpen = wrapper.find('.ClickToOpen_test')
-      clickToOpen.trigger('click')
+      clickToOpen.vm.$emit('click')
       await wrapper.vm.$nextTick()
     })
 
