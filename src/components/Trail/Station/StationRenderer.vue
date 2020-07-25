@@ -2,8 +2,15 @@
   <div
     class="full-width column items-center q-gutter-y-sm"
   >
-    <div>{{ trailName }}</div>
-    <div>{{ stationName }}</div>
+    <div class="full-width row justify-between items-baseline q-pa-sm">
+      <div class="text-body1 text-weight-bold">
+        {{ trailName }}
+      </div>
+      <div class="text-body1">
+        {{ stationName }}
+      </div>
+      <q-separator />
+    </div>
     <div
       v-for="row in rows"
       :key="row.rowId"
