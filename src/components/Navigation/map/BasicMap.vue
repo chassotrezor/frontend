@@ -82,13 +82,19 @@ export default {
     height: {
       type: String,
       default: () => '300px'
+    },
+    center: {
+      type: Object,
+      default: () => latLng(0, 0)
+    },
+    zoom: {
+      type: Number,
+      default: 16
     }
   },
   data () {
     return {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      zoom: 18,
-      center: latLng(46.788107, 7.122072),
       positionMarker: {
         url: positionMarker,
         size: [61, 39],

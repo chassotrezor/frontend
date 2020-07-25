@@ -1,5 +1,5 @@
 <template>
-  <q-page class="full-width">
+  <q-page class="flex flex-center">
     <station-layout />
   </q-page>
 </template>

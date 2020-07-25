@@ -1,14 +1,15 @@
 import { mountQuasar } from '@test'
 import TrailMarker from './TrailMarker'
+import { fromArray } from 'src/helpers/mapHelpers'
 
-const trail = {
-  name: 'trailName'
-}
+const name = 'trailName'
+const latLng = fromArray([0, 0]).toLatLng()
 
 describe('TrailMarker', () => {
   const wrapper = mountQuasar(TrailMarker, {
     propsData: {
-      trail
+      name,
+      latLng
     }
   })
 
@@ -18,6 +19,6 @@ describe('TrailMarker', () => {
   })
 
   it('displays the trail name', () => {
-    expect(wrapper.html()).toContain(trail.name)
+    expect(wrapper.html()).toContain(name)
   })
 })

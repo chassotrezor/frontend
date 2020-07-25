@@ -72,7 +72,13 @@ export default {
   },
   trail: {
     manage: {
-      start: 'Commencer le parcours'
+      duration: 'durée',
+      foundStationOfTrail: 'Vous avez trouvé le poste "{stationName}" du parcours "{trailName}"',
+      inaccessibleStation: 'Le parcours ne peut pas être commencé ici.',
+      mentalEffort: 'mental',
+      physicalEffort: 'physique',
+      start: 'Commencer le parcours',
+      trailStartIsOnMap: 'Pour commencer le parcours, rendez-vous au poste figurant sur la carte.'
     },
     station: {
       connectForFullUse: 'Connectez-vous pour sauvegarder votre progression en ligne et pour créer vos propre parcours.',

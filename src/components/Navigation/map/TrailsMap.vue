@@ -11,7 +11,8 @@
         v-for="trail in trails"
         :key="trail.trailId"
         class="TrailMarker_test"
-        :trail="trail"
+        :name="trail.name"
+        :lat-lng="trail.latLng"
       />
     </basic-map>
   </div>

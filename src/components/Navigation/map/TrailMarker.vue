@@ -1,7 +1,7 @@
 <template>
   <l-marker
     class="LMarker_test"
-    :lat-lng="trail.latLng"
+    :lat-lng="latLng"
   >
     <l-icon
       :icon-size="size"
@@ -13,7 +13,7 @@
     />
     <l-tooltip :options="{ parmanent: true }">
       <div>
-        {{ trail.name }}
+        {{ name }}
       </div>
     </l-tooltip>
   </l-marker>
@@ -32,8 +32,12 @@ export default {
     LIcon
   },
   props: {
-    trail: {
+    latLng: {
       type: Object,
+      required: true
+    },
+    name: {
+      type: String,
       required: true
     }
   },

@@ -1,5 +1,8 @@
 <template>
   <q-btn
+    color="primary"
+    no-caps
+    size="lg"
     @click="$emit('start')"
   >
     {{ $t('trail.manage.start') }}

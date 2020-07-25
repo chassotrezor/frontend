@@ -71,3 +71,9 @@ export function randomHexColor (brightness) {
   const hexColor = `#${red}${green}${blue}`
   return hexColor
 }
+
+export function renderDuration (durationMinutes) {
+  const hours = Math.floor(durationMinutes / 60)
+  const minutes = durationMinutes - hours * 60
+  return `${hours}h${minutes}`
+}

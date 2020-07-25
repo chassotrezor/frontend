@@ -155,6 +155,11 @@ describe('StationLayout', () => {
             const startTrail = wrapper.find('.StartTrail_test')
             expect(startTrail.exists()).toBe(false)
           })
+
+          it('displays an "InaccessibleStationInfo" component', () => {
+            const inaccessible = wrapper.find('.InaccessibleStationInfo_test')
+            expect(inaccessible.exists()).toBe(true)
+          })
         })
 
         describe('when "station" is a "trailEntry" in trail', () => {
@@ -166,6 +171,11 @@ describe('StationLayout', () => {
           it('displays a "StartTrail" component', () => {
             const startTrail = wrapper.find('.StartTrail_test')
             expect(startTrail.exists()).toBe(true)
+          })
+
+          it('does not an "InaccessibleStationInfo" component', () => {
+            const inaccessible = wrapper.find('.InaccessibleStationInfo_test')
+            expect(inaccessible.exists()).toBe(false)
           })
 
           describe('when "startTrail" emits "start"', () => {

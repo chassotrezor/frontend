@@ -1,24 +1,25 @@
 <template>
-  <div class="full-width">
-    <div v-if="station && trail">
-      <station
-        v-if="stationIsAccessible"
-        class="Station_test"
-      />
-      <div v-else>
-        <trail-info
-          class="TrailInfo_test"
-        />
-        <start-trail
-          v-if="isTrailEntry"
-          class="StartTrail_test"
-          @start="() => start = true"
-        />
-      </div>
-    </div>
+  <div class="full-width full-height column justify-center items-center q-gutter-y-sm">
+    <station
+      v-if="station && trail && stationIsAccessible"
+      class="Station_test"
+    />
+    <trail-info
+      v-if="station && trail && !stationIsAccessible"
+      class="TrailInfo_test"
+    />
+    <start-trail
+      v-if="station && trail && !stationIsAccessible && isTrailEntry"
+      class="StartTrail_test"
+      @start="() => start = true"
+    />
+    <inaccessible-station-info
+      v-if="station && trail && !stationIsAccessible && !isTrailEntry"
+      class="InaccessibleStationInfo_test"
+    />
     <spinner-with-message
-      v-else
-      class="SpinnerWithMessage_test"
+      v-if="!station || !trail"
+      class="SpinnerWithMessage_test q-pa-md"
       :message="$t('trail.station.waitForStation')"
     />
   </div>
@@ -30,6 +31,7 @@ import TrailInfo from './TrailInfo'
 import Station from './Station/Station'
 import SpinnerWithMessage from 'components/Navigation/SpinnerWithMessage'
 import StartTrail from './StartTrail'
+import InaccessibleStationInfo from './InaccessibleStationInfo'
 
 export default {
   name: 'StationLayout',
@@ -37,7 +39,8 @@ export default {
     TrailInfo,
     Station,
     SpinnerWithMessage,
-    StartTrail
+    StartTrail,
+    InaccessibleStationInfo
   },
   data () {
     return {
