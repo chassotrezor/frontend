@@ -201,7 +201,7 @@ export default {
         this.dialog.cancelBtn.method = () => { vm.dialog.open = false }
         switch (methodName) {
           case 'updateTrailAndCreateStation': {
-            this.dialog.title = this.$t('editor.unsavedChanges')
+            this.dialog.title = this.$t('editor.changes.unsavedChanges')
             this.dialog.message = ''
             this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenCreateStation')
             this.dialog.cancelBtn.label = this.$t('editor.trail.doNotCreateStation')

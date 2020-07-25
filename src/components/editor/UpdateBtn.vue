@@ -11,7 +11,7 @@
       color="warning"
       text-color="black"
       no-caps
-      :label="$t('editor.cancelChanges')"
+      :label="$t('editor.changes.cancelChanges')"
       @click="cancelFn"
     />
     <q-btn
@@ -20,7 +20,7 @@
       color="warning"
       text-color="black"
       no-caps
-      :label="$t('editor.saveChanges')"
+      :label="$t('editor.changes.saveChanges')"
       @click="updateFn"
     />
   </q-page-sticky>
@@ -64,15 +64,15 @@ export default {
       if (routeGuard.action === 'routeUpdate' || routeGuard.action === 'routeLeave') {
         if (this.difference) {
           this.$q.dialog({
-            title: this.$t('editor.unsavedChanges'),
+            title: this.$t('editor.changes.unsavedChanges'),
             persistent: true,
             ok: {
               noCaps: true,
-              label: this.$t('editor.saveAndContinue')
+              label: this.$t('editor.changes.saveAndContinue')
             },
             cancel: {
               noCaps: true,
-              label: this.$t('editor.stayOnPage')
+              label: this.$t('editor.changes.stayOnPage')
             }
           }).onOk(() => {
             vm.updateFn()

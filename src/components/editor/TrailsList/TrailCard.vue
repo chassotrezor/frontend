@@ -50,13 +50,13 @@ export default {
     confirmRemove () {
       const vm = this
       this.$q.dialog({
-        title: this.$t('editor.askRemoveTrail'),
-        message: this.$t('editor.allTrailDataWillBeLost'),
+        title: this.$t('editor.trailsList.askRemoveTrail'),
+        message: this.$t('editor.trailsList.allTrailDataWillBeLost'),
         ok: {
-          label: this.$t('navigation.ok')
+          label: this.$t('editor.trailsList.confirmRemoveTrail')
         },
         cancel: {
-          label: this.$t('navigation.cancel')
+          label: this.$t('editor.trailsList.cancelRemoveTrail')
         }
       })
         .onOk(() => {

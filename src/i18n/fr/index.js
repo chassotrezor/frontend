@@ -15,12 +15,13 @@ export default {
     sendingMail: 'envoi du lien de connexion...'
   },
   editor: {
-    allTrailDataWillBeLost: 'Toutes les données de ce parcours ainsi que celles de tous ses postes seront définitivement perdues !',
-    askRemoveTrail: 'Supprimer le parcours ?',
-    cancelChanges: 'Annuler les modifications',
-    createTrail: 'créer un parcours',
-    saveAndContinue: 'Sauvegarder et continuer',
-    saveChanges: 'Sauvegarder les modifications',
+    changes: {
+      cancelChanges: 'Annuler les modifications',
+      saveAndContinue: 'Sauvegarder et continuer',
+      saveChanges: 'Sauvegarder les modifications',
+      stayOnPage: 'Rester sur la page',
+      unsavedChanges: 'Changements non sauvegardés'
+    },
     station: {
       addRow: {
         text: 'texte',
@@ -34,7 +35,6 @@ export default {
         width: 'largeur de l\'image: '
       }
     },
-    stayOnPage: 'Rester sur la page',
     trail: {
       allStationDataWillBeLost: 'Toutes les données du poste seront perdues.',
       askRemoveStation: 'Supprimer le poste ?',
@@ -47,7 +47,13 @@ export default {
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
       saveChangesThenRemoveStation: 'Oui, sauvegarder les changements, puis supprimer le poste'
     },
-    unsavedChanges: 'Changements non sauvegardés'
+    trailsList: {
+      allTrailDataWillBeLost: 'Toutes les données de ce parcours ainsi que celles de tous ses postes seront définitivement perdues !',
+      askRemoveTrail: 'Supprimer le parcours ?',
+      cancelRemoveTrail: 'Ne pas supprimer',
+      confirmRemoveTrail: 'Supprimer',
+      createTrail: 'créer un parcours'
+    }
   },
   navigation: {
     cancel: 'annuler',
