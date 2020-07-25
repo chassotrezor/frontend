@@ -9,12 +9,12 @@
       :key="row.rowId"
       class="full-width column items-center"
     >
-      <station-image
+      <row-image
         v-if="row.type === types.rows.IMAGE"
         class="StationImage_test"
         :row="row"
       />
-      <station-text
+      <row-text
         v-if="row.type === types.rows.TEXT"
         class="StationText_test"
         :row="row"
@@ -24,15 +24,15 @@
 </template>
 
 <script>
-import StationImage from './StationImage'
-import StationText from './StationText'
+import RowImage from './Rows/RowImage'
+import RowText from './Rows/RowText'
 import types from 'src/types'
 
 export default {
   name: 'StationRenderer',
   components: {
-    StationImage,
-    StationText
+    RowImage,
+    RowText
   },
   props: {
     trailName: {

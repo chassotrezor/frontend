@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'StationImage',
+  name: 'RowImage',
   props: {
     row: {
       type: Object,

@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'StationText',
+  name: 'RowText',
   props: {
     row: {
       type: Object,
