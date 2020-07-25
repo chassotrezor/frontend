@@ -1,7 +1,6 @@
 import { mountQuasar } from '@test'
 import TrailEditor from './TrailEditor'
 import types from 'src/types'
-import { isEqual } from 'lodash'
 
 jest.mock('html2pdf.js', () => {})
 
@@ -224,38 +223,10 @@ describe('TrailEditor', () => {
       afterAll(jest.clearAllMocks)
     })
 
-    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId } when all changes are saved', () => {
+    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId }', () => {
       const removedStationId = 'stationId'
       const updatedGraph = trail.graph
       beforeAll(async () => {
-        wrapper.vm.duplicateTrail(wrapper.vm.trail)
-        await wrapper.vm.$nextTick()
-        trailGraph.vm.$emit('removeStation', { updatedGraph, removedStationId })
-        await wrapper.vm.$nextTick()
-      })
-
-      it('removes station on server', () => {
-        expect(store.modules.editor.actions.removeStationInTrail).toHaveBeenCalledWith(
-          expect.any(Object),
-          {
-            trailId,
-            removedStationId,
-            updatedGraph
-          }
-        )
-      })
-
-      afterAll(jest.clearAllMocks)
-    })
-
-    describe('When TrailGraph emits "removeStation" with { updatedGraph, removedStationId } when some changes are unsaved', () => {
-      const removedStationId = 'stationId'
-      const updatedGraph = trail.graph
-      beforeAll(async () => {
-        const changedTrail = JSON.parse(JSON.stringify(trail))
-        changedTrail.name = 'otherName'
-        wrapper.vm.duplicateTrail(changedTrail)
-        await wrapper.vm.$nextTick()
         trailGraph.vm.$emit('removeStation', { updatedGraph, removedStationId })
         await wrapper.vm.$nextTick()
       })
