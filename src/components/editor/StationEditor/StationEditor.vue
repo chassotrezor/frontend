@@ -34,7 +34,7 @@
         v-model="stationName"
         class="QInputName_test"
       />
-      <station-row
+      <row-editor
         v-for="(row, index) in rows"
         :key="row.rowId"
         class="StationRow_test"
@@ -71,18 +71,18 @@
 <script>
 import { cloneDeep, merge } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
-import StationRow from './StationRow/StationRow'
+import RowEditor from './RowEditor/RowEditor'
 import StationPreview from './StationPreview'
 import UpdateBtn from '../UpdateBtn'
 import { copyGraph } from 'src/helpers/graphHelpers'
 import { generateIdIn } from 'src/helpers/dataHelpers'
 import types from 'src/types'
-import rowDefault from './StationRow/rowsDefaultData'
+import rowDefault from './RowEditor/rowsDefaultData'
 
 export default {
   name: 'StationEditor',
   components: {
-    StationRow,
+    RowEditor,
     StationPreview,
     UpdateBtn
   },

@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'TextRow',
+  name: 'TextRowEditor',
   props: {
     row: {
       type: Object,

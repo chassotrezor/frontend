@@ -3,14 +3,14 @@
     class="row no-wrap q-pa-md q-mb-md bg-grey-1 rounded-borders shadow-3 q-gutter-x-md"
     style="width: 600px"
   >
-    <text-row
+    <text-row-editor
       v-if="row.type === types.rows.TEXT"
       class="col-grow TextRow_test"
       :row="row"
       :old-row-data="oldRowData"
       @input="$emit('input', $event)"
     />
-    <image-row
+    <image-row-editor
       v-else-if="row.type === types.rows.IMAGE"
       class="col-grow ImageRow_test"
       :row="row"
@@ -51,14 +51,14 @@
 
 <script>
 import types from 'src/types'
-import TextRow from './TextRow'
-import ImageRow from './ImageRow'
+import TextRowEditor from './TextRowEditor'
+import ImageRowEditor from './ImageRowEditor'
 
 export default {
-  name: 'StationRow',
+  name: 'RowEditor',
   components: {
-    TextRow,
-    ImageRow
+    TextRowEditor,
+    ImageRowEditor
   },
   props: {
     row: {

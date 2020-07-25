@@ -1,9 +1,9 @@
 import { mountQuasar } from '@test'
-import StationRow from './StationRow'
+import RowEditor from './RowEditor'
 import types from 'src/types'
 
-describe('StationRow', () => {
-  const wrapper = mountQuasar(StationRow, {
+describe('RowEditor', () => {
+  const wrapper = mountQuasar(RowEditor, {
     propsData: {
       row: {}
     }

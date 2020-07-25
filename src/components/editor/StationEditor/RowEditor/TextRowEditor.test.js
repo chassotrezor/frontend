@@ -1,8 +1,8 @@
 import { mountQuasar } from '@test'
-import TextRow from './TextRow'
+import TextRowEditor from './TextRowEditor'
 
-describe('TextRow', () => {
-  const wrapper = mountQuasar(TextRow, {
+describe('TextRowEditor', () => {
+  const wrapper = mountQuasar(TextRowEditor, {
     propsData: {
       row: {
         data: { rawHtml: '<div>TEST</div>' }

@@ -103,7 +103,7 @@ import FirebaseUploader from 'src/store/FirebaseUploader'
 import defaultData from './rowsDefaultData'
 
 export default {
-  name: 'ImageRow',
+  name: 'ImageRowEditor',
   components: {
     FirebaseUploader
   },

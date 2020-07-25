@@ -1,5 +1,5 @@
 import { mountQuasar } from '@test'
-import ImageRow from './ImageRow'
+import ImageRowEditor from './ImageRowEditor'
 import { cloneDeep } from 'lodash'
 
 const $route = {
@@ -18,9 +18,9 @@ const defaultRow = {
   rowId: 'testRowId'
 }
 
-describe('ImageRow', () => {
+describe('ImageRowEditor', () => {
   const row = cloneDeep(defaultRow)
-  const wrapper = mountQuasar(ImageRow, {
+  const wrapper = mountQuasar(ImageRowEditor, {
     propsData: {
       row,
       oldRowData: row.data
