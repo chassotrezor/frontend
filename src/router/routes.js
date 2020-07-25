@@ -71,7 +71,7 @@ const routes = [
         }
       },
       {
-        path: '/:trailId/:stationId',
+        path: '/station/:trailId/:stationId',
         name: 'station',
         component: () => import('pages/Station.vue'),
         meta: {

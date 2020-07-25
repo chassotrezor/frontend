@@ -1,5 +1,5 @@
 export function generateString (trailId, stationId) {
-  return `https://chassotrezor.web.app/${trailId}/${stationId}`
+  return `https://chassotrezor.web.app/station/${trailId}/${stationId}`
 }
 
 function getPart (code, index) {
@@ -8,16 +8,16 @@ function getPart (code, index) {
 }
 
 export function getTrailId (code) {
-  return getPart(code, 3)
+  return getPart(code, 4)
 }
 
 export function getStationId (code) {
-  return getPart(code, 4)
+  return getPart(code, 5)
 }
 
 export function checkCodeValidity (code) {
   const anyString = 'anyString'
-  const expectedParts = ['https:', '', 'chassotrezor.web.app', anyString, anyString]
+  const expectedParts = ['https:', '', 'chassotrezor.web.app', 'station', anyString, anyString]
   const parts = code.split('/')
   const hasCorrectPartsAmount = parts.length === expectedParts.length
   if (hasCorrectPartsAmount) {
