@@ -1,17 +1,108 @@
 <template>
-  <div class="full-width">
+  <div class="full-width column items-center q-gutter-md q-mt-md">
     <update-btn
       class="UpdateBtn_test"
-      :old-data="{ graph: trail.graph, name: trail.name }"
-      :new-data="{ graph, name }"
+      :old-data="{
+        graph: trail.graph,
+        name: trail.name,
+        description: trail.description,
+        durationMinutes: trail.durationMinutes,
+        physicalEffort: trail.physicalEffort,
+        mentalEffort: trail.mentalEffort
+      }"
+      :new-data="{ graph, name, description, durationMinutes, physicalEffort, mentalEffort }"
       :update-fn="updateTrailWithPosition"
       :cancel-fn="() => duplicateTrail(trail)"
     />
-    <q-input v-model="name" />
+    <div
+      class="row q-pr-md justify-center q-gutter-md"
+    >
+      <q-card
+        style="width: 400px"
+      >
+        <q-card-section>
+          <q-input
+            v-model="name"
+            class="InputName_test"
+            :label="$t('editor.trail.name')"
+          />
+        </q-card-section>
+        <q-card-section>
+          <q-editor
+            v-model="description"
+            class="InputDescription_test"
+            :definitions="{
+              label: {
+                label: $t('editor.trail.description'),
+                disable: false
+              }
+            }"
+            :toolbar="[
+              ['label'],
+              ['bold', 'italic', 'underline']
+            ]"
+          />
+        </q-card-section>
+      </q-card>
+      <q-card
+        class="column justify-around"
+        style="width: 400px"
+      >
+        <q-card-section
+          class="row justify-between items-center"
+          style="width: 400px"
+        >
+          <div class="text-body1 text-weight-bold">
+            {{ $t('trail.manage.duration') }} :
+          </div>
+          <q-slider
+            v-model="durationMinutes"
+            class="InputDuration_test"
+            style="width: 240px"
+            :min="30"
+            :max="480"
+            :step="15"
+            label
+            :label-value="renderedDuration"
+            label-always
+          />
+        </q-card-section>
+        <q-card-section
+          class="row justify-between items-center"
+          style="width: 400px"
+        >
+          <div class="text-body1 text-weight-bold">
+            {{ $t('trail.manage.physicalEffort') }} :
+          </div>
+          <q-rating
+            v-model="physicalEffort"
+            class="InputPhysicalEffort_test"
+            icon="star"
+            size="xl"
+          />
+        </q-card-section>
+        <q-card-section
+          class="row justify-between items-center"
+          style="width: 400px"
+        >
+          <div class="text-body1 text-weight-bold">
+            {{ $t('trail.manage.mentalEffort') }} :
+          </div>
+          <q-rating
+            v-model="mentalEffort"
+            class="InputMentalEffort_test"
+            icon="star"
+            size="xl"
+          />
+        </q-card-section>
+      </q-card>
+    </div>
+
     <br>
     <trail-graph
       class="TrailGraph_test"
       :graph="graph"
+      :center="trail.position.geopoint"
       @updateName="updateName"
       @updateGraph="updateGraph"
       @editStation="editStation($event)"
@@ -61,6 +152,7 @@ import { mapActions, mapGetters } from 'vuex'
 import TrailGraph from './TrailGraph'
 import QrCodesGenerator from './QrCodesGenerator'
 import UpdateBtn from '../UpdateBtn'
+import { renderDuration } from 'src/helpers/dataHelpers'
 
 export default {
   name: 'TrailEditor',
@@ -78,6 +170,10 @@ export default {
   data () {
     return {
       name: '',
+      description: '',
+      durationMinutes: 0,
+      physicalEffort: 0,
+      mentalEffort: 0,
       graph: {
         trailEntries: [],
         endNodes: [],
@@ -110,6 +206,9 @@ export default {
       const nameDifference = this.trail.name !== this.name
       const graphDifference = !isEqual(this.trail.graph, this.graph)
       return nameDifference || graphDifference
+    },
+    renderedDuration () {
+      return renderDuration(this.durationMinutes)
     }
   },
   watch: {
@@ -129,6 +228,10 @@ export default {
     duplicateTrail (trail) {
       const vm = this
       this.name = trail.name
+      this.description = this.$sanitize(trail.description)
+      this.durationMinutes = trail.durationMinutes
+      this.physicalEffort = trail.physicalEffort
+      this.mentalEffort = trail.mentalEffort
       this.graph.trailEntries = [...trail.graph.trailEntries]
       this.graph.endNodes = [...trail.graph.endNodes]
       Object.entries(trail.graph.nodes).forEach(node => {
@@ -165,6 +268,10 @@ export default {
         trailId: this.trailId,
         newProps: {
           name: this.name,
+          description: this.$sanitize(this.description),
+          durationMinutes: this.durationMinutes,
+          physicalEffort: this.physicalEffort,
+          mentalEffort: this.mentalEffort,
           position,
           graph: this.graph
         }

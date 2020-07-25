@@ -31,7 +31,11 @@ const trail = {
     endNodes: ['testNodeId2']
   },
   name: 'testTrailName',
-  position: { AC: 3, RC: 3 }
+  position: { AC: 3, RC: 3 },
+  description: '<div>Description</div>',
+  durationMinutes: 90,
+  physicalEffort: 3,
+  mentalEffort: 3
 }
 
 const store = {
@@ -50,6 +54,8 @@ const store = {
   }
 }
 
+const $sanitize = rawHtml => rawHtml
+
 describe('TrailEditor', () => {
   let wrapper
   beforeAll(async () => {
@@ -59,10 +65,38 @@ describe('TrailEditor', () => {
         trailId
       },
       mocks: {
-        $geo
+        $geo,
+        $sanitize
       }
     })
     await wrapper.vm.$nextTick()
+  })
+
+  describe('Trail properties', () => {
+    it('displays an input for trail name', () => {
+      const input = wrapper.find('.InputName_test')
+      expect(input.props().value).toBe(trail.name)
+    })
+
+    it('displays an input for trail description', () => {
+      const input = wrapper.find('.InputDescription_test')
+      expect(input.props().value).toBe(trail.description)
+    })
+
+    it('displays an input for trail duration', () => {
+      const input = wrapper.find('.InputDuration_test')
+      expect(input.props().value).toBe(trail.durationMinutes)
+    })
+
+    it('displays an input for trail physical effort', () => {
+      const input = wrapper.find('.InputPhysicalEffort_test')
+      expect(input.props().value).toBe(trail.physicalEffort)
+    })
+
+    it('displays an input for trail mental effort', () => {
+      const input = wrapper.find('.InputMentalEffort_test')
+      expect(input.props().value).toBe(trail.mentalEffort)
+    })
   })
 
   it('displays an "UpdateBtn"', () => {
@@ -86,9 +120,9 @@ describe('TrailEditor', () => {
         {
           trailId,
           newProps: {
+            ...trail,
             name: expectedName,
-            position: expectedGeoPoint,
-            graph: trail.graph
+            position: expectedGeoPoint
           }
         }
       )

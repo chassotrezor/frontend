@@ -1,32 +1,41 @@
 <template>
   <q-card class="q-ma-md">
-    <q-card-section class="text-h6">
+    <q-card-section class="text-h4">
       {{ trail.name }}
     </q-card-section>
-    <q-card-section class="text-body1">
-      {{ trail.description }}
+    <q-card-section class="text-body1 TrailDescription_test">
+      <div v-html="$sanitize(trail.description)" />
     </q-card-section>
+    <q-separator />
     <q-card-section class="text-body1">
       <div class="row justify-between">
-        <div>{{ $t('trail.manage.duration') }} :</div>
-        <div>{{ duration }}</div>
+        <div class="text-body1 text-weight-bold">
+          {{ $t('trail.manage.duration') }} :
+        </div>
+        <div class="TrailDuration_test">
+          {{ duration }}
+        </div>
       </div>
       <div class="row justify-between items-center">
-        <div>{{ $t('trail.manage.physicalEffort') }} :</div>
+        <div class="text-body1 text-weight-bold">
+          {{ $t('trail.manage.physicalEffort') }} :
+        </div>
         <q-rating
           class="PhysicalRating_test"
           :value="trail.physicalEffort"
-          icon="grade"
+          icon="star"
           size="md"
           readonly
         />
       </div>
       <div class="row justify-between items-center">
-        <div>{{ $t('trail.manage.mentalEffort') }} :</div>
+        <div class="text-body1 text-weight-bold">
+          {{ $t('trail.manage.mentalEffort') }} :
+        </div>
         <q-rating
           class="MentalRating_test"
           :value="trail.mentalEffort"
-          icon="grade"
+          icon="star"
           size="md"
           readonly
         />

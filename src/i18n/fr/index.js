@@ -40,9 +40,11 @@ export default {
       askRemoveStation: 'Supprimer le poste ?',
       askSaveThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste ?',
       confirmRemoveStation: 'Oui, supprimer le poste',
+      description: 'description du parcours',
       doNotCreateStation: 'Ne pas créer le poste',
       doNotRemoveStation: 'Non, ne pas supprimer le poste',
       downloadQrCodes: 'télécharger les codes QR',
+      name: 'nom du parcours',
       qrCodes: 'Codes QR',
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
       saveChangesThenRemoveStation: 'Oui, sauvegarder les changements, puis supprimer le poste'

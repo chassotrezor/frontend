@@ -75,5 +75,5 @@ export function randomHexColor (brightness) {
 export function renderDuration (durationMinutes) {
   const hours = Math.floor(durationMinutes / 60)
   const minutes = durationMinutes - hours * 60
-  return `${hours}h${minutes}`
+  return `${hours}h${minutes >= 10 ? minutes : `0${minutes}`}`
 }

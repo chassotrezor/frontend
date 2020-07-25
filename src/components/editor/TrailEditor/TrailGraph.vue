@@ -1,8 +1,10 @@
 <template>
-  <div class="column items-center full-width">
+  <div class="column items-center">
     <basic-map
       height="500px"
       width="800px"
+      :zoom="2"
+      :center="latLng"
     >
       <node-marker
         v-for="(node, nodeId) in graph.nodes"
@@ -48,6 +50,15 @@ export default {
     graph: {
       type: Object,
       required: true
+    },
+    center: {
+      type: Object,
+      default: () => {
+        return {
+          Rc: 0,
+          Ac: 0
+        }
+      }
     }
   },
   computed: {
@@ -61,6 +72,9 @@ export default {
         positions.unshift(position)
       }
       return positions
+    },
+    latLng () {
+      return fromGeopoint(this.center).toLatLng()
     }
   },
   methods: {
