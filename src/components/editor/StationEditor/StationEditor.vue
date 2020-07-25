@@ -27,12 +27,15 @@
       :style="`width: ${previewWidth}px`"
     />
     <div
-      class="col-grow bg-grey-3 column justify-start items-center"
+      class="col-grow bg-grey-3 column justify-start items-center q-gutter-y-lg q-pt-md"
       style="z-index: 10"
     >
       <q-input
         v-model="stationName"
-        class="QInputName_test"
+        class="QInputName_test q-pr-md"
+        style="width: 600px"
+        :label="$t('editor.station.name')"
+        input-class="text-weight-bold text-body1"
       />
       <row-editor
         v-for="(row, index) in rows"

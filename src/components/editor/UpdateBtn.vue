@@ -3,7 +3,7 @@
     v-if="difference"
     class="q-py-sm row"
     position="top-right"
-    style="z-index: 2001"
+    style="z-index: 1001"
   >
     <q-btn
       class="q-mr-sm CancelChangesBtn_test"

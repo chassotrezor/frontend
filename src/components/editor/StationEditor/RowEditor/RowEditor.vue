@@ -1,6 +1,6 @@
 <template>
   <div
-    class="row no-wrap q-pa-md q-mb-md bg-grey-1 rounded-borders shadow-3 q-gutter-x-md"
+    class="row no-wrap q-pa-md bg-grey-1 rounded-borders shadow-3 q-gutter-x-md"
     style="width: 600px"
   >
     <text-row-editor

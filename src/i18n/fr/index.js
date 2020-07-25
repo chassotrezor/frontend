@@ -33,7 +33,8 @@ export default {
         url: 'lien de l\'image',
         warningDeleteImage: 'L\'image précédemment envoyée sera supprimée du serveur.',
         width: 'largeur de l\'image: '
-      }
+      },
+      name: 'Nom du poste'
     },
     trail: {
       allStationDataWillBeLost: 'Toutes les données du poste seront perdues.',
