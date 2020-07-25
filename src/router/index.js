@@ -34,9 +34,11 @@ export default function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     const connectionState = getConnectionState(firebase.auth().currentUser)
-    const validRoute = to.meta.access.allowedConnectionStates && to.meta.access.allowedConnectionStates.some(access => access === connectionState)
-    if (validRoute) next()
-    else next(false)
+    const toValidRoute = to.meta.access.allowedConnectionStates && to.meta.access.allowedConnectionStates.some(access => access === connectionState)
+    const fromValidRoute = from.meta.access && from.meta.access.allowedConnectionStates && to.meta.access.allowedConnectionStates.some(access => access === connectionState)
+    if (toValidRoute) next()
+    else if (fromValidRoute) next(false)
+    else next({ name: 'home' })
   })
 
   return Router
