@@ -34,7 +34,7 @@
 
 <script>
 import { LPolyline } from 'vue2-leaflet'
-import BasicMap from 'components/Navigation/map/BasicMap'
+import BasicMap from 'components/Navigation/BasicMap'
 import NodeMarker from './NodeMarker'
 import { fromGeopoint, fromLatLng } from 'src/helpers/mapHelpers'
 import { generateNodeBefore, generateNodeAfter, moveBefore, moveAfter, remove, copyGraph } from 'src/helpers/graphHelpers'

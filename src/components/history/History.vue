@@ -17,7 +17,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import BasicMap from 'components/Navigation/map/BasicMap'
+import BasicMap from 'components/Navigation/BasicMap'
 import HistoryMarker from './HistoryMarker'
 import { fromGeopoint } from 'src/helpers/mapHelpers'
 

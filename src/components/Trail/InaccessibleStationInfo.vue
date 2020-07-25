@@ -28,8 +28,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import { fromGeopoint } from 'src/helpers/mapHelpers'
-import BasicMap from 'components/Navigation/map/BasicMap'
-import TrailMarker from 'components/Navigation/map/TrailMarker'
+import BasicMap from 'components/Navigation/BasicMap'
+import TrailMarker from 'components/findTrails/TrailMarker'
 
 export default {
   name: 'InaccessibleStationInfo',

@@ -21,7 +21,7 @@
 
 <script>
 import { isOutOfBoundsBounds, getRadius, fromGeopoint } from 'src/helpers/mapHelpers'
-import BasicMap from './BasicMap'
+import BasicMap from 'components/Navigation/BasicMap'
 import TrailMarker from './TrailMarker'
 import trailMarker from 'assets/trailPlace.png'
 
