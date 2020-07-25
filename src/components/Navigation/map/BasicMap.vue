@@ -89,7 +89,7 @@ export default {
     },
     zoom: {
       type: Number,
-      default: 16
+      default: () => 16
     }
   },
   data () {
@@ -127,11 +127,11 @@ export default {
     }
   },
   beforeDestroy () {
+    this.showPosition = false
     this.stopWatch()
   },
   methods: {
     geolocationError (errorToHandle) {
-      // handle error
       this.showPosition = false
       this.stopWatch()
     },
@@ -142,6 +142,7 @@ export default {
           const map = this.$refs.map.mapObject
           const zoom = Math.max(map.getZoom(), 9)
           map.setView(newCenter, zoom)
+          this.showPosition = true
         },
         this.geolocationError
       )
@@ -157,8 +158,7 @@ export default {
       navigator.geolocation.clearWatch(this.positionWatcher)
     },
     toggleWatch () {
-      this.showPosition = !this.showPosition
-      if (this.showPosition) this.startWatch()
+      if (!this.showPosition) this.startWatch()
       else this.stopWatch()
     }
   }

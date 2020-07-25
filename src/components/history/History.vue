@@ -3,6 +3,7 @@
     <basic-map
       width="100%"
       height="100%"
+      :zoom="2"
     >
       <history-marker
         v-for="station in stations"

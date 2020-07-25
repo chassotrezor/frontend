@@ -4,6 +4,7 @@
       class="BasicMap_test"
       width="100%"
       height="100%"
+      :zoom="3"
       @ready="initMap"
       @update:bounds="updateBounds"
     >
