@@ -2,7 +2,12 @@ import { mountQuasar } from '@test'
 import TrailEditor from './TrailEditor'
 import types from 'src/types'
 
-jest.mock('html2pdf.js', () => {})
+jest.mock('vue-pdf', () => {
+  return {
+    name: 'VuePdf'
+  }
+})
+jest.mock('jspdf', () => {})
 
 const expectedGeoPoint = { Ac: 0, Rc: 0 }
 const $geo = {
@@ -35,7 +40,17 @@ const trail = {
   description: '<div>Description</div>',
   durationMinutes: 90,
   physicalEffort: 3,
-  mentalEffort: 3
+  mentalEffort: 3,
+  pdfData: {
+    colors: {
+      light: '#111111',
+      dark: '#EEEEEE'
+    },
+    width: 160
+  },
+  mapData: {
+    zoom: 7
+  }
 }
 
 const store = {
@@ -134,6 +149,15 @@ describe('TrailEditor', () => {
   describe('TrailGraph', () => {
     let trailGraph
     beforeAll(() => { trailGraph = wrapper.find('.TrailGraph_test') })
+
+    describe('when "TrailGraph" emits "update:zoom"', () => {
+      it('updates "mapData.zoom"', async () => {
+        const newZoom = 12
+        trailGraph.vm.$emit('update:zoom', newZoom)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.mapData.zoom).toEqual(newZoom)
+      })
+    })
 
     describe('When TrailGraph emits "editStation" with "stationId"', () => {
       it('emits "editStation" with value stationId', async () => {
@@ -296,8 +320,51 @@ describe('TrailEditor', () => {
     })
   })
 
-  it('displays a "QrCodesGenerator', () => {
-    const qr = wrapper.find('.QrCodesGenerator_test')
-    expect(qr.exists()).toBe(true)
+  describe('QrCodesGenerator', () => {
+    let qrCodes
+    beforeAll(() => { qrCodes = wrapper.find('.QrCodesGenerator_test') })
+
+    describe('when "QrCodesGenerator" emits "update:width"', () => {
+      it('updates local pdfData.width', async () => {
+        const newWidth = 1000
+        qrCodes.vm.$emit('update:width', newWidth)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.pdfData.width).toEqual(newWidth)
+      })
+    })
+
+    describe('when "QrCodesGenerator" emits "update:light"', () => {
+      it('updates local pdfData.colors.light', async () => {
+        const newLight = '#222222'
+        qrCodes.vm.$emit('update:light', newLight)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.pdfData.colors.light).toEqual(newLight)
+      })
+    })
+
+    describe('when "QrCodesGenerator" emits "update:dark"', () => {
+      it('updates local pdfData.colors.dark', async () => {
+        const newDark = '#DDDDDD'
+        qrCodes.vm.$emit('update:dark', newDark)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.pdfData.colors.dark).toEqual(newDark)
+      })
+    })
+  })
+
+  describe('when destroyed', () => {
+    it('updates mapData on server', async () => {
+      const newMapData = { zoom: 25 }
+      wrapper.vm.mapData = newMapData
+      wrapper.destroy()
+      await wrapper.vm.$nextTick()
+      expect(store.modules.editor.actions.updateTrail).toHaveBeenCalledWith(
+        expect.any(Object),
+        {
+          trailId,
+          newProps: { mapData: newMapData }
+        }
+      )
+    })
   })
 })

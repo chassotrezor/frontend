@@ -107,7 +107,6 @@
         :center="trail.position.geopoint"
         :zoom="trail.mapData.zoom"
         @update:zoom="mapData.zoom = $event"
-        @update:center="mapData.center = $event"
         @updateName="updateName"
         @updateGraph="updateGraph"
         @editStation="editStation($event)"
