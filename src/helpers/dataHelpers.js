@@ -56,6 +56,16 @@ export function ratioToQuasarColor (ratio, level) {
   return color
 }
 
+// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+export function hexToRgb (hex) {
+  return hex.replace(
+    /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+    (m, r, g, b) => '#' + r + r + g + g + b + b
+  )
+    .substring(1).match(/.{2}/g)
+    .map(x => parseInt(x, 16))
+}
+
 function randomHexString (range) {
   const length = Math.ceil(Math.log(range) / Math.log(16))
   const hexValue = Math.floor(Math.random() * range)

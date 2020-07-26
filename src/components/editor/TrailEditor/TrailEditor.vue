@@ -8,9 +8,10 @@
         description: trail.description,
         durationMinutes: trail.durationMinutes,
         physicalEffort: trail.physicalEffort,
-        mentalEffort: trail.mentalEffort
+        mentalEffort: trail.mentalEffort,
+        pdfData: trail.pdfData
       }"
-      :new-data="{ graph, name, description, durationMinutes, physicalEffort, mentalEffort }"
+      :new-data="{ graph, name, description, durationMinutes, physicalEffort, mentalEffort, pdfData }"
       :update-fn="updateTrailWithPosition"
       :cancel-fn="() => duplicateTrail(trail)"
     />
@@ -104,6 +105,9 @@
         class="TrailGraph_test"
         :graph="graph"
         :center="trail.position.geopoint"
+        :zoom="trail.mapData.zoom"
+        @update:zoom="mapData.zoom = $event"
+        @update:center="mapData.center = $event"
         @updateName="updateName"
         @updateGraph="updateGraph"
         @editStation="editStation($event)"
@@ -113,8 +117,12 @@
       <qr-codes-generator
         class="QrCodesGenerator_test"
         :trail-id="trailId"
-        :trail-name="trail.name"
-        :graph="trail.graph"
+        :trail-name="name"
+        :graph="graph"
+        :pdf-data="pdfData"
+        @update:width="pdfData.width = $event"
+        @update:light="pdfData.colors.light = $event"
+        @update:dark="pdfData.colors.dark = $event"
       />
       <q-dialog
         v-model="dialog.open"
@@ -149,7 +157,7 @@
 </template>
 
 <script>
-import { isEqual } from 'lodash'
+import { isEqual, cloneDeep } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import TrailGraph from './TrailGraph'
 import QrCodesGenerator from './QrCodesGenerator'
@@ -193,6 +201,16 @@ export default {
           label: '',
           method: () => {}
         }
+      },
+      pdfData: {
+        colors: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        },
+        width: 50
+      },
+      mapData: {
+        zoom: 2
       }
     }
   },
@@ -221,6 +239,9 @@ export default {
   mounted () {
     this.duplicateTrail(this.trail)
   },
+  beforeDestroy () {
+    this.updateTrail({ trailId: this.trailId, newProps: { mapData: this.mapData } })
+  },
   methods: {
     ...mapActions({
       updateTrail: 'editor/updateTrail',
@@ -239,6 +260,8 @@ export default {
       Object.entries(trail.graph.nodes).forEach(node => {
         vm.$set(vm.graph.nodes, node[0], { ...node[1] })
       })
+      this.pdfData = cloneDeep(trail.pdfData)
+      this.mapData = cloneDeep(trail.mapData)
     },
     updateName ({ stationId, newName }) {
       this.graph.nodes[stationId].name = newName
@@ -273,7 +296,9 @@ export default {
           physicalEffort: this.physicalEffort,
           mentalEffort: this.mentalEffort,
           position,
-          graph: this.graph
+          graph: this.graph,
+          mapData: this.mapData,
+          pdfData: this.pdfData
         }
       })
     },

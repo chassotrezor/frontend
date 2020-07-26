@@ -1,3 +1,5 @@
+import * as QRCode from 'qrcode'
+
 export function generateString (trailId, stationId) {
   return `https://chassotrezor.web.app/station/${trailId}/${stationId}`
 }
@@ -30,4 +32,23 @@ export function checkCodeValidity (code) {
   } else {
     return false
   }
+}
+
+export function generateQrCodeAsDataUrl (trailId, stationId, color) {
+  let qrCode = ''
+  QRCode.toDataURL(
+    generateString(trailId, stationId),
+    {
+      errorCorrectionLevel: 'L',
+      type: 'image/png',
+      margin: 4,
+      scale: 8,
+      color
+    },
+    (error, url) => {
+      if (error) throw error
+      qrCode = url
+    }
+  )
+  return qrCode
 }

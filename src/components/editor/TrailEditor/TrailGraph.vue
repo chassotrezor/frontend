@@ -3,8 +3,9 @@
     <basic-map
       height="500px"
       width="800px"
-      :zoom="2"
+      :zoom="zoom"
       :center="latLng"
+      @update:zoom="$emit('update:zoom', $event)"
     >
       <node-marker
         v-for="(node, nodeId) in graph.nodes"
@@ -59,6 +60,10 @@ export default {
           Ac: 0
         }
       }
+    },
+    zoom: {
+      type: Number,
+      default: () => 4
     }
   },
   computed: {

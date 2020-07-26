@@ -47,6 +47,13 @@ export default {
       downloadQrCodes: 'télécharger les codes QR',
       name: 'nom du parcours',
       qrCodes: 'Codes QR',
+      qrCodesDark: 'Teinte foncée',
+      qrCodesLight: 'Teinte claire',
+      qrCodesLatitude: 'latitude',
+      qrCodesLongitude: 'longitude',
+      qrCodesNotLightEnough: 'La teinte claire doit être significativement plus claire que la teinte foncée.',
+      qrCodesNotDarkEnough: 'La teinte foncée doit être significativement plus foncée que la teinte claire.',
+      qrCodesWidth: 'Largeur',
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
       saveChangesThenRemoveStation: 'Oui, sauvegarder les changements, puis supprimer le poste'
     },
