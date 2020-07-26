@@ -23,16 +23,16 @@
       />
     </q-page-sticky>
     <div
-      class="col-shrink bg-grey-3"
-      :style="`width: ${previewWidth}px`"
+      class="col-shrink"
+      :style="`width: ${previewWidth}px; height: ${pageHeight - 50}px`"
     />
     <div
-      class="col-grow bg-grey-3 column justify-start items-center q-gutter-y-lg q-pt-md"
+      class="col-grow bg-light column justify-start items-center q-gutter-y-lg q-pt-md"
       style="z-index: 10"
     >
       <q-input
         v-model="stationName"
-        class="QInputName_test q-pr-md"
+        class="QInputName_test q-pr-md text-dark"
         style="width: 600px"
         :label="$t('editor.station.name')"
         input-class="text-weight-bold text-body1"
@@ -52,7 +52,7 @@
         @triggerSave="update"
       />
       <q-btn-group
-        class="AddRow_test"
+        class="AddRow_test bg-lighter text-dark"
       >
         <q-btn
           class="AddText_test"
@@ -74,6 +74,7 @@
 <script>
 import { cloneDeep, merge } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
+import FillPageHeight from 'src/mixins/FillPageHeight'
 import RowEditor from './RowEditor/RowEditor'
 import StationPreview from './StationPreview'
 import UpdateBtn from '../UpdateBtn'
@@ -89,6 +90,7 @@ export default {
     StationPreview,
     UpdateBtn
   },
+  mixins: [FillPageHeight],
   props: {
     stationId: {
       type: String,

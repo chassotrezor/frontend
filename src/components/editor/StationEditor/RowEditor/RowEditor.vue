@@ -1,6 +1,6 @@
 <template>
   <div
-    class="row no-wrap q-pa-md bg-grey-1 rounded-borders shadow-3 q-gutter-x-md"
+    class="row no-wrap q-pa-md bg-lighter rounded-borders shadow-3 q-gutter-x-md"
     style="width: 600px"
   >
     <text-row-editor
@@ -28,7 +28,7 @@
       <q-btn
         class="moveBtn UpBtn_test"
         icon="keyboard_arrow_up"
-        color="primary"
+        color="secondary"
         :disable="first"
         @click="$emit('up')"
       />
@@ -41,7 +41,7 @@
       <q-btn
         class="moveBtn DownBtn_test"
         icon="keyboard_arrow_down"
-        color="primary"
+        color="secondary"
         :disable="last"
         @click="$emit('down')"
       />

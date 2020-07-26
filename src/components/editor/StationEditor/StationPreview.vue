@@ -30,7 +30,7 @@
           </q-toolbar>
         </div>
         <q-scroll-area
-          class="bg-grey-3"
+          class="bg-light"
           :style="pageStyle"
         >
           <station-renderer

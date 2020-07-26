@@ -13,6 +13,8 @@
       :label="$t('editor.trailsList.createTrail')"
       no-caps
       size="lg"
+      color="lighter"
+      text-color="dark"
       @click="createAndEditTrail"
     />
   </div>

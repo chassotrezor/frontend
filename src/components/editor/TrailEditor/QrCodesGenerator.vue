@@ -3,23 +3,30 @@
     class="row justify-between q-pb-xl"
     style="width: 800px"
   >
-    <div class="column">
-      <q-btn-group class="row">
+    <div class="column q-gutter-y-sm">
+      <q-btn-group
+        class="row"
+        style="z-index: 1"
+      >
         <q-btn
           class="col-grow PdfNavigationPrevious_test"
           icon="navigate_before"
+          color="lighter"
+          text-color="dark"
           :disable="page === 1"
           @click="page -= 1"
         />
         <q-btn
           class="col-grow PdfNavigationNext_test"
           icon="navigate_next"
+          color="lighter"
+          text-color="dark"
           :disable="page === numPages"
           @click="page += 1"
         />
       </q-btn-group>
       <pdf
-        class="PdfViewer_test"
+        class="PdfViewer_test bordered"
         :src="pdf"
         :page="page"
         style="width: 350px; height: 495px"
@@ -28,6 +35,8 @@
     <div class="column justify-between">
       <q-btn
         class="DownloadCodes_test"
+        color="lighter"
+        text-color="dark"
         icon="cloud_download"
         :label="$t('editor.trail.downloadQrCodes')"
         @click="makePdf"

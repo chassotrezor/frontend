@@ -5,15 +5,16 @@
         <q-btn
           class="EditBtn_test col-6"
           icon="edit"
-          text-color="black"
+          color="lighter"
+          text-color="dark"
           padding="xs"
-          color="grey-2"
           @click="$emit('editStation')"
         />
         <q-btn
           class="Remove_test col-4"
           icon="delete_forever"
           color="negative"
+          text-color="lighter"
           padding="xs"
           :disable="first && last"
           @click="$emit('removeStation')"
@@ -28,6 +29,7 @@
         <q-btn
           class="MoveBefore_test"
           flat
+          color="dark"
           padding="sm"
           icon="navigate_before"
           :disable="first"
@@ -36,10 +38,12 @@
         <q-icon
           name="sync_alt"
           size="xl"
+          color="dark"
         />
         <q-btn
           class="MoveAfter_test"
           flat
+          color="dark"
           padding="sm"
           icon="navigate_next"
           :disable="last"
@@ -50,6 +54,7 @@
         <q-btn
           class="AddBefore_test"
           flat
+          color="dark"
           padding="sm"
           icon="navigate_before"
           @click="$emit('newStation:before')"
@@ -57,10 +62,12 @@
         <q-icon
           name="add_circle"
           size="xl"
+          color="dark"
         />
         <q-btn
           class="AddAfter_test"
           flat
+          color="dark"
           icon="navigate_next"
           padding="sm"
           @click="$emit('newStation:after')"

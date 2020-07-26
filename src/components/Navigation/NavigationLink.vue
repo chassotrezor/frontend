@@ -1,5 +1,6 @@
 <template>
   <q-item
+    class="text-dark"
     :class="itemClass"
     :clickable="!isCurrentRoute"
     @click="$router.push(route)"
@@ -8,7 +9,10 @@
       v-if="icon"
       avatar
     >
-      <q-icon :name="icon" />
+      <q-icon
+        :name="icon"
+        color="dark"
+      />
     </q-item-section>
 
     <q-item-section>
@@ -46,7 +50,7 @@ export default {
     },
 
     itemClass () {
-      if (this.isCurrentRoute) return 'bg-secondary text-weight-bolder active_test'
+      if (this.isCurrentRoute) return 'bg-secondary text-weight-bold active_test'
       else return 'inactive_test'
     }
   }

@@ -1,7 +1,11 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <q-header elevated>
-      <q-toolbar>
+    <q-header
+      elevated
+    >
+      <q-toolbar
+        class="text-lighter"
+      >
         <q-btn
           flat
           dense
@@ -31,7 +35,7 @@
       v-model="leftDrawerOpen"
       side="left"
       bordered
-      content-class="bg-grey-1"
+      content-class="bg-lighter"
     >
       <q-list>
         <navigation-link
@@ -63,7 +67,7 @@
       />
     </q-drawer>
     <q-page-container>
-      <router-view />
+      <router-view class="bg-light" />
     </q-page-container>
   </q-layout>
 </template>

@@ -20,6 +20,7 @@
         class="row q-pr-md justify-center q-gutter-md"
       >
         <q-card
+          class="bg-lighter text-dark"
           style="width: 400px"
         >
           <q-card-section>
@@ -32,7 +33,7 @@
           <q-card-section>
             <q-editor
               v-model="description"
-              class="InputDescription_test"
+              class="InputDescription_test bg-lighter text-dark"
               :definitions="{
                 label: {
                   label: $t('editor.trail.description'),
@@ -47,7 +48,7 @@
           </q-card-section>
         </q-card>
         <q-card
-          class="column justify-around"
+          class="column justify-around bg-lighter text-dark"
           style="width: 400px"
         >
           <q-card-section
@@ -96,6 +97,7 @@
               class="InputPhysicalEffort_test"
               icon="star"
               size="xl"
+              color="primary"
             />
           </q-card-section>
           <q-card-section
@@ -110,6 +112,7 @@
               class="InputMentalEffort_test"
               icon="star"
               size="xl"
+              color="primary"
             />
           </q-card-section>
         </q-card>

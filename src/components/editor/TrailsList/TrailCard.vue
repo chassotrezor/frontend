@@ -1,6 +1,6 @@
 <template>
   <div
-    class="row no-wrap justify-between bg-grey-4 rounded-borders shadow-3"
+    class="row no-wrap justify-between bg-lighter text-dark rounded-borders shadow-3"
     style="width: 600px"
   >
     <q-btn

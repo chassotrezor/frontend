@@ -1,6 +1,7 @@
 <template>
   <div class="column items-center">
     <basic-map
+      class="bordered"
       height="500px"
       width="800px"
       :zoom="zoom"

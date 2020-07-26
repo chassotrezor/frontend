@@ -21,6 +21,8 @@
     <div class="row no-wrap q-gutter-x-md">
       <q-card
         content-class="column justify-center items-center"
+        flat
+        bordered
       >
         <q-card-section>
           <q-img
@@ -43,6 +45,8 @@
           class="col-grow FirebaseUploader_test"
           :path="path"
           :file-id="row.rowId"
+          flat
+          bordered
           @uploaded="updateFile"
         >
           <template v-slot:header="scope">

@@ -1,6 +1,6 @@
 <template>
   <q-page-sticky
-    class="full-width q-pa-sm bg-secondary text-white shadow-3"
+    class="full-width q-pa-sm bg-secondary text-dark shadow-3"
     style="justify-content: flex-start; z-index: 1000"
     position="top"
   >
