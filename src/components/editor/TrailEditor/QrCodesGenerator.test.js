@@ -1,9 +1,32 @@
+/*
+  TODO: find why "async > ...$emit(...) > await wrapper.vm.$nextTick()" does not work here
+*/
+
 import { mountQuasar } from '@test'
 import QrCodesGenerator from './QrCodesGenerator'
 import types from 'src/types'
 
-jest.mock('html2pdf.js', () => jest.fn())
-import html2pdf from 'html2pdf.js'
+const mockSave = jest.fn()
+jest.mock('jspdf', () => {
+  return class JsPDF {
+    // constructor () {}
+    addImage () {}
+    extractImageFromDataUrl () { return 'image' }
+    insertPage () {}
+    output () { return 'pdf' }
+    save = mockSave
+    setFontSize () {}
+    setFontStyle () {}
+    setPage () {}
+    text () {}
+  }
+})
+
+jest.mock('vue-pdf', () => {
+  return {
+    name: 'VuePdf'
+  }
+})
 
 const trailId = 'testTrailId'
 const trailName = 'testTrailName'
@@ -13,59 +36,151 @@ const graph = {
     testStationId1: {
       dependencies: [],
       name: 'testStationName1',
-      type: types.nodes.STATION
+      type: types.nodes.STATION,
+      position: { Ac: 1, Rc: 1 }
     },
     testStationId2: {
       dependencies: ['testStationId1'],
       name: 'testStationName2',
-      type: types.nodes.STATION
+      type: types.nodes.STATION,
+      position: { Ac: 2, Rc: 2 }
     }
   }
+}
+const pdfData = {
+  colors: {
+    light: '#FFFFFF',
+    dark: '#000000'
+  },
+  width: 100
+}
+
+const $q = {
+  notify: jest.fn()
 }
 
 describe('QrCodesGenerator', () => {
   let wrapper
-  let showBtn
   beforeAll(() => {
     wrapper = mountQuasar(QrCodesGenerator, {
       propsData: {
         trailName,
         trailId,
-        graph
-      }
+        graph,
+        pdfData
+      },
+      mocks: { $q }
     })
-    showBtn = wrapper.find('.ShowQrCodesBtn_test')
   })
 
-  it('displays a "ShowQrCodes" button', () => {
-    expect(showBtn.exists()).toBe(true)
+  describe('when "PdfNavigationNext" emits "click"', () => {
+    it('increases page number', () => {
+      const next = wrapper.find('.PdfNavigationNext_test')
+      next.vm.$emit('click')
+      expect(wrapper.vm.page).toBe(2)
+    })
   })
 
-  describe('when "ShowQrCodes" button emits "click"', () => {
-    let modules
-    let expectedLength
-    beforeAll(async () => {
-      showBtn.vm.$emit('click')
-      await wrapper.vm.$nextTick()
-      modules = wrapper.findAll('.QrCodeModule_test')
-      expectedLength = Object.keys(graph.nodes).length
+  describe('when "PdfNavigationPrevious" emits "click"', () => {
+    it('decreases page number', () => {
+      const next = wrapper.find('.PdfNavigationPrevious_test')
+      next.vm.$emit('click')
+      expect(wrapper.vm.page).toBe(1)
     })
+  })
 
-    it('displays a QR Code Module for each station in nodes', () => {
-      expect(modules.length).toBe(expectedLength)
-    })
+  it('displays a "PdfViewer" with page="page" and src="pdf" props', () => {
+    const pdf = wrapper.find('.PdfViewer_test')
+    expect(pdf.attributes().src).toBe('pdf')
+    expect(pdf.attributes().page).toBe('1')
+  })
 
-    test('every QR Code Module ends with a page break', () => {
-      for (let i = 0; i < expectedLength; i++) {
-        expect(modules.at(i).attributes().style).toContain('page-break-after: always')
-      }
-    })
-
-    it('creates a pdf when QBtn emits "click"', async () => {
-      const btn = wrapper.find('.QBtn_test')
+  describe('when "DownloadCodes" button emits "click"', () => {
+    it('creates a pdf to save', () => {
+      const btn = wrapper.find('.DownloadCodes_test')
       btn.vm.$emit('click')
-      await wrapper.vm.$nextTick()
-      expect(html2pdf).toHaveBeenCalled()
+      expect(mockSave).toHaveBeenCalled()
+    })
+  })
+
+  describe('when "WidthInput" emits "change"', () => {
+    it('emits "update:width" with new width', () => {
+      const newWidth = 2000
+      const input = wrapper.find('.WidthInput_test')
+      input.vm.$emit('change', newWidth)
+      expect(wrapper.emitted('update:width')[0][0]).toBe(newWidth)
+    })
+  })
+
+  describe('when "LightColor" emits "change"', () => {
+    describe('if contrast between light and dark is not valid', () => {
+      const newLight = '#000000'
+      beforeAll(() => {
+        const input = wrapper.find('.LightColorInput_test')
+        input.vm.$emit('input', newLight)
+        input.vm.$emit('change', newLight)
+      })
+
+      it('notifies user', () => {
+        expect($q.notify).toHaveBeenCalled()
+      })
+
+      it('restores current "colors.light" value', () => {
+        expect(wrapper.vm.colors.light).toBe(pdfData.colors.light)
+      })
+
+      afterAll(jest.clearAllMocks)
+    })
+
+    describe('if contrast between light and dark is valid', () => {
+      const newLight = '#EEEEEE'
+      beforeAll(() => {
+        const input = wrapper.find('.LightColorInput_test')
+        input.vm.$emit('input', newLight)
+        input.vm.$emit('change', newLight)
+      })
+
+      it('emits "update:light" with new color', () => {
+        const input = wrapper.find('.LightColorInput_test')
+        input.vm.$emit('change', newLight)
+        expect(wrapper.emitted('update:light')[0][0]).toBe(newLight)
+      })
+    })
+  })
+
+  describe('when "DarkColor" emits "change"', () => {
+    describe('if contrast between light and dark is not valid', () => {
+      const newDark = '#FFFFFF'
+      beforeAll(() => {
+        const input = wrapper.find('.DarkColorInput_test')
+        input.vm.$emit('input', newDark)
+        input.vm.$emit('change', newDark)
+      })
+
+      it('notifies user', () => {
+        expect($q.notify).toHaveBeenCalled()
+      })
+
+      it('restores current "colors.light" value', () => {
+        expect(wrapper.vm.colors.dark).toBe(pdfData.colors.dark)
+      })
+
+      afterAll($q.notify.mockClear)
+    })
+
+    describe('if contrast between light and dark is valid', () => {
+      const newDark = '#111111'
+      beforeAll(() => {
+        const input = wrapper.find('.DarkColorInput_test')
+        input.vm.$emit('input', newDark)
+        input.vm.$emit('change', newDark)
+      })
+
+      it('emits "update:dark" with new color', () => {
+        const input = wrapper.find('.DarkColorInput_test')
+        input.vm.$emit('change', newDark)
+        expect(wrapper.emitted('update:dark')[0][0]).toBe(newDark)
+      })
     })
   })
 })

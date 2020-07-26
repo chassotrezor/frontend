@@ -6,19 +6,20 @@
     <div class="column">
       <q-btn-group class="row">
         <q-btn
-          class="col-grow"
+          class="col-grow PdfNavigationPrevious_test"
           icon="navigate_before"
           :disable="page === 1"
           @click="page -= 1"
         />
         <q-btn
-          class="col-grow"
+          class="col-grow PdfNavigationNext_test"
           icon="navigate_next"
           :disable="page === numPages"
           @click="page += 1"
         />
       </q-btn-group>
       <pdf
+        class="PdfViewer_test"
         :src="pdf"
         :page="page"
         style="width: 350px; height: 495px"
@@ -26,14 +27,14 @@
     </div>
     <div class="column justify-between">
       <q-btn
-        class="QBtn_test"
+        class="DownloadCodes_test"
         icon="cloud_download"
         :label="$t('editor.trail.downloadQrCodes')"
         @click="makePdf"
       />
       <q-slider
         v-model="width"
-        class="q-mt-md"
+        class="q-mt-md WidthInput_test"
         :min="10"
         :max="200"
         label
@@ -54,6 +55,7 @@
           </div>
           <q-color
             v-model="colors.light"
+            class="LightColorInput_test"
             no-header
             default-view="palette"
             @change="updateLightColorIfLightEnough"
@@ -71,6 +73,7 @@
           </div>
           <q-color
             v-model="colors.dark"
+            class="DarkColorInput_test"
             no-header
             default-view="palette"
             @change="updateDarkColorIfDarkEnough"
