@@ -1,7 +1,12 @@
 import { mountQuasar } from '@test'
 import Editor from './Editor'
 
-jest.mock('html2pdf.js', () => jest.fn())
+jest.mock('vue-pdf', () => {
+  return {
+    name: 'VuePdf'
+  }
+})
+jest.mock('jspdf', () => {})
 
 const testTrailId = 'testTrailId'
 const testStationId = 'testStationId'
