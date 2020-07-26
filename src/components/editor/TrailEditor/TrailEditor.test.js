@@ -119,6 +119,11 @@ describe('TrailEditor', () => {
     expect(btn.exists()).toBe(true)
   })
 
+  it('displays a "PublishToggle"', () => {
+    const toggle = wrapper.find('.TogglePublish_test')
+    expect(toggle.exists()).toBe(true)
+  })
+
   describe('when "UpdateBtn" calls "updateFn"', () => {
     const expectedName = 'newName'
 

@@ -39,13 +39,18 @@ export default {
     trail: {
       allStationDataWillBeLost: 'Toutes les données du poste seront perdues.',
       askRemoveStation: 'Supprimer le poste ?',
+      askSaveAndPublish: 'Sauvegarder les changements publier le parcours ?',
+      askSaveAndUnPublish: 'Sauvegarder les changements et dépublier le parcours ?',
       askSaveThenRemoveStation: 'Sauvegarder les changements, puis supprimer le poste ?',
       confirmRemoveStation: 'Oui, supprimer le poste',
       description: 'description du parcours',
       doNotCreateStation: 'Ne pas créer le poste',
+      doNotPublish: 'Ne pas publier',
       doNotRemoveStation: 'Non, ne pas supprimer le poste',
+      doNotUnPublish: 'Laisser publié',
       downloadQrCodes: 'télécharger les codes QR',
       name: 'nom du parcours',
+      publishOnMap: 'Publier sur la carte',
       qrCodes: 'Codes QR',
       qrCodesDark: 'Teinte foncée',
       qrCodesLight: 'Teinte claire',
@@ -55,7 +60,9 @@ export default {
       qrCodesNotDarkEnough: 'La teinte foncée doit être significativement plus foncée que la teinte claire.',
       qrCodesWidth: 'Largeur',
       saveChangesThenCreateStation: 'Sauvegarder les changements, puis créer le poste',
-      saveChangesThenRemoveStation: 'Oui, sauvegarder les changements, puis supprimer le poste'
+      saveChangesThenPublish: 'Sauvegarder et publier',
+      saveChangesThenRemoveStation: 'Oui, sauvegarder les changements, puis supprimer le poste',
+      saveChangesThenUnPublish: 'Sauvegarder et dépublier'
     },
     trailsList: {
       allTrailDataWillBeLost: 'Toutes les données de ce parcours ainsi que celles de tous ses postes seront définitivement perdues !',

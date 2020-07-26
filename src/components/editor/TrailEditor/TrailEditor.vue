@@ -52,6 +52,21 @@
         >
           <q-card-section
             class="row justify-between items-center"
+          >
+            <div class="text-body1 text-weight-bold">
+              {{ $t('editor.trail.publishOnMap') }}
+            </div>
+            <q-toggle
+              class="TogglePublish_test"
+              :value="trail.published"
+              size="xl"
+              checked-icon="check"
+              unchecked-icon="close"
+              @input="togglePublish"
+            />
+          </q-card-section>
+          <q-card-section
+            class="row justify-between items-center"
             style="width: 400px"
           >
             <div class="text-body1 text-weight-bold">
@@ -61,7 +76,7 @@
               v-model="durationMinutes"
               class="InputDuration_test"
               style="width: 240px"
-              :min="30"
+              :min="15"
               :max="480"
               :step="15"
               label
@@ -210,7 +225,8 @@ export default {
       },
       mapData: {
         zoom: 2
-      }
+      },
+      published: false
     }
   },
   computed: {
@@ -223,8 +239,17 @@ export default {
     },
     difference () {
       const nameDifference = this.trail.name !== this.name
+      const descriptionDifference = this.trail.description !== this.description
+      const durationMinutesDifference = this.trail.durationMinutes !== this.durationMinutes
+      const physicalEffortDifference = this.trail.physicalEffort !== this.physicalEffort
+      const mentalEffortDifference = this.trail.mentalEffort !== this.mentalEffort
       const graphDifference = !isEqual(this.trail.graph, this.graph)
-      return nameDifference || graphDifference
+      return nameDifference ||
+        descriptionDifference ||
+        durationMinutesDifference ||
+        physicalEffortDifference ||
+        mentalEffortDifference ||
+        graphDifference
     },
     renderedDuration () {
       return renderDuration(this.durationMinutes)
@@ -261,6 +286,7 @@ export default {
       })
       this.pdfData = cloneDeep(trail.pdfData)
       this.mapData = cloneDeep(trail.mapData)
+      this.published = trail.published
     },
     updateName ({ stationId, newName }) {
       this.graph.nodes[stationId].name = newName
@@ -297,7 +323,8 @@ export default {
           position,
           graph: this.graph,
           mapData: this.mapData,
-          pdfData: this.pdfData
+          pdfData: this.pdfData,
+          published: this.published
         }
       })
     },
@@ -347,12 +374,38 @@ export default {
             this.dialog.cancelBtn.label = this.$t('editor.trail.doNotRemoveStation')
             break
           }
+          case 'publish': {
+            this.dialog.title = this.$t('editor.trail.askSaveAndPublish')
+            this.dialog.message = ''
+            this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenPublish')
+            this.dialog.cancelBtn.label = this.$t('editor.trail.doNotPublish')
+            break
+          }
+          case 'unpublish': {
+            this.dialog.title = this.$t('editor.trail.askSaveAndUnPublish')
+            this.dialog.message = ''
+            this.dialog.okBtn.label = this.$t('editor.trail.saveChangesThenUnPublish')
+            this.dialog.cancelBtn.label = this.$t('editor.trail.doNotUnPublish')
+            break
+          }
           default: break
         }
         this.dialog.open = true
       } else {
         return vm[methodName](payload)
       }
+    },
+    togglePublish (value) {
+      if (value) this.promptSaveBefore('publish')
+      else this.promptSaveBefore('unpublish')
+    },
+    publish () {
+      this.published = true
+      this.updateTrailWithPosition()
+    },
+    unpublish () {
+      this.published = false
+      this.updateTrailWithPosition()
     }
   }
 }
