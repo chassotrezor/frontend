@@ -127,12 +127,10 @@ export default {
     }
   },
   beforeDestroy () {
-    this.showPosition = false
     this.stopWatch()
   },
   methods: {
     geolocationError (errorToHandle) {
-      this.showPosition = false
       this.stopWatch()
     },
     startWatch () {
@@ -155,6 +153,7 @@ export default {
       )
     },
     stopWatch () {
+      this.showPosition = false
       navigator.geolocation.clearWatch(this.positionWatcher)
     },
     toggleWatch () {
