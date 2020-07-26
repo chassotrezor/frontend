@@ -9,7 +9,8 @@ const trails = [
         latitude: 31,
         longitude: 41
       }
-    }
+    },
+    published: true
   },
   {
     name: 'trailName2',
@@ -18,7 +19,8 @@ const trails = [
         latitude: 32,
         longitude: 42
       }
-    }
+    },
+    published: true
   },
   {
     name: 'trailName3',
@@ -27,9 +29,15 @@ const trails = [
         latitude: 33,
         longitude: 43
       }
-    }
+    },
+    published: false
   }
 ]
+
+const expectedLength = trails.reduce((length, trail) => {
+  if (trail.published) length += 1
+  return length
+}, 0)
 
 const $geo = {
   point: (lng, lat) => { return { longitude: lng, latitude: lat } },
@@ -76,9 +84,9 @@ describe('TrailsMap', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('updates nearby trails on map', () => {
+    it('updates nearby published trails on map', () => {
       const trailMarkers = wrapper.findAll('.TrailMarker_test')
-      expect(trailMarkers.length).toBe(trails.length)
+      expect(trailMarkers.length).toBe(expectedLength)
     })
 
     afterAll(async () => {
@@ -94,9 +102,9 @@ describe('TrailsMap', () => {
       await wrapper.vm.$nextTick()
     })
 
-    it('updates nearby trails on map', () => {
+    it('updates nearby published trails on map', () => {
       const trailMarkers = wrapper.findAll('.TrailMarker_test')
-      expect(trailMarkers.length).toBe(trails.length)
+      expect(trailMarkers.length).toBe(expectedLength)
     })
 
     afterAll(async () => {

@@ -49,14 +49,17 @@ export default {
     queryTrails ({ center, radius }) {
       const query = this.$geo.query('trails').within(this.$geo.point(...center), radius, 'position')
       query.subscribe(trails => {
-        this.trails = trails.map(trail => {
-          return {
-            latLng: fromGeopoint(trail.position.geopoint).toLatLng(),
-            name: trail.name,
-            // TODO: get trailId from backend
-            trailId: trail.name + Math.random().toString(36).substring(2)
+        this.trails = trails.reduce((publishedTrails, trail) => {
+          if (trail.published) {
+            publishedTrails.push({
+              latLng: fromGeopoint(trail.position.geopoint).toLatLng(),
+              name: trail.name,
+              // TODO: get trailId from backend
+              trailId: trail.name + Math.random().toString(36).substring(2)
+            })
           }
-        })
+          return publishedTrails
+        }, [])
       })
     },
     updateBounds (newBounds) {
