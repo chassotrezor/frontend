@@ -100,6 +100,7 @@ export default {
         if (vm.mustBeDisplayed(route.meta.display.rule)) {
           routes[route.meta.display.group].push({
             name: route.name,
+            path: route.path,
             meta: route.meta
           })
         }

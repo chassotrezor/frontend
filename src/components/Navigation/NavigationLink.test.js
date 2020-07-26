@@ -1,40 +1,42 @@
 import { mountQuasar } from '@test'
 import NavigationLink from './NavigationLink'
 
-describe('NavigationLink', () => {
-  const $router = {
-    push: jest.fn()
-  }
-  const $route = {
-    name: 'currentRoute',
-    params: {}
-  }
-  const wrapper = mountQuasar(NavigationLink, {
-    propsData: {
-      title: 'testTitle',
-      route: {
-        name: 'testRoute'
-      }
-    },
-    mocks: {
-      $router,
-      $route
-    }
-  })
-  const qItem = wrapper.findComponent({ name: 'QItem' })
+const defaultRoute = {
+  name: 'defaultName',
+  path: '/default/path'
+}
 
+const $router = {
+  push: jest.fn()
+}
+const $route = defaultRoute
+
+const wrapper = mountQuasar(NavigationLink, {
+  propsData: {
+    title: 'testTitle',
+    route: defaultRoute
+  },
+  mocks: {
+    $router,
+    $route
+  }
+})
+
+describe('NavigationLink', () => {
+  const qItem = wrapper.findComponent({ name: 'QItem' })
   it('displays its title', () => {
     expect(qItem.find('testTiltle')).toBeTruthy()
   })
 
-  describe('when "route" prop has same name as current route', () => {
-    beforeAll(done => {
+  describe('when "route" prop has same root path as current route', () => {
+    beforeAll(async () => {
       wrapper.setProps({
         route: {
-          name: $route.name
+          ...defaultRoute,
+          path: `/${$route.path.split('/')[1]}/and/more/path`
         }
       })
-      wrapper.vm.$nextTick(done)
+      await wrapper.vm.$nextTick()
     })
 
     test('q-item has "active_test" class', () => {
@@ -45,22 +47,19 @@ describe('NavigationLink', () => {
       expect(qItem.props().clickable).toBe(false)
     })
 
-    test('router pushes to "route" prop when q-item emits "click" event', () => {
-      return new Promise(resolve => {
-        qItem.vm.$emit('click')
-        wrapper.vm.$nextTick(() => {
-          expect($router.push).toHaveBeenCalledWith({ name: $route.name })
-          resolve()
-        })
-      })
+    test('router pushes to "route" prop when q-item emits "click" event', async () => {
+      qItem.vm.$emit('click')
+      await wrapper.vm.$nextTick()
+      expect($router.push).toHaveBeenCalledWith(wrapper.props().route)
     })
   })
 
-  describe('when "route" prop has different name than current route', () => {
+  describe('when "route" prop has different root path than current route', () => {
     beforeAll(done => {
       wrapper.setProps({
         route: {
-          name: 'differentName'
+          ...defaultRoute,
+          path: '/other/route'
         }
       })
       wrapper.vm.$nextTick(done)

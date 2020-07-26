@@ -41,8 +41,8 @@ export default {
 
   computed: {
     isCurrentRoute () {
-      const sameName = this.$route.name === this.route.name
-      return sameName
+      const sameRoot = this.$route.path.split('/')[1] === this.route.path.split('/')[1]
+      return sameRoot
     },
 
     itemClass () {

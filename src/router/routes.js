@@ -29,7 +29,7 @@ const routes = [
     component: () => import('layouts/Layout.vue'),
     children: [
       {
-        path: '',
+        path: '/',
         name: 'home',
         component: () => import('pages/Index.vue'),
         meta: {
