@@ -12,11 +12,11 @@
       />
       <app-progress
         name="Ergonomie"
-        :value="0.2"
+        :value="0.9"
       />
       <app-progress
         name="Esthétique"
-        :value="0"
+        :value="0.8"
       />
     </div>
   </q-page>
